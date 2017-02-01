@@ -5,7 +5,7 @@ library(igraph)
 temp <- list.files(paste(getwd(),"/dataset/",sep=""),pattern = "*.txt")
 data_LS <- list()
 for(i in 1:length(temp)){
-  dir <- "D:/School/ST4199 - HONOURS/Code/ERGM/dataset/"
+  dir <- paste(getwd(),"/dataset/",sep="")
   DT <- fread(paste(dir,temp[i],sep=""))
   DT <- DT[,.(Date,HomeTeam,AwayTeam,FTHG,FTAG)]
   
@@ -109,6 +109,6 @@ for(i in 1:6){
                                                vertices = data_LS[[i]]$vertices_DT)
 }
 
-saveRDS(data_LS,"data_LS")
+saveRDS(data_LS,paste(getwd(),"/processed data/data_LS",sep=""))
 
 
