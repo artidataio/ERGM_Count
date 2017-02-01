@@ -2,7 +2,7 @@ library(data.table)
 library(igraph)
 
 #insert 3 different simiar files
-temp <- list.files("D:/School/ST4199 - HONOURS/Code/ERGM/dataset/",pattern = "*.txt")
+temp <- list.files(paste(getwd(),"/dataset/",sep=""),pattern = "*.txt")
 data_LS <- list()
 for(i in 1:length(temp)){
   dir <- "D:/School/ST4199 - HONOURS/Code/ERGM/dataset/"
@@ -100,7 +100,7 @@ for(i in 1:6){
                     DT[,.(from = AwayTeam,
                           to = HomeTeam, 
                           weight = FTAG,
-                          home=-1),])
+                          home=0),])
   
   setcolorder(edges_DT,c("from","to","weight","home"))
   data_LS[[i]]$edges_DT <- edges_DT
