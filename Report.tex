@@ -187,7 +187,7 @@ Larger $\theta_k$ will result in a distribution of networks with more feature ga
 Let the possibly predictive variables outside the network structure or exogenous covariate be $x_{ijk}$.
 A \textit{poisson-reference} ERGM Count will reduce to Poisson Regression Model if we introduce an edge-independent sufficient statistics:
 \begin{align}
-g_k(\bm{y})= \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ijk}.
+g_k(\bm{y})= \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ijk}.c
 \end{align}
 
 Let the model sufficient statistics only be exogenous covariate and \BI{sum}  the PMF will reduce to:
@@ -387,14 +387,14 @@ One example of the graph that will be fitted is shown in Figure \ref{fig:EPL2015
 
 \begin{figure}[H]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-5-1} 
+
+}
 
 
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in gzfile(file, "{}rb"{}): cannot open the connection}}
 
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plot(nonzero, layout = layout\_in\_circle, vertex.label.dist = 0.8, : object 'nonzero' not found}}
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in strwidth(legend, units = "{}user"{}, cex = cex, font = text.font): plot.new has not been called yet}}\end{kframe}
 \end{knitrout}
 \caption [Graph Representation of a Football League]{This is the graph representation of the first half of EPL 2015-2016. The red circles denote the 20 teams that are participating. Its size corresponds to the average market value of the players in the team. The bigger the circle, the average price of the players is higher. The color of the arrow arrow represents total goal scored by the team it orginates from, to the team pointed by the arrow head. The darker the color, the more goals scored in the match. Note that zero total goals scored are omitted.}
 \label{fig:EPL2015}

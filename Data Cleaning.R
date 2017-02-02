@@ -1,4 +1,5 @@
 library(data.table)
+library(RColorBrewer)
 library(igraph)
 
 #insert 3 different simiar files
@@ -90,6 +91,12 @@ market_value <- c(9.97, 2.55, 1.39, 14.50,
 data_LS[[5]]$vertices_DT <- data.table(team,market_value) 
 data_LS[[6]]$vertices_DT <- data.table(team,market_value)
 
+#Setting up color DT
+max_goal <- 8
+color <- c("white",brewer.pal(max_goal,"Greens"),"white",brewer.pal(max_goal,"Reds"))
+weight <- rep(0:max_goal,2)
+home <- c(rep(1,max_goal+1),rep(0,max_goal+1))
+color_DT <- data.table(color,weight,home)
 
 for(i in 1:6){
   DT <- data_LS[[i]]$data
@@ -102,7 +109,8 @@ for(i in 1:6){
                           weight = FTAG,
                           home=0),])
   
-  setcolorder(edges_DT,c("from","to","weight","home"))
+  edges_DT <- merge(edges_DT,color_DT,by.x=c("weight","home"),by.y=c("weight","home"))
+  setcolorder(edges_DT,c("from","to","weight","home","color"))
   data_LS[[i]]$edges_DT <- edges_DT
   data_LS[[i]]$igraph <- graph_from_data_frame(d = edges_DT,
                                                directed = T,

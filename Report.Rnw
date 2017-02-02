@@ -24,7 +24,8 @@
 \newcommand{\BI}[1]{\textit{\textbf{#1}}}
 \newcommand{\me}{\mathrm{e}}
 <<echo=F >>=
- opts_chunk$set(fig.align="center",echo=F,cache=F,eval = T,warning=F,message=F)
+  opts_chunk$set(fig.align="center",echo=F,cache=F,eval = T,warning=F,message=F)
+  data_LS <- readRDS(paste(getwd(),"/processed data/data_LS",sep=""))
 @
 
 \begin{document}
@@ -317,26 +318,37 @@ One example of the graph that will be fitted is shown in Figure \ref{fig:EPL2015
 library(igraph)
 library(scales)
 library(RColorBrewer)
+
+data_igraph <- data_LS[[2]]$igraph
+
 radian.rescale <- function(x, start=0, direction=1) {
   c.rotate <- function(x) (x + start) %% (2 * pi) * direction
   c.rotate(scales::rescale(x, c(0, 2 * pi), range(x)))
 }
-lab.locs <- radian.rescale(x=1:20, direction=-1, start=0)
-nonzero <- readRDS("nonzero igraph")
-plot(nonzero, 
-     layout=layout_in_circle,
+
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
      vertex.label.dist=0.8,
-     vertex.label.degree=lab.locs,
-     vertex.size=sqrt(V(nonzero)$market_value)*15/max(sqrt(V(nonzero)$market_value)),
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
      vertex.frame.color="NA",
-     vertex.color="red",
-     edge.arrow.size=1,
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
      edge.curved = 0.1,
      edge.lty =1,
-     edge.width=0.5*E(nonzero)$weight)
+     edge.width=0.5*E(data_igraph)$weight)
 
-legend(x=1,y=-.7, legend=1:6,lwd =0.5*(1:6) ,col = brewer.pal(6,"Greys"),y.intersp = 1,bty = "n")
+legend(x=1, y=-1, legend=0:8,lwd=0.5*(0:8), cex =.5,
+       col = c("white",brewer.pal(8,"Greens")),
+       y.intersp = 1,bty = "n",title="Goals(Home)")
 
+legend(x=1.25, y=-1, legend=0:8,lwd=0.5*(0:8), cex = .5,
+       col = c("white",brewer.pal(8,"Reds")),
+       y.intersp = 1,bty ="n",title= "Goals(Away)")
+#making the legend of the circle is hard
 @
 \caption [Graph Representation of a Football League]{This is the graph representation of the first half of EPL 2015-2016. The red circles denote the 20 teams that are participating. Its size corresponds to the average market value of the players in the team. The bigger the circle, the average price of the players is higher. The color of the arrow arrow represents total goal scored by the team it orginates from, to the team pointed by the arrow head. The darker the color, the more goals scored in the match. Note that zero total goals scored are omitted.}
 \label{fig:EPL2015}

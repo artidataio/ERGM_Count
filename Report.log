@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.8.28)  2 FEB 2017 20:19
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.8.28)  3 FEB 2017 04:59
 entering extended mode
 **Report.tex
 (Report.tex
@@ -463,19 +463,11 @@ Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 340.
 \c@lstlisting=\count129
 
 Chapter 1.
-
-Package natbib Warning: Citation `countergmdefined' on page 1 undefined on inpu
-t line 82.
-
 [1
 
 
 {C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}]
 Chapter 2.
-
-Package natbib Warning: Citation `countergmdefined' on page 2 undefined on inpu
-t line 91.
-
 LaTeX Font Info:    Try loading font information for U+msa on input line 96.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -490,14 +482,6 @@ Underfull \vbox (badness 1571) has occurred while \output is active []
  [2
 
 ]
-
-Package natbib Warning: Citation `countergmdefined' on page 3 undefined on inpu
-t line 118.
-
-
-Package natbib Warning: Citation `countergmdefined' on page 3 undefined on inpu
-t line 129.
-
 [3]
 
 Package xcolor Warning: Incompatible color definition on input line 149.
@@ -508,20 +492,7 @@ File: figure/geom_pois-1.pdf Graphic file (type pdf)
 <use figure/geom_pois-1.pdf>
 Package pdftex.def Info: figure/geom_pois-1.pdf used on input line 151.
 (pdftex.def)             Requested size: 501.50787pt x 200.0108pt.
-
-
-Package natbib Warning: Citation `countergmdefined' on page 4 undefined on inpu
-t line 162.
-
-
-Package natbib Warning: Citation `countergmdefined' on page 4 undefined on inpu
-t line 163.
-
-
-Package natbib Warning: Citation `countergmapplied' on page 4 undefined on inpu
-t line 168.
-
-[4 <./figure/geom_pois-1.pdf>] [5]
+ [4 <./figure/geom_pois-1.pdf>] [5]
 
 Package xcolor Warning: Incompatible color definition on input line 228.
 
@@ -585,52 +556,24 @@ Chapter 4.
 
 Package xcolor Warning: Incompatible color definition on input line 390.
 
-LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 393.
+<figure/unnamed-chunk-5-1.pdf, id=105, 505.89pt x 505.89pt>
+File: figure/unnamed-chunk-5-1.pdf Graphic file (type pdf)
 
-Package xcolor Warning: Incompatible color definition on input line 393.
+<use figure/unnamed-chunk-5-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-5-1.pdf used on input line 392.
+(pdftex.def)             Requested size: 501.50787pt x 501.51964pt.
+ [14
 
-
-Package xcolor Warning: Incompatible color definition on input line 395.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 395--396
-[]\OT1/cmtt/m/n/12 ## Error in plot(nonzero, layout = layout[]in[]circle, verte
-x.label.dist = 0.8, :
- []
-
-
-Package xcolor Warning: Incompatible color definition on input line 397.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 397--397
-[]\OT1/cmtt/m/n/12 ## Error in strwidth(legend, units = "user", cex = cex, font
- = text.font):
- []
-
-[14
-
-]
-Underfull \vbox (badness 1769) has occurred while \output is active []
-
- [15]
-(Report.bbl [16]
-
-Package natbib Warning: Empty `thebibliography' environment on input line 3.
-
-)
-
-Package natbib Warning: There were undefined citations.
-
-[17
+] [15 <./figure/unnamed-chunk-5-1.pdf>]
+[16] (Report.bbl [17]) [18
 
 ] (Report.aux) ) 
 Here is how much of TeX's memory you used:
- 6640 strings out of 493698
- 93810 string characters out of 3144374
- 166614 words of memory out of 3000000
- 9853 multiletter control sequences out of 15000+200000
- 14435 words of font info for 52 fonts, out of 3000000 for 9000
+ 6645 strings out of 493698
+ 94015 string characters out of 3144374
+ 166680 words of memory out of 3000000
+ 9858 multiletter control sequences out of 15000+200000
+ 14266 words of font info for 51 fonts, out of 3000000 for 9000
  1025 hyphenation exceptions out of 8191
  44i,11n,42p,643b,351s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/cm-super/cm-super-
@@ -648,12 +591,11 @@ sfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm
 ram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program File
 s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 
 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Program Files/MiKTeX 2.9/font
-s/type1/public/amsfonts/cm/cmtt12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/
-public/amsfonts/symbols/msbm10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pub
-lic/cm-super/sfrm1200.pfb>
-Output written on Report.pdf (17 pages, 262795 bytes).
+s/type1/public/amsfonts/symbols/msbm10.pfb><C:/Program Files/MiKTeX 2.9/fonts/t
+ype1/public/cm-super/sfrm1200.pfb>
+Output written on Report.pdf (18 pages, 378759 bytes).
 PDF statistics:
- 175 PDF objects out of 1000 (max. 8388607)
+ 181 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
