@@ -1,0 +1,110 @@
+---
+title: "Application of ERGM Count in Network Representation of Football Matches"
+author: "Imaduddin Haetami"
+date: "28/01/2017"
+output: 
+  revealjs::revealjs_presentation:
+    theme: beige
+    center: TRUE
+---
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(fig.align="center",echo=F,warning = F,cache=T,eval =T)
+```
+
+#Specification of ERGM Count
+##Specification of ERGM Count
+- In ERGM Count, an edge can have any of natural numbers and 0 value, such that $y_{ij} \in \mathbb{N}_0$. 
+- The ERGM Count of $\mathbf{Y}$ has Probability Mass Function (PMF) of:  $$Pr_{\mathbf{\theta};h,\eta,g}(\mathbf{Y}=\mathbf{y})=\frac{h(\mathbf{y})\exp(\eta(\mathbf{\theta})\cdot g(\mathbf{y}))}{k_{h,\eta,g}(\mathbf{\theta})}$$
+- Which the denominator is a normalization constant defined as:
+$$k_{h,\eta,g}(\mathbf{\theta}) = \sum_{\mathbf{y} \in \mathcal{Y}}h(\mathbf{y})\exp(\eta(\mathbf{\theta})\cdot g(\mathbf{y}))$$
+
+#Reference Measure and Baseline Distribution
+##Reference Measure and Baseline Distribution (Geometric)
+- Using sufficient statistics, __sum__ : $g(\mathbf{y}) = \sum_{(i,j) \in \mathbb{Y}} y_{ij}$ 
+- Geometric reference measure: $h(\mathbf{y}) = 1$ 
+- The model has PMF:
+$$Pr(\mathbf{Y}=\mathbf{y}|\theta) \propto \exp\left(\theta \sum_{(i,j) \in \mathbb{Y}} y_{ij}\right) = \prod_{(i,j) \in \mathbb{Y}} (\exp(\theta))^{y_{ij}}$$
+- This can be identified as __edge-wise distribution__ $Y_{ij}\stackrel{\text{iid}}{\sim}\text{geometric}(p =1-\exp(\theta))$ where $\theta < 0$
+
+##Reference Measure and Baseline Distribution (Poisson)
+- Using sufficient statistics, __sum__ : $g(\mathbf{y}) = \sum_{(i,j) \in \mathbb{Y}} y_{ij}$
+- Poisson reference measure: $h(\mathbf{y}) = \prod_{(i,j) \in \mathbb{Y}}(y_{ij}!)^{-1}$
+- The model has PMF:
+$$Pr(\mathbf{Y}=\mathbf{y}|\theta) \propto \frac{\exp\left(\theta \sum_{(i,j) \in \mathbb{Y}} y_{ij}\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!} = \prod_{(i,j) \in \mathbb{Y}} \frac{(\exp(\theta))^{y_{ij}}}{y_{ij}!}$$
+- This can be identified as __edge-wise distribution__ $Y_{ij}\stackrel{\text{iid}}{\sim}\text{poisson}(\lambda =\exp(\theta))$ where $\theta \in \mathbb{R}$. 
+
+***
+```{r geom_pois,fig.asp=0.4,fig.cap= "Geometric and Poisson Distribution with Mean = 1.5"}
+geom_pois <- readRDS(paste(getwd(),"/plots/geom_pois",sep=""))
+plot(geom_pois)
+```
+
+#ERGM Count Modelling
+
+
+#Parameter Interpretation
+
+***
+linear ERGM Count, if $\Theta_{N}$ is an open set, then $\theta_{k}^{\prime} >\theta_{k} \implies E(g_k(\bm{Y})|\theta,\theta_k^{\prime})>E(g_k(\bm{Y})|\theta,\theta_k)$. 
+In other words, if other model parameters $\theta \setminus \theta_k$ are fixed, the expected sufficient statistics $g_k$ is strictly increasing in $\theta_k$.
+
+#Poisson Reference Model
+***
+we will focus on \textit{poisson-reference} ERGM Count without complex constraints: $\mathcal{Y} \in \mathcal{N}_0^{\mathcal{Y}}$ and $h(\bm{y}) = \prod_{(i,j) \in \mathbb{Y}}(y_{ij}!)^{-1}$. 
+
+#Exogenous Covariates
+
+***
+$$
+g_k(\bm{y})= \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ijk}
+$$
+
+
+##Exogenous Covariates
+- Let the model sufficient statistics only be exogenous covariate and __sum__
+- the PMF will reduce to:
+$$
+\begin{eqnarray}
+Pr(\bm{Y}=\bm{y}|\theta) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_k \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ijk} \right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
+&= \prod_{(i,j) \in \mathbb{Y}} \frac{(\exp(\theta_1+\theta_k x_{ijk}))^{y_{ij}}}{y_{ij}!}
+\end{eqnarray}
+$$
+- This can be recognised as an __edge-wise distribution__ $Y_{ij}\stackrel{\text{iid}}{\sim}\text{poisson}(\lambda =\exp(\theta_1 + \theta_k x_{ijk}))$
+
+
+##Implementation of Exogenous Covariates
+- __nodeocov__ : the attribute of the actor where the edge originate, $x_{i}$. 
+- __nodeicov__ : the attribute of receiving actor, $x_j$. 
+- __edgecov__ : which represent the external edge attribute, $x_{ij}$.
+
+#Zero Modification
+
+***
+The idea behind zero modification is to move away from the baseline distribution with new PMF that has more accurate representation of its $Pr(Y_{ij}=0)$
+
+***
+$$
+g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \mathbb{I}(y_{ij} > 0)
+$$
+
+##Zero Modification
+- Let the model sufficient statistics only be __nonzero__ and __sum__
+- Then the PMF will reduce to:
+$$
+\begin{eqnarray}
+Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} \mathbb{I}(y_{ij} > 0)\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
+&=\prod_{(i,j) \in \mathbb{Y}} \frac{\exp \left(\theta_1 y_{ij} + \theta_2 \mathbb{I}(y_{ij} > 0)\right)}{y_{ij}!}
+\end{eqnarray}
+$$
+-This can be recognised as independent edge-wise Zero Modified Poisson
+
+***
+```{r, fig.asp=0.5, fig.cap = "Zero Modified Poisson"}
+zero_modified<- readRDS(paste(getwd(),"/plots/zero_modified",sep=""))
+plot(zero_modified)
+```
+
+
+
+
