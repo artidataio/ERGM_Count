@@ -6,17 +6,24 @@ library(ergm)
 library(ergm.count)
 library(xtable)
 
-data_LS <- readRDS(paste(getwd(),"/processed data /geom_pois",sep=""))
+data_LS <- readRDS(paste(getwd(),"/processed data/data_LS",sep=""))
 
 fit_LS <- list()
+coef_LS <- list()
+  
+#Edgewise Models
 
+#model 1 : Poisson
 #fitting Poisson
 set.seed(240193)
 poisson_LS <- list()
+poisson_DT <- data.table()
 for(i in 1:6){
-  training_i <- asNetwork(data_LS[[i]]$igraph)
-  poisson_LS[[i]] <- ergm(training_i~sum(pow=1),
-                          response = "weight",reference = ~Poisson)
+  training <- asNetwork(data_LS[[i]]$igraph)
+  model <- ergm(training~sum(pow=1),
+                response = "weight",reference = ~Poisson)
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  
 }
 fit_LS[["poisson_LS"]]<-poisson_LS
 
