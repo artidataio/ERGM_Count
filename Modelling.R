@@ -14,158 +14,356 @@ coef_LS <- list()
 #Edgewise Models
 
 #model 1 : Poisson
-#fitting Poisson
 set.seed(240193)
-poisson_LS <- list()
-poisson_DT <- data.table()
+LS <- list()
+DT <- data.table()
 for(i in 1:6){
   training <- asNetwork(data_LS[[i]]$igraph)
   model <- ergm(training~sum(pow=1),
                 response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
-  
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
 }
-fit_LS[["poisson_LS"]]<-poisson_LS
+fit_LS[["poisson_LS"]] <- LS
+coef_LS[["poisson_DT"]] <- DT 
 
-#fitting Geometric
+#model 2: nonzero
 set.seed(240193)
-geom_LS <- list()
+LS <- list()
+DT <- data.table()
 for(i in 1:6){
-  training_i <- asNetwork(data_LS[[i]]$igraph)
-  geom_LS[[i]] <- ergm(training_i~sum(pow=1),
-                          response = "weight",reference = ~Geometric)
+  training <- asNetwork(data_LS[[i]]$igraph)
+  model <- ergm(training~sum(pow=1) + nonzero,
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
 }
-fit_LS[["geom_LS"]]<-geom_LS
+fit_LS[["nonzero_LS"]] <- LS
+coef_LS[["nonzero_DT"]] <- DT 
 
-
-#fitting CMP
+#model 3: CMP
 set.seed(240193)
-cmp_LS <- list()
+LS <- list()
+DT <- data.table()
 for(i in 1:6){
-  training_i <- asNetwork(data_LS[[i]]$igraph)
-  cmp_LS[[i]] <- ergm(training_i~
-                        sum(pow=1) + 
-                        CMP,
-                          response = "weight",reference = ~Poisson)
+  training <- asNetwork(data_LS[[i]]$igraph)
+  model <- ergm(training~sum(pow=1) + CMP,
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
 }
-fit_LS[["cmp_LS"]] <- cmp_LS
+fit_LS[["cmp_LS"]] <- LS
+coef_LS[["cmp_DT"]] <- DT 
 
-#fitting nonzero
+#model 4: nodeocov
 set.seed(240193)
-nonzero_LS <- list()
+LS <- list()
+DT <- data.table()
 for(i in 1:6){
-  training_i <- asNetwork(data_LS[[i]]$igraph)
-  nonzero_LS[[i]] <- ergm(training_i~
-                            sum(pow=1) + 
-                            nonzero,
-                          response = "weight",reference = ~Poisson)
+  training <- asNetwork(data_LS[[i]]$igraph)
+  model <- ergm(training~nodeocov("market_value"),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
 }
-fit_LS[["nonzero_LS"]] <- nonzero_LS
+fit_LS[["nodeocov_LS"]] <- LS
+coef_LS[["nodeocov_DT"]] <- DT 
 
-#fitting mutual
-#geomean
+#model 5: nodeicov
 set.seed(240193)
-geomean_LS <- list()
+LS <- list()
+DT <- data.table()
 for(i in 1:6){
-  training_i <- asNetwork(data_LS[[i]]$igraph)
-  geomean_LS[[i]] <- ergm(training_i~
-                              sum(pow=1) + 
-                              mutual("geometric"),
-                            response = "weight",reference = ~Poisson)
+  training <- asNetwork(data_LS[[i]]$igraph)
+  model <- ergm(training~nodeicov("market_value"),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
 }
-fit_LS[["geomean_LS"]] <- geomean_LS
+fit_LS[["nodeicov_LS"]] <- LS
+coef_LS[["nodeicov_DT"]] <- DT 
 
-#minimum
+#model 6: edgecov
 set.seed(240193)
-minimum_LS <- list()
+LS <- list()
+DT <- data.table()
 for(i in 1:6){
-  training_i <- asNetwork(data_LS[[i]]$igraph)
-  minimum_LS[[i]] <- ergm(training_i~
-                            sum(pow=1) + 
-                            mutual("min"),
-                          response = "weight",reference = ~Poisson)
+  training <- asNetwork(data_LS[[i]]$igraph)
+  home_mat <- as.matrix(as_adjacency_matrix(data_LS[[i]]$igraph,attr="home"))
+  model <- ergm(training~ edgecov(home_mat),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
 }
-fit_LS[["minimum_LS"]] <- minimum_LS
+fit_LS[["edgecov_LS"]] <- LS
+coef_LS[["edgecov_DT"]] <- DT 
 
-#nabsdiff
+#model 7: exco
 set.seed(240193)
-nabsdiff_LS <- list()
+LS <- list()
+DT <- data.table()
 for(i in 1:6){
-  training_i <- asNetwork(data_LS[[i]]$igraph)
-  nabsdiff_LS[[i]] <- ergm(training_i~
-                             sum(pow=1) + 
-                             mutual("nabsdiff"),
-                           response = "weight",reference = ~Poisson)
+  training <- asNetwork(data_LS[[i]]$igraph)
+  home_mat <- as.matrix(as_adjacency_matrix(data_LS[[i]]$igraph,attr="home"))
+  model <- ergm(training~ edgecov(home_mat) + nodeocov("market_value") + nodeicov("market_value"),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
 }
-fit_LS[["nabsdiff_LS"]] <- nabsdiff_LS
+fit_LS[["model_7_LS"]] <- LS
+coef_LS[["model_7_DT"]] <- DT 
 
-#fitting transitivity
+#Model 8: exco +sum
 set.seed(240193)
-transitivity_LS <- list()
+LS <- list()
+DT <- data.table()
 for(i in 1:6){
-  training_i <- asNetwork(data_LS[[i]]$igraph)
-  transitivity_LS[[i]] <- ergm(training_i~
-                                 sum(pow=1) + 
-                                 transitiveweights("geomean","sum","geomean"),
-                               response = "weight",reference = ~Poisson)
+  training <- asNetwork(data_LS[[i]]$igraph)
+  home_mat <- as.matrix(as_adjacency_matrix(data_LS[[i]]$igraph,attr="home"))
+  model <- ergm(training~ sum + edgecov(home_mat) + nodeocov("market_value") + nodeicov("market_value"),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
 }
-fit_LS[["transitivity_LS"]] <- transitivity_LS
+fit_LS[["model_8_LS"]] <- LS
+coef_LS[["model_8_DT"]] <- DT 
 
-
-
-#Exogenous Covariate
-exco_LS <- list()
-for(i in 1:6){
-  training_i <- asNetwork(data_LS[[i]]$igraph)
-  exco_LS[[i]] <- ergm(training_i~
-                         sum(pow=1) +
-                         nodeocov("market_value")+
-                         nodeicov("market_value"),
-                       response = "weight",reference = ~Poisson)
-}
-fit_LS[["exco_LS"]] <- exco_LS
-
-
-#Predictive Modelling
-#Best edgewise
+#model 9: exco +nonzero
 set.seed(240193)
-edgewise_LS <- list()
+LS <- list()
+DT <- data.table()
 for(i in 1:6){
-  training_i <- asNetwork(data_LS[[i]]$igraph)
-  edgewise_LS[[i]] <- ergm(training_i~
-                         sum(pow=1) +
-                         nodeocov("market_value")+
-                         nodeicov("market_value"),
-                       response = "weight",reference = ~Poisson)
+  training <- asNetwork(data_LS[[i]]$igraph)
+  home_mat <- as.matrix(as_adjacency_matrix(data_LS[[i]]$igraph,attr="home"))
+  model <- ergm(training~ nonzero + edgecov(home_mat) + nodeocov("market_value") + nodeicov("market_value"),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
 }
-fit_LS[["edgewise_LS"]] <- edgewise_LS
+fit_LS[["model_9_LS"]] <- LS
+coef_LS[["model_9_DT"]] <- DT 
 
-#Best edgewise
+#model 10: exco + cmp
 set.seed(240193)
-pairwise_LS <- list() 
+LS <- list()
+DT <- data.table()
 for(i in 1:6){
-  training_i <- asNetwork(data_LS[[i]]$igraph)
-  pairwise_LS[[i]] <- ergm(training_i~
-                             sum(pow=1) +
-                             nodeocov("market_value")+
-                             nodeicov("market_value")+
-                             mutual("nabsdiff"),
-                           response = "weight",reference = ~Poisson)
+  training <- asNetwork(data_LS[[i]]$igraph)
+  home_mat <- as.matrix(as_adjacency_matrix(data_LS[[i]]$igraph,attr="home"))
+  model <- ergm(training~ CMP + edgecov(home_mat) + nodeocov("market_value") + nodeicov("market_value"),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
 }
-fit_LS[["pairwise_LS"]] <- pairwise_LS 
+fit_LS[["model_10_LS"]] <- LS
+coef_LS[["model_10_DT"]] <- DT 
+
+#model 11: exco + cmp + nonzero
+set.seed(240193)
+LS <- list()
+DT <- data.table()
+for(i in 1:6){
+  training <- asNetwork(data_LS[[i]]$igraph)
+  home_mat <- as.matrix(as_adjacency_matrix(data_LS[[i]]$igraph,attr="home"))
+  model <- ergm(training~ nonzero + CMP + edgecov(home_mat) + nodeocov("market_value") + nodeicov("market_value"),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
+}
+fit_LS[["model_11_LS"]] <- LS
+coef_LS[["model_11_DT"]] <- DT 
 
 
-saveRDS(fit_LS,"fit_LS")
+#model 12: nabsdiff
+set.seed(240193)
+LS <- list()
+DT <- data.table()
+for(i in 1:6){
+  training <- asNetwork(data_LS[[i]]$igraph)
+  model <- ergm(training~sum(pow=1) + mutual("nabsdiff"),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
+}
+fit_LS[["nabsdiff_LS"]] <- LS
+coef_LS[["nabsdiff_DT"]] <- DT 
+
+#model 13: minimum
+set.seed(240193)
+LS <- list()
+DT <- data.table()
+for(i in 1:6){
+  training <- asNetwork(data_LS[[i]]$igraph)
+  model <- ergm(training~sum(pow=1) + mutual("min"),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
+}
+fit_LS[["min_LS"]] <- LS
+coef_LS[["min_DT"]] <- DT 
+
+#model 14: geometric
+set.seed(240193)
+LS <- list()
+DT <- data.table()
+for(i in 1:6){
+  training <- asNetwork(data_LS[[i]]$igraph)
+  model <- ergm(training~sum(pow=1) + mutual("geometric"),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
+}
+fit_LS[["geometric_LS"]] <- LS
+coef_LS[["geometric_DT"]] <- DT 
+
+#model 15: exco+mutual 
+set.seed(240193)
+LS <- list()
+DT <- data.table()
+for(i in 1:6){
+  training <- asNetwork(data_LS[[i]]$igraph)
+  home_mat <- as.matrix(as_adjacency_matrix(data_LS[[i]]$igraph,attr="home"))
+  model <- ergm(training~ mutual("nabsdiff")+edgecov(home_mat) + nodeocov("market_value") + nodeicov("market_value"),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
+}
+fit_LS[["model_15_LS"]] <- LS
+coef_LS[["model_15_DT"]] <- DT 
+
+#model 16: exco+mutual + nonzero
+set.seed(240193)
+LS <- list()
+DT <- data.table()
+for(i in 1:6){
+  training <- asNetwork(data_LS[[i]]$igraph)
+  home_mat <- as.matrix(as_adjacency_matrix(data_LS[[i]]$igraph,attr="home"))
+  model <- ergm(training~ nonzero+mutual("nabsdiff")+edgecov(home_mat) + nodeocov("market_value") + nodeicov("market_value"),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
+}
+fit_LS[["model_16_LS"]] <- LS
+coef_LS[["model_16_DT"]] <- DT 
+
+#model 17: exco +mutual +cmp
+set.seed(240193)
+LS <- list()
+DT <- data.table()
+for(i in 1:6){
+  training <- asNetwork(data_LS[[i]]$igraph)
+  home_mat <- as.matrix(as_adjacency_matrix(data_LS[[i]]$igraph,attr="home"))
+  model <- ergm(training~ CMP +mutual("nabsdiff")+edgecov(home_mat) + nodeocov("market_value") + nodeicov("market_value"),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
+}
+fit_LS[["model_17_LS"]] <- LS
+coef_LS[["model_17_DT"]] <- DT 
+
+#model 18: exco + mutual +nonzero +cmp
+set.seed(240193)
+LS <- list()
+DT <- data.table()
+for(i in 1:6){
+  training <- asNetwork(data_LS[[i]]$igraph)
+  home_mat <- as.matrix(as_adjacency_matrix(data_LS[[i]]$igraph,attr="home"))
+  model <- ergm(training~ CMP +mutual("nabsdiff")+edgecov(home_mat) + nodeocov("market_value") + nodeicov("market_value"),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
+}
+fit_LS[["model_18_LS"]] <- LS
+coef_LS[["model_18_DT"]] <- DT 
+
+#model 19: transitivity
+set.seed(240193)
+LS <- list()
+DT <- data.table()
+for(i in 1:6){
+  training <- asNetwork(data_LS[[i]]$igraph)
+  model <- ergm(training~sum(pow=1) + transitiveweights("min","max","min"),
+                response = "weight",reference = ~Poisson)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
+}
+fit_LS[["transitivity_LS"]] <- LS
+coef_LS[["transitivity_DT"]] <- DT 
+
+#model 20: geometric
+set.seed(240193)
+LS <- list()
+DT <- data.table()
+for(i in 1:6){
+  training <- asNetwork(data_LS[[i]]$igraph)
+  model <- ergm(training~sum(pow=1),
+                response = "weight",reference = ~Geometric)
+  LS[[i]] <- model 
+  coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
+  setnames(coef_DT, "rn", "parameter")
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  DT <- rbind(DT,coef_DT)
+}
+fit_LS[["geometric_LS"]] <- LS
+coef_LS[["geometric_DT"]] <- DT 
 
 
-
-
-
-
-estimate <- unlist(lapply(poisson_LS, function(x){x$coef}),use.names = F)
-standard_error <- unlist(lapply(poisson_LS, function(x){sqrt(x$covar[1,1])}),use.names = F)
-parameter <- unlist(lapply(poisson_LS, function(x){names(x$coef)}),use.names = F)
-model <- paste(rep("fit",6),1:6)
-type <- c(rep("estimate",6),rep("standard error",6))
-table_DT <- data.table(model,parameter,type,value = c(estimate,standard_error))
-
+saveRDS(fit_LS,paste(getwd(),"/processed data/fit_LS",sep=""))
+saveRDS(coef_LS,paste(getwd(),"/processed data/coef_LS",sep=""))
