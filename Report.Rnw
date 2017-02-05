@@ -189,7 +189,7 @@ g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)
 When only sufficient statistics use in the model is \textit{\textbf{sum}} and \textit{\textbf{CMP}} with poisson reference, the PMF:
 \begin{align*}
 Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
-&\propto \prod_{(i,j) \in \mathbb{Y}} (\exp(\theta_1))^{y_{ij}} (y_{ij}!)^{\theta_1-1}
+&\propto \prod_{(i,j) \in \mathbb{Y}} (\exp(\theta_1))^{y_{ij}} (y_{ij}!)^{\theta_2-1}
 \end{align*}
 Hence the model reduced to edge-wise \textit{Conway-Maxwell-Poisson} \textit{\textbf{CMP}} distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{CMP}(\lambda =\exp(\theta_1),\nu = 1-\theta_2)$ where $\theta_2 \le 1$. When $\theta_2$ goes from 0 to $-\infty$, the distribution become less and less dispersed compare to Poisson. When $\theta_2 \to -\infty$, it is reduced to Bernoulli Distribution. Whereas if as $\theta_2$ from 0 to 1, the distribution is more dispersed compare to Poisson. It is reduced  to Geometric Distribution at $\theta_2=1$. Figure ... will illustrate the various shapes of CMP distribution.
 
@@ -351,12 +351,23 @@ legend(x=.95, y=1.3, legend=0:8,lwd=0.5*(0:8), cex = 1,
        y.intersp = 1,bty ="n",title= "Goals(Away)")
 #making the legend of the circle is hard
 @
-\caption [Graph Representation of a Football League]{This is the graph representation of the first half of EPL 2015-2016. The red circles denote the 20 teams that are participating. Its size corresponds to the average market value of the players in the team. The bigger the circle, the average price of the players is higher. The color of the arrow arrow represents total goal scored by the team it orginates from, to the team pointed by the arrow head. The darker the color, the more goals scored in the match. Note that zero total goals scored are omitted.}
-\label{fig:EPL2015}
+\caption [Graph Representation of a Football League]{This is the graph representation of the dataset used. The circles denote the 20 teams that are participating. The participating teams vary annually. The size of the circles corresponds to the average market value of the players in the team. The bigger the circle, the average price of the players is higher. The arrow represents the goal scored by the team it orginates from, to the team pointed by the arrow head. The green hue indicates the scoring team is playing at home stadium. Whereas the red hue shows the goal scored in opponent stadium. The intensity of the color represents the total goal scored. The higher intensity of the color, the more goals were scored.}
+\label{fig: EPL}
 \end{figure}
 
 
-\newpage
+%This is for the igraph figure
+<<>>=
+library(igraph)
+library(scales)
+library(RColorBrewer)
+
+radian.rescale <- function(x, start=0, direction=1) {
+  c.rotate <- function(x) (x + start) %% (2 * pi) * direction
+  c.rotate(scales::rescale(x, c(0, 2 * pi), range(x)))
+}
+@
+
 \begin{figure}[H] % "[t!]" placement specifier just for this example
 
 \hspace*{\fill}
@@ -379,7 +390,7 @@ plot(data_igraph,
      edge.lty =1,
      edge.width=0.5*E(data_igraph)$weight)
 @
-\caption{First subfigure} \label{fig:a}
+\caption{\Sexpr{paste(data_LS[[1]]$name,"1st Half",sep = ", ")}}
 \end{subfigure}\hspace*{\fill}
 \begin{subfigure}{0.40\textwidth}
 <<>>=
@@ -402,7 +413,7 @@ plot(data_igraph,
      edge.width=0.5*E(data_igraph)$weight)
 
 @
-\caption{Second subfigure} \label{fig:b}
+\caption{\Sexpr{paste(data_LS[[2]]$name,"2nd Half",sep = ", ")}} 
 \end{subfigure}
 \hspace*{\fill}
 
@@ -427,7 +438,7 @@ plot(data_igraph,
      edge.lty =1,
      edge.width=0.5*E(data_igraph)$weight)
 @
-\caption{Third subfigure} \label{fig:c}
+\caption{\Sexpr{paste(data_LS[[3]]$name,"1st Half",sep = ", ")}}
 \end{subfigure}\hspace*{\fill}
 \begin{subfigure}{0.4\textwidth}
 <<>>=
@@ -450,7 +461,7 @@ plot(data_igraph,
      edge.width=0.5*E(data_igraph)$weight)
 
 @
-\caption{Fourth subfigure} \label{fig:d}
+\caption{\Sexpr{paste(data_LS[[4]]$name,"2nd Half",sep = ", ")}} 
 \end{subfigure}
 \hspace*{\fill}
 
@@ -476,7 +487,7 @@ plot(data_igraph,
      edge.width=0.5*E(data_igraph)$weight)
 
 @
-\caption{Fifth subfigure} \label{fig:e}
+\caption{\Sexpr{paste(data_LS[[5]]$name,"1st Half",sep = ", ")}}
 \end{subfigure}\hspace*{\fill}
 \begin{subfigure}{0.40\textwidth}
 <<>>=
@@ -499,11 +510,11 @@ plot(data_igraph,
      edge.width=0.5*E(data_igraph)$weight)
 
 @
-\caption{Sixth subfigure} \label{fig:f}
+\caption{\Sexpr{paste(data_LS[[6]]$name,"2nd Half",sep = ", ")}}
 \end{subfigure}
 \hspace*{\fill}
  
-\caption{My complicated figure} \label{fig:1}
+\caption [Graph Representation of a Football League]{This is the graph representation of the dataset used. The circles denote the 20 teams that are participating. The teams participating vary annually. Its size corresponds to the average market value of the players in the team. The bigger the circle, the average price of the players is higher. The arrow represents the goal scored by the team it orginates from, to the team pointed by the arrow head. The green hue indicates the scoring team is playing at home stadium. Whereas the red hue shows the goal scored in opponent stadium. The intensity of the color represents the total goals scored. The higher intensity of the color, the more goals were scored.} \label{fig:1}
 \end{figure}
 
 The interpretation of sufficient statistics will differs significantly from Krivistky's examples. 
