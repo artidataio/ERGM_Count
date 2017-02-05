@@ -9,7 +9,7 @@ output:
 ---
 
 ```{r, echo=FALSE}
-knitr::opts_chunk$set(fig.align="center",echo=F,warning = F,cache=T,eval =T)
+knitr::opts_chunk$set(fig.align="center",echo=F,warning = F,cache=F,eval =T)
 ```
 
 #Specification of ERGM Count

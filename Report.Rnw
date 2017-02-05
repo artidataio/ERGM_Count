@@ -378,13 +378,6 @@ plot(data_igraph,
      edge.curved = 0.1,
      edge.lty =1,
      edge.width=0.5*E(data_igraph)$weight)
-legend(x=-1.40, y=1.3, legend=0:8,lwd=0.5*(0:8), cex =1,
-       col = c("white",brewer.pal(8,"Greens")),
-       y.intersp = 1,bty = "n",title="Goals(Home)")
-
-legend(x=.95, y=1.3, legend=0:8,lwd=0.5*(0:8), cex = 1,
-       col = c("white",brewer.pal(8,"Reds")),
-       y.intersp = 1,bty ="n",title= "Goals(Away)")
 @
 \caption{First subfigure} \label{fig:a}
 \end{subfigure}\hspace*{\fill}
@@ -408,13 +401,6 @@ plot(data_igraph,
      edge.lty =1,
      edge.width=0.5*E(data_igraph)$weight)
 
-legend(x=-1.40, y=1.3, legend=0:8,lwd=0.5*(0:8), cex =1,
-       col = c("white",brewer.pal(8,"Greens")),
-       y.intersp = 1,bty = "n",title="Goals(Home)")
-
-legend(x=.95, y=1.3, legend=0:8,lwd=0.5*(0:8), cex = 1,
-       col = c("white",brewer.pal(8,"Reds")),
-       y.intersp = 1,bty ="n",title= "Goals(Away)")
 @
 \caption{Second subfigure} \label{fig:b}
 \end{subfigure}
@@ -440,13 +426,6 @@ plot(data_igraph,
      edge.curved = 0.1,
      edge.lty =1,
      edge.width=0.5*E(data_igraph)$weight)
-legend(x=-1.40, y=1.3, legend=0:8,lwd=0.5*(0:8), cex =1,
-       col = c("white",brewer.pal(8,"Greens")),
-       y.intersp = 1,bty = "n",title="Goals(Home)")
-
-legend(x=.95, y=1.3, legend=0:8,lwd=0.5*(0:8), cex = 1,
-       col = c("white",brewer.pal(8,"Reds")),
-       y.intersp = 1,bty ="n",title= "Goals(Away)")
 @
 \caption{Third subfigure} \label{fig:c}
 \end{subfigure}\hspace*{\fill}
@@ -469,13 +448,7 @@ plot(data_igraph,
      edge.curved = 0.1,
      edge.lty =1,
      edge.width=0.5*E(data_igraph)$weight)
-legend(x=-1.40, y=1.3, legend=0:8,lwd=0.5*(0:8), cex =1,
-       col = c("white",brewer.pal(8,"Greens")),
-       y.intersp = 1,bty = "n",title="Goals(Home)")
 
-legend(x=.95, y=1.3, legend=0:8,lwd=0.5*(0:8), cex = 1,
-       col = c("white",brewer.pal(8,"Reds")),
-       y.intersp = 1,bty ="n",title= "Goals(Away)")
 @
 \caption{Fourth subfigure} \label{fig:d}
 \end{subfigure}
@@ -501,13 +474,7 @@ plot(data_igraph,
      edge.curved = 0.1,
      edge.lty =1,
      edge.width=0.5*E(data_igraph)$weight)
-legend(x=-1.40, y=1.3, legend=0:8,lwd=0.5*(0:8), cex =1,
-       col = c("white",brewer.pal(8,"Greens")),
-       y.intersp = 1,bty = "n",title="Goals(Home)")
 
-legend(x=.95, y=1.3, legend=0:8,lwd=0.5*(0:8), cex = 1,
-       col = c("white",brewer.pal(8,"Reds")),
-       y.intersp = 1,bty ="n",title= "Goals(Away)")
 @
 \caption{Fifth subfigure} \label{fig:e}
 \end{subfigure}\hspace*{\fill}
@@ -530,13 +497,7 @@ plot(data_igraph,
      edge.curved = 0.1,
      edge.lty =1,
      edge.width=0.5*E(data_igraph)$weight)
-legend(x=-1.40, y=1.3, legend=0:8,lwd=0.5*(0:8), cex =1,
-       col = c("white",brewer.pal(8,"Greens")),
-       y.intersp = 1,bty = "n",title="Goals(Home)")
 
-legend(x=.95, y=1.3, legend=0:8,lwd=0.5*(0:8), cex = 1,
-       col = c("white",brewer.pal(8,"Reds")),
-       y.intersp = 1,bty ="n",title= "Goals(Away)")
 @
 \caption{Sixth subfigure} \label{fig:f}
 \end{subfigure}

@@ -241,7 +241,7 @@ for(i in 1:6){
 fit_LS[["min_LS"]] <- LS
 coef_LS[["min_DT"]] <- DT 
 
-#model 14: geometric
+#model 14: geomean
 set.seed(240193)
 LS <- list()
 DT <- data.table()
@@ -255,8 +255,8 @@ for(i in 1:6){
   coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
   DT <- rbind(DT,coef_DT)
 }
-fit_LS[["geometric_LS"]] <- LS
-coef_LS[["geometric_DT"]] <- DT 
+fit_LS[["geomean_LS"]] <- LS
+coef_LS[["geomean_DT"]] <- DT 
 
 #model 15: exco+mutual 
 set.seed(240193)
