@@ -1,0 +1,173 @@
+\documentclass[12pt,a4paper,twoside,openany]{article}
+\usepackage{subcaption}
+\usepackage[margin=48pt]{geometry}
+
+<<echo=F >>=
+  opts_chunk$set(fig.align="center",echo=F,cache=F,eval = T,warning=F,message=F)
+  data_LS <- readRDS(paste(getwd(),"/processed data/data_LS",sep=""))
+@
+
+\begin{document}
+<<>>=
+library(igraph)
+library(scales)
+library(RColorBrewer)
+
+radian.rescale <- function(x, start=0, direction=1) {
+  c.rotate <- function(x) (x + start) %% (2 * pi) * direction
+  c.rotate(scales::rescale(x, c(0, 2 * pi), range(x)))
+}
+@
+
+\begin{figure}[H] % "[t!]" placement specifier just for this example
+
+\hspace*{\fill}
+\begin{subfigure}{0.40\textwidth}
+<<>>=
+data_igraph <- data_LS[[1]]$igraph
+par(mfrow = c(1,1),mar=c(3, 3, 3, 3))
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
+     vertex.label.dist=0.8,
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
+     vertex.frame.color="NA",
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
+     edge.curved = 0.1,
+     edge.lty =1,
+     edge.width=0.5*E(data_igraph)$weight)
+@
+\caption{\Sexpr{paste(data_LS[[1]]$name,"1st Half",sep = ", ")}}
+\end{subfigure}\hspace*{\fill}
+\begin{subfigure}{0.40\textwidth}
+<<>>=
+par(mfrow = c(1,1),mar=c(3, 3, 3, 3))
+data_igraph <- data_LS[[2]]$igraph
+
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
+     vertex.label.dist=0.8,
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
+     vertex.frame.color="NA",
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
+     edge.curved = 0.1,
+     edge.lty =1,
+     edge.width=0.5*E(data_igraph)$weight)
+
+@
+\caption{\Sexpr{paste(data_LS[[2]]$name,"2nd Half",sep = ", ")}} 
+\end{subfigure}
+\hspace*{\fill}
+
+\hspace*{\fill}
+\begin{subfigure}{0.40\textwidth}
+<<>>=
+par(mfrow = c(1,1),mar=c(3, 3, 3, 3))
+data_igraph <- data_LS[[3]]$igraph
+
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
+     vertex.label.dist=0.8,
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
+     vertex.frame.color="NA",
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
+     edge.curved = 0.1,
+     edge.lty =1,
+     edge.width=0.5*E(data_igraph)$weight)
+@
+\caption{\Sexpr{paste(data_LS[[3]]$name,"1st Half",sep = ", ")}}
+\end{subfigure}\hspace*{\fill}
+\begin{subfigure}{0.4\textwidth}
+<<>>=
+par(mfrow = c(1,1),mar=c(3, 3, 3, 3))
+data_igraph <- data_LS[[2]]$igraph
+
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
+     vertex.label.dist=0.8,
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
+     vertex.frame.color="NA",
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
+     edge.curved = 0.1,
+     edge.lty =1,
+     edge.width=0.5*E(data_igraph)$weight)
+
+@
+\caption{\Sexpr{paste(data_LS[[4]]$name,"2nd Half",sep = ", ")}} 
+\end{subfigure}
+\hspace*{\fill}
+
+\hspace*{\fill}
+\begin{subfigure}{0.40\textwidth}
+<<>>=
+par(mfrow = c(1,1),mar=c(3, 3, 3, 3))
+data_igraph <- data_LS[[5]]$igraph
+
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
+     vertex.label.dist=0.8,
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
+     vertex.frame.color="NA",
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
+     edge.curved = 0.1,
+     edge.lty =1,
+     edge.width=0.5*E(data_igraph)$weight)
+
+@
+\caption{\Sexpr{paste(data_LS[[5]]$name,"1st Half",sep = ", ")}}
+\end{subfigure}\hspace*{\fill}
+\begin{subfigure}{0.40\textwidth}
+<<>>=
+par(mfrow = c(1,1),mar=c(3, 3, 3, 3))
+data_igraph <- data_LS[[6]]$igraph
+
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
+     vertex.label.dist=0.8,
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
+     vertex.frame.color="NA",
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
+     edge.curved = 0.1,
+     edge.lty =1,
+     edge.width=0.5*E(data_igraph)$weight)
+
+@
+\caption{\Sexpr{paste(data_LS[[6]]$name,"2nd Half",sep = ", ")}}
+\end{subfigure}
+\hspace*{\fill}
+ 
+\caption [Graph Representation of a Football League]{This is the graph representation of the dataset used. The circles denote the 20 teams that are participating. The teams participating vary annually. Its size corresponds to the average market value of the players in the team. The bigger the circle, the average price of the players is higher. The arrow represents the goal scored by the team it orginates from, to the team pointed by the arrow head. The green hue indicates the scoring team is playing at home stadium. Whereas the red hue shows the goal scored in opponent stadium. The intensity of the color represents the total goals scored. The higher intensity of the color, the more goals were scored.} \label{fig:1}
+\end{figure}
+
+
+
+\end{document}

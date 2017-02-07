@@ -1,7 +1,7 @@
 ---
-title: "Application of ERGM Count in Network Representation of Football Matches"
-author: "Imaduddin Haetami"
-date: "28/01/2017"
+title: "<small>Application of ERGM Count in Network Representation of Football Matches</small>"
+author: "<small>Imaduddin Haetami</small>"
+date: "<small>09/02/2017</small>"
 output: 
   revealjs::revealjs_presentation:
     theme: white
@@ -19,9 +19,15 @@ table_LS <- readRDS(paste(getwd(),"/processed data/table_LS",sep=""))
 
 ***
 - In ERGM Count, an edge can have any value of natural numbers including zero, such that $y_{ij} \in \mathbb{N}_0$. 
-- The ERGM Count of $\mathbf{Y}$ has Probability Mass Function (PMF) of:  $$Pr_{\mathbf{\theta};h,\eta,g}(\mathbf{Y}=\mathbf{y})=\frac{h(\mathbf{y})\exp(\eta(\mathbf{\theta})\cdot g(\mathbf{y}))}{k_{h,\eta,g}(\mathbf{\theta})}$$
+- The ERGM Count of $\mathbf{Y}$ has Probability Mass Function (PMF) of: 
+$$
+Pr_{\mathbf{\theta};h,\eta,g}(\mathbf{Y}=\mathbf{y})=\frac{h(\mathbf{y})\exp(\eta(\mathbf{\theta})\cdot g(\mathbf{y}))}{k_{h,\eta,g}(\mathbf{\theta})}
+$$
 - Which the denominator is a normalization constant defined as:
-$$k_{h,\eta,g}(\mathbf{\theta}) = \sum_{\mathbf{y} \in \mathcal{Y}}h(\mathbf{y})\exp(\eta(\mathbf{\theta})\cdot g(\mathbf{y}))$$
+$$
+k_{h,\eta,g}(\mathbf{\theta}) = \sum_{\mathbf{y} \in \mathcal{Y}}h(\mathbf{y})\exp(\eta(\mathbf{\theta})\cdot g(\mathbf{y}))
+$$
+
 
 #Reference Measure and Baseline Distribution
 
@@ -79,16 +85,19 @@ $$
 ***
 - Let the model sufficient statistics only be exogenous covariate and __sum__
 - the PMF will reduce to:
+<small>
 $$
 \begin{eqnarray}
 Pr(\bm{Y}=\bm{y}|\theta) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_k \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ijk} \right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
 &= \prod_{(i,j) \in \mathbb{Y}} \frac{(\exp(\theta_1+\theta_k x_{ijk}))^{y_{ij}}}{y_{ij}!}
 \end{eqnarray}
 $$
+</small>
 - This can be recognised as an __edge-wise distribution__ $Y_{ij}\stackrel{\text{iid}}{\sim}\text{poisson}(\lambda =\exp(\theta_1 + \theta_k x_{ijk}))$
 
 
-##Implementation of Exogenous Covariates
+#Implementation of Exogenous Covariates
+---
 - __nodeocov__ : the attribute of the actor where the edge originate, $x_{i}$. 
 - __nodeicov__ : the attribute of receiving actor, $x_j$. 
 - __edgecov__ : which represent the external edge attribute, $x_{ij}$.
@@ -124,12 +133,14 @@ __nonzero__: $g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \mathbb{I}(y_{ij} > 0)$
 ***
 - Let the model sufficient statistics only be __nonzero__ and __sum__
 - Then the PMF will reduce to:
+<small>
 $$
 \begin{eqnarray}
 Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} \mathbb{I}(y_{ij} > 0)\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
 &=\prod_{(i,j) \in \mathbb{Y}} \frac{\exp \left(\theta_1 y_{ij} + \theta_2 \mathbb{I}(y_{ij} > 0)\right)}{y_{ij}!}
 \end{eqnarray}
 $$
+</small>
 - This can be recognised as independent edge-wise Zero Modified Poisson
 
 ***
@@ -157,12 +168,14 @@ __CMP__: $g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)$
 ***
 - Let the model sufficient statistics only be __CMP__ and __sum__
 - Then the PMF will reduce to:
+<small>
 $$
 \begin{eqnarray}
 Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
 &\propto \prod_{(i,j) \in \mathbb{Y}} (\exp(\theta_1))^{y_{ij}} (y_{ij}!)^{\theta_2-1}
 \end{eqnarray}
 $$
+</small>
 - Hence the model reduced to edge-wise _Conway-Maxwell-Poisson_ __CMP__ distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{CMP}(\lambda =\exp(\theta_1),\nu = 1-\theta_2)$ where $\theta_2 \le 1$.
 
 ***
@@ -175,3 +188,81 @@ plot(cmp)
 ```{r, results='asis'}
 print(table_LS$cmp,type="html")
 ```
+#Mutuality
+
+***
+The previous sections discussed the various models that has independent edge-wise assumption. However, fitting network data to independent edge-wise model will undermine the inherent relational characteristic of network properties. 
+
+***
+Addition of mutuality will reduce to model with independent pair-wise distribution
+
+***
+```{r,fig.asp=0.5}
+mutual<- readRDS(paste(getwd(),"/plots/mutual",sep=""))
+plot(mutual)
+```
+
+
+#Mininmum
+
+***
+__mutual(min)__: $g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})$
+
+***
+- Let the model sufficient statistics only be __mutual(min)__ and __sum__
+- Then the PMF will reduce to:
+<small>
+$$
+\begin{eqnarray}
+Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_{2}\sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
+&= \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y},i<j} (y_{ij}+y_{ji}) + \theta_{2}\sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})\right)}{\prod_{(i,j) \in \mathbb{Y},i<j}y_{ij}!y_{ji}!}\\
+&= \prod_{(i,j) \in \mathbb{Y},i<j} \frac{\exp(\theta_1(y_{ij}+y_{ji})+\theta_2 \min(y_{ij},y_{ji}))}{y_{ij}!y_{ji}!}
+\end{eqnarray}
+$$
+</small>
+- the joint distribution of $(Y_{ij},Y_{ji})$ has PMF:
+<small>
+$$
+\begin{eqnarray}
+P(Y_{ij}=y_{ij},Y_{ji}=y_{ji}|\theta_1,\theta_2) \propto \frac{\exp(\theta_1(y_{ij}+y_{ji})+\theta_2 \min(y_{ij},y_{ji}))}{y_{ij}!y_{ji}!}
+\end{eqnarray}
+$$
+</small>
+
+***
+```{r, results='asis'}
+print(table_LS$min,type="html")
+```
+
+#Negative Absolute Difference
+
+***
+__mutual(nabsdiff)__: $g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} -|y_{ij} - y_{ji}|$
+
+***
+- Let the model sufficient statistics only be __mutual(nabsdiff)__ and __sum__
+- Then the PMF will reduce to:
+$$
+Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) - \theta_2 |y_{ij}-y_{ji}|)}{y_{ij}!y_{ji}!} 
+$$
+
+***
+```{r, results='asis'}
+print(table_LS$nabsdiff,type="html")
+```
+
+#Geometric Mean
+__mutual(geomean)__: $g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \sqrt{y_{ij}}\sqrt{y_{ji}}$
+
+***
+- Let the model sufficient statistics only be __mutual(nabsdiff)__ and __sum__
+- Then the PMF will reduce to:
+$$
+Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) - \theta_2 |y_{ij}-y_{ji}|)}{y_{ij}!y_{ji}!} 
+$$
+
+***
+```{r, results='asis'}
+print(table_LS$geomean,type="html")
+```
+
