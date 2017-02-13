@@ -1,14 +1,21 @@
-#Best model choice for each training data
-edgewise_aic <- NULL
+library(data.table)
+
+fit_LS <- readRDS(paste(getwd(),"/processed data/fit_LS",sep=""))
+fit_LS$transitivity_LS 
+fit_LS$geometric_LS <- NULL#Best model choice for each training data
+
+aic_DT <- data.table()
 model_name <- NULL
+
+
 for(name in names(fit_LS)){
   coef_name <- gsub("\\..*$", "",names(fit_LS[[name]][[1]]$coef))
   model <- paste(coef_name,collapse=" + ")
   model_name <- c(model_name,model)
   aic <- lapply(fit_LS[[name]],AIC)
-  edgewise_aic <- rbind(edgewise_aic,unlist(aic)) 
+  aic_DT <- rbind(aic_DT,unlist(aic)) 
 }
-edgewise_aic_DT <- data.table(edgewise_aic)
+
 colnames(edgewise_aic_DT) <- paste("data",1:6,sep="_")
 edgewise_aic_DT <- cbind(model_name,edgewise_aic_DT)
 

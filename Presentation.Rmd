@@ -72,13 +72,13 @@ print(table_LS$poisson,type="html")
 
 #Poisson Reference Model
 ***
-we will focus on \textit{poisson-reference} ERGM Count without complex constraints: $\mathcal{Y} \in \mathcal{N}_0^{\mathcal{Y}}$ and $h(\bm{y}) = \prod_{(i,j) \in \mathbb{Y}}(y_{ij}!)^{-1}$. 
+we will focus on \textit{poisson-reference} ERGM Count without complex constraints: $\mathcal{Y} \in \mathcal{N}_0^{\mathcal{Y}}$ and $h(\mathbf{y}) = \prod_{(i,j) \in \mathbb{Y}}(y_{ij}!)^{-1}$. 
 
 #Exogenous Covariates
 
 ***
 $$
-g_k(\bm{y})= \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ijk}
+g_k(\mathbf{y})= \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ijk}
 $$
 
 
@@ -88,7 +88,7 @@ $$
 <small>
 $$
 \begin{eqnarray}
-Pr(\bm{Y}=\bm{y}|\theta) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_k \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ijk} \right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
+Pr(\mathbf{Y}=\mathbf{y}|\theta) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_k \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ijk} \right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
 &= \prod_{(i,j) \in \mathbb{Y}} \frac{(\exp(\theta_1+\theta_k x_{ijk}))^{y_{ij}}}{y_{ij}!}
 \end{eqnarray}
 $$
@@ -96,7 +96,9 @@ $$
 - This can be recognised as an __edge-wise distribution__ $Y_{ij}\stackrel{\text{iid}}{\sim}\text{poisson}(\lambda =\exp(\theta_1 + \theta_k x_{ijk}))$
 
 
+
 #Implementation of Exogenous Covariates
+
 ---
 - __nodeocov__ : the attribute of the actor where the edge originate, $x_{i}$. 
 - __nodeicov__ : the attribute of receiving actor, $x_j$. 
@@ -128,7 +130,7 @@ print(table_LS$model_8,type="html")
 The idea behind zero modification is to move away from the baseline distribution with new PMF that has more accurate representation of its $Pr(Y_{ij}=0)$
 
 ***
-__nonzero__: $g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \mathbb{I}(y_{ij} > 0)$
+__nonzero__: $g(\mathbf{y}) = \sum_{(i,j) \in \mathbb{Y}} \mathbb{I}(y_{ij} > 0)$
 
 ***
 - Let the model sufficient statistics only be __nonzero__ and __sum__
@@ -136,7 +138,7 @@ __nonzero__: $g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \mathbb{I}(y_{ij} > 0)$
 <small>
 $$
 \begin{eqnarray}
-Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} \mathbb{I}(y_{ij} > 0)\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
+Pr(\mathbf{Y}=\mathbf{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} \mathbb{I}(y_{ij} > 0)\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
 &=\prod_{(i,j) \in \mathbb{Y}} \frac{\exp \left(\theta_1 y_{ij} + \theta_2 \mathbb{I}(y_{ij} > 0)\right)}{y_{ij}!}
 \end{eqnarray}
 $$
@@ -163,7 +165,7 @@ print(table_LS$nonzero,type="html")
 Poisson distribution has only 1 parameter that affect the distribution. This parameter found to affect the mean and the spread of the distribution. For one particular value of mean, there is only one particular spread poisson can attain. In other words, the spread is fixed and not adjustable. 
 
 ***
-__CMP__: $g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)$
+__CMP__: $g(\mathbf{y}) = \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)$
 
 ***
 - Let the model sufficient statistics only be __CMP__ and __sum__
@@ -171,7 +173,7 @@ __CMP__: $g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)$
 <small>
 $$
 \begin{eqnarray}
-Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
+Pr(\mathbf{Y}=\mathbf{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
 &\propto \prod_{(i,j) \in \mathbb{Y}} (\exp(\theta_1))^{y_{ij}} (y_{ij}!)^{\theta_2-1}
 \end{eqnarray}
 $$
@@ -203,10 +205,10 @@ plot(mutual)
 ```
 
 
-#Mininmum
+#Minimum
 
 ***
-__mutual(min)__: $g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})$
+__mutual(min)__: $g(\mathbf{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})$
 
 ***
 - Let the model sufficient statistics only be __mutual(min)__ and __sum__
@@ -214,7 +216,7 @@ __mutual(min)__: $g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})$
 <small>
 $$
 \begin{eqnarray}
-Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_{2}\sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
+Pr(\mathbf{Y}=\mathbf{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_{2}\sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
 &= \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y},i<j} (y_{ij}+y_{ji}) + \theta_{2}\sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})\right)}{\prod_{(i,j) \in \mathbb{Y},i<j}y_{ij}!y_{ji}!}\\
 &= \prod_{(i,j) \in \mathbb{Y},i<j} \frac{\exp(\theta_1(y_{ij}+y_{ji})+\theta_2 \min(y_{ij},y_{ji}))}{y_{ij}!y_{ji}!}
 \end{eqnarray}
@@ -234,10 +236,11 @@ $$
 print(table_LS$min,type="html")
 ```
 
+
 #Negative Absolute Difference
 
 ***
-__mutual(nabsdiff)__: $g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} -|y_{ij} - y_{ji}|$
+__mutual(nabsdiff)__: $g(\mathbf{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} -|y_{ij} - y_{ji}|$
 
 ***
 - Let the model sufficient statistics only be __mutual(nabsdiff)__ and __sum__
@@ -251,8 +254,9 @@ $$
 print(table_LS$nabsdiff,type="html")
 ```
 
+
 #Geometric Mean
-__mutual(geomean)__: $g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \sqrt{y_{ij}}\sqrt{y_{ji}}$
+__mutual(geomean)__: $g(\mathbf{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \sqrt{y_{ij}}\sqrt{y_{ji}}$
 
 ***
 - Let the model sufficient statistics only be __mutual(nabsdiff)__ and __sum__
@@ -266,3 +270,12 @@ $$
 print(table_LS$geomean,type="html")
 ```
 
+
+
+#Predictive Modelling
+
+***
+```{r, results='asis'}
+aic_table <- readRDS(paste(getwd(),"/processed data/aic_table",sep=""))
+print(aic_table,type="html")
+```

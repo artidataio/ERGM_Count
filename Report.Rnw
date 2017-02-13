@@ -219,12 +219,12 @@ The proposed statistics to represent mutuality are:
 
 \item \textit{\textbf{Minimum}}
 
-One of the proposed statistics to represent mutuality is minimum value or \textit{\textbf{mutual("min")}}: 
+One of the proposed statistics to represent mutuality is minimum value or \textit{\textbf{mutual(min)}}: 
 \begin{align}
 g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})
 \end{align}
 This is simply taking minimum values between 2 opposite edges of a dyad, and sum it for every possible pair.
-When a model only use the \textit{\textbf{sum}} and \textit{\textbf{mutual("min")}}, the PMF:
+When a model only use the \textit{\textbf{sum}} and \textit{\textbf{mutual(min)}}, the PMF:
 \begin{align*}
 Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_{2}\sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
 &= \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y},i<j} (y_{ij}+y_{ji}) + \theta_{2}\sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})\right)}{\prod_{(i,j) \in \mathbb{Y},i<j}y_{ij}!y_{ji}!}\\
@@ -237,7 +237,7 @@ P(Y_{ij}=y_{ij},Y_{ji}=y_{ji}|\theta_1,\theta_2) \propto \frac{\exp(\theta_1(y_{
 
 \item \textit{\textbf{Negative Absolute Difference}}
 
-Another proposed statistics is negative absolute difference or \textit{\textbf{mutual("nabsdiff")}} which has the form:
+Another proposed statistics is negative absolute difference or \textit{\textbf{mutual(nabsdiff)}} which has the form:
 \begin{align}
 g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} -|y_{ij} - y_{ji}| 
 \end{align}
@@ -246,16 +246,16 @@ It is achieved when $\forall(i,j) \in\mathbb{Y},i<j (y_{ij}=y_{ji})$ or every pa
 The negation of the statistics is necessary as the higher the statistics, the higher strength of mutuality. 
 With the same method as above, the pairwise distribution $(Y_{ij},Y_{ji})$ has PMF:
 \begin{align*}
-Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) - \theta_2 |y_{ij}-y_{ji}|)}{y_{ij}!y_{ji}!F} 
+Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) - \theta_2 |y_{ij}-y_{ji}|)}{y_{ij}!y_{ji}!} 
 \end{align*}
 
 \item \textit{\textbf{Geometric Mean}}
 
-The last proposed statistics is geometric mean or \textit{\textbf{mutual("geomean")}} which has the form:
+The last proposed statistics is geometric mean or \textit{\textbf{mutual(geomean)}} which has the form:
 \begin{align}
 g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \sqrt{y_{ij}}\sqrt{y_{ji}} 
 \end{align}
-Similarly the model with statistics \textit{\textbf{sum}} and \textit{\textbf{mutual("geomean")}} will have independent pairwise ditribution $(Y_{ij},Y_{ji})$ with PMF:
+Similarly the model with statistics \textit{\textbf{sum}} and \textit{\textbf{mutual(geomean)}} will have independent pairwise ditribution $(Y_{ij},Y_{ji})$ with PMF:
 \begin{align*}
 Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) + \theta_2 \sqrt{y_{ij}}\sqrt{y_{ji}})}{y_{ij}!y_{ji}!} 
 \end{align*}
