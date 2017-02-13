@@ -1,7 +1,13 @@
 library(data.table)
 library(ztable)
 library(stringi)
-coef_LS <- readRDS(paste(getwd(),"/processed data/coef_LS",sep=""))
+library(rprojroot)
+
+#set up root
+root <- find_root(is_rstudio_project)
+
+
+coef_LS <- readRDS(paste(root,"/processed data/coef_LS",sep=""))
 table_LS <- list()
 
 for(names in names(coef_LS)){
@@ -16,5 +22,5 @@ for(names in names(coef_LS)){
   table_LS[[stri_sub(names,1,-4)]] <- z
 }
 
-
+saveRDS(table_LS,paste(root,"/processed data/table_LS",sep=""))
 

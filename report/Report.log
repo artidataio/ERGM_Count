@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.8.28)  3 FEB 2017 04:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.8.28)  14 FEB 2017 01:41
 entering extended mode
 **Report.tex
 (Report.tex
@@ -189,8 +189,8 @@ Package: parskip 2001/04/09 non-zero parskip adjustments
 Package: enumerate 2014/10/28 v3.00 enumerate extensions (DPC)
 \@enLab=\toks28
 )
-("C:\Program Files\MiKTeX 2.9\tex\latex\subfig\subfig.sty"
-Package: subfig 2005/06/28 ver: 1.3 subfig package
+("C:\Program Files\MiKTeX 2.9\tex\latex\caption\subcaption.sty"
+Package: subcaption 2013/02/03 v1.1-62 Sub-captions (AR)
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\caption\caption.sty"
 Package: caption 2013/05/02 v3.3-89 Customizing captions (AR)
@@ -208,19 +208,8 @@ Package caption3 Info: TeX engine: e-TeX on input line 57.
 )
 \c@ContinuedFloat=\count104
 )
-\c@KVtest=\count105
-\sf@farskip=\skip50
-\sf@captopadj=\dimen133
-\sf@capskip=\skip51
-\sf@nearskip=\skip52
-\c@subfigure=\count106
-\c@subfigure@save=\count107
-\c@lofdepth=\count108
-\c@subtable=\count109
-\c@subtable@save=\count110
-\c@lotdepth=\count111
-\sf@top=\skip53
-\sf@bottom=\skip54
+\c@subfigure=\count105
+\c@subtable=\count106
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty"
 Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
@@ -235,17 +224,17 @@ Package: colortbl 2012/02/13 v1.0a Color table columns (DPC)
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\tools\array.sty"
 Package: array 2014/10/28 v2.4c Tabular extension package (FMi)
-\col@sep=\dimen134
-\extrarowheight=\dimen135
+\col@sep=\dimen133
+\extrarowheight=\dimen134
 \NC@list=\toks29
-\extratabsurround=\skip55
-\backup@length=\skip56
+\extratabsurround=\skip50
+\backup@length=\skip51
 )
 \everycr=\toks30
-\minrowclearance=\skip57
+\minrowclearance=\skip52
 )
 LaTeX Info: Redefining \color on input line 702.
-\rownum=\count112
+\rownum=\count107
 Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
 Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
 Package xcolor Info: Model `RGB' extended on input line 1353.
@@ -258,7 +247,7 @@ Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\float\float.sty"
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count113
+\c@float@type=\count108
 \float@exts=\toks31
 \float@box=\box28
 \@float@everytoks=\toks32
@@ -270,23 +259,23 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 Package: setspace 2011/12/19 v6.7a set line spacing
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\listings\listings.sty"
-\lst@mode=\count114
+\lst@mode=\count109
 \lst@gtempboxa=\box30
 \lst@token=\toks34
-\lst@length=\count115
-\lst@currlwidth=\dimen136
-\lst@column=\count116
-\lst@pos=\count117
-\lst@lostspace=\dimen137
-\lst@width=\dimen138
-\lst@newlines=\count118
-\lst@lineno=\count119
-\lst@maxwidth=\dimen139
+\lst@length=\count110
+\lst@currlwidth=\dimen135
+\lst@column=\count111
+\lst@pos=\count112
+\lst@lostspace=\dimen136
+\lst@width=\dimen137
+\lst@newlines=\count113
+\lst@lineno=\count114
+\lst@maxwidth=\dimen138
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\listings\lstmisc.sty"
 File: lstmisc.sty 2014/09/06 1.5e (Carsten Heinz)
-\c@lstnumber=\count120
-\lst@skipnumbers=\count121
+\c@lstnumber=\count115
+\lst@skipnumbers=\count116
 \lst@framebox=\box31
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\listings\listings.cfg"
@@ -304,10 +293,10 @@ LaTeX Info: Redefining \bm on input line 203.
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\natbib\natbib.sty"
 Package: natbib 2010/09/13 8.31b (PWD, AO)
-\bibhang=\skip58
-\bibsep=\skip59
+\bibhang=\skip53
+\bibsep=\skip54
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count122
+\c@NAT@ctr=\count117
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\upquote\upquote.sty"
 Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
@@ -328,16 +317,16 @@ LaTeX Font Info:    ... okay on input line 79.
 
 ("C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count123
-\scratchdimen=\dimen140
+\scratchcounter=\count118
+\scratchdimen=\dimen139
 \scratchbox=\box32
-\nofMPsegments=\count124
-\nofMParguments=\count125
+\nofMPsegments=\count119
+\nofMParguments=\count120
 \everyMPshowfont=\toks35
-\MPscratchCnt=\count126
-\MPscratchDim=\dimen141
-\MPnumerator=\count127
-\makeMPintoPDFobject=\count128
+\MPscratchCnt=\count121
+\MPscratchDim=\dimen140
+\MPnumerator=\count122
+\makeMPintoPDFobject=\count123
 \everyMPtoPDFconversion=\toks36
 )
 *geometry* driver: auto-detecting
@@ -375,7 +364,6 @@ LaTeX Font Info:    ... okay on input line 79.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 Package caption Info: Begin \AtBeginDocument code.
-Package caption Info: subfig package v1.3 is loaded.
 Package caption Info: float package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
@@ -460,7 +448,7 @@ Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 338.
 Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 339.
 Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 340.
 )
-\c@lstlisting=\count129
+\c@lstlisting=\count124
 
 Chapter 1.
 [1
@@ -554,6 +542,9 @@ Chapter 3.
 ]
 Chapter 4.
 
+LaTeX Warning: Reference `fig:EPL2015' on page 14 undefined on input line 386.
+
+
 Package xcolor Warning: Incompatible color definition on input line 390.
 
 <figure/unnamed-chunk-5-1.pdf, id=105, 505.89pt x 505.89pt>
@@ -564,38 +555,115 @@ Package pdftex.def Info: figure/unnamed-chunk-5-1.pdf used on input line 392.
 (pdftex.def)             Requested size: 501.50787pt x 501.51964pt.
  [14
 
-] [15 <./figure/unnamed-chunk-5-1.pdf>]
-[16] (Report.bbl [17]) [18
+]
 
-] (Report.aux) ) 
+Package xcolor Warning: Incompatible color definition on input line 412.
+
+<figure/unnamed-chunk-7-1.pdf, id=109, 505.89pt x 505.89pt>
+File: figure/unnamed-chunk-7-1.pdf Graphic file (type pdf)
+
+<use figure/unnamed-chunk-7-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-7-1.pdf used on input line 414.
+(pdftex.def)             Requested size: 200.60008pt x 200.60013pt.
+
+
+Package xcolor Warning: Incompatible color definition on input line 425.
+
+<figure/unnamed-chunk-8-1.pdf, id=110, 505.89pt x 505.89pt>
+File: figure/unnamed-chunk-8-1.pdf Graphic file (type pdf)
+
+<use figure/unnamed-chunk-8-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-8-1.pdf used on input line 427.
+(pdftex.def)             Requested size: 200.60008pt x 200.60013pt.
+
+
+Package xcolor Warning: Incompatible color definition on input line 441.
+
+<figure/unnamed-chunk-9-1.pdf, id=111, 505.89pt x 505.89pt>
+File: figure/unnamed-chunk-9-1.pdf Graphic file (type pdf)
+
+<use figure/unnamed-chunk-9-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-9-1.pdf used on input line 443.
+(pdftex.def)             Requested size: 200.60008pt x 200.60013pt.
+
+
+Package xcolor Warning: Incompatible color definition on input line 454.
+
+<figure/unnamed-chunk-10-1.pdf, id=112, 505.89pt x 505.89pt>
+File: figure/unnamed-chunk-10-1.pdf Graphic file (type pdf)
+
+<use figure/unnamed-chunk-10-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-10-1.pdf used on input line 456.
+(pdftex.def)             Requested size: 200.60008pt x 200.60013pt.
+
+
+Package xcolor Warning: Incompatible color definition on input line 470.
+
+<figure/unnamed-chunk-11-1.pdf, id=113, 505.89pt x 505.89pt>
+File: figure/unnamed-chunk-11-1.pdf Graphic file (type pdf)
+
+<use figure/unnamed-chunk-11-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-11-1.pdf used on input line 472.
+(pdftex.def)             Requested size: 200.60008pt x 200.60013pt.
+
+
+Package xcolor Warning: Incompatible color definition on input line 483.
+
+<figure/unnamed-chunk-12-1.pdf, id=114, 505.89pt x 505.89pt>
+File: figure/unnamed-chunk-12-1.pdf Graphic file (type pdf)
+
+<use figure/unnamed-chunk-12-1.pdf>
+Package pdftex.def Info: figure/unnamed-chunk-12-1.pdf used on input line 485.
+(pdftex.def)             Requested size: 200.60008pt x 200.60013pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [15 <./figure/unnamed-chunk-5-1.pdf>]
+Overfull \vbox (23.85349pt too high) has occurred while \output is active []
+
+
+[16 <./figure/unnamed-chunk-7-1.pdf> <./figure/unnamed-chunk-8-1.pdf> <./figure
+/unnamed-chunk-9-1.pdf> <./figure/unnamed-chunk-10-1.pdf> <./figure/unnamed-chu
+nk-11-1.pdf> <./figure/unnamed-chunk-12-1.pdf>]
+
+LaTeX Warning: Reference `fig:EPL2015' on page 17 undefined on input line 508.
+
+[17] (Report.bbl [18]) [19
+
+] (Report.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 6645 strings out of 493698
- 94015 string characters out of 3144374
- 166680 words of memory out of 3000000
- 9858 multiletter control sequences out of 15000+200000
- 14266 words of font info for 51 fonts, out of 3000000 for 9000
+ 6585 strings out of 493698
+ 93493 string characters out of 3144374
+ 163718 words of memory out of 3000000
+ 9793 multiletter control sequences out of 15000+200000
+ 14566 words of font info for 52 fonts, out of 3000000 for 9000
  1025 hyphenation exceptions out of 8191
- 44i,11n,42p,643b,351s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/cm-super/cm-super-
-ts1.enc}<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
-<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Pr
-ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Fi
-les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Program Files/MiKT
-eX 2.9/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Program Files/MiKTeX 2.9/fo
-nts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1
-/public/amsfonts/cm/cmmib10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public
-/amsfonts/cmextra/cmmib8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/am
-sfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm
-/cmr6.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb>
-<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsl12.pfb><C:/Prog
-ram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program File
-s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 
-2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Program Files/MiKTeX 2.9/font
-s/type1/public/amsfonts/symbols/msbm10.pfb><C:/Program Files/MiKTeX 2.9/fonts/t
-ype1/public/cm-super/sfrm1200.pfb>
-Output written on Report.pdf (18 pages, 378759 bytes).
+ 42i,11n,40p,770b,479s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/cm-super/cm-super-ts1.enc}<C:/Pr
+ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Fi
+les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Program Files/Mi
+KTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX 2.9
+/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Program Files/MiKTeX 2.9/fonts/t
+ype1/public/amsfonts/cm/cmmi6.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/publ
+ic/amsfonts/cm/cmmi8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfon
+ts/cm/cmmib10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cmex
+tra/cmmib8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr1
+0.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:
+/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Program F
+iles/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files/MiKTe
+X 2.9/fonts/type1/public/amsfonts/cm/cmsl12.pfb><C:/Program Files/MiKTeX 2.9/fo
+nts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type
+1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/
+amsfonts/cm/cmti12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts
+/symbols/msbm10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/cm-super/sf
+rm1200.pfb>
+Output written on Report.pdf (19 pages, 1167683 bytes).
 PDF statistics:
- 181 PDF objects out of 1000 (max. 8388607)
+ 225 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 56 words of extra memory for PDF output out of 10000 (max. 10000000)
 

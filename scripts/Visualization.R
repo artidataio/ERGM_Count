@@ -2,7 +2,11 @@ library(data.table)
 library(ggthemes)
 library(ggplot2)
 library(latex2exp)
-#comparison of mutuality
+library(rprojroot)
+
+#setup
+root <- find_root(is_rstudio_project)
+
 
 #Geometric and Poisson
 n <- 10
@@ -17,7 +21,7 @@ geom_pois <- ggplot(data=graph_DT)+
   theme_tufte()+
   labs(x=expression(y["ij"]),y=expression(paste("Pr (",Y["ij"]," = ",y["ij"]," | ",mu," = ","3/2",")" )))
 
-saveRDS(geom_pois, paste(getwd(),"/plots/geom_pois",sep=""))
+saveRDS(geom_pois, paste(root,"/plots/geom_pois",sep=""))
 
 #Zero Modified Poisson
 n <- 10
@@ -53,7 +57,7 @@ zero_modified <- ggplot(data=graph_DT)+
   labs(x=TeX("$y_{ij}$"), y= TeX("$Pr(Y_{ij}=y_{ij}|\\theta_{1},\\theta_{2})$"))+
   theme_tufte()
 
-saveRDS(zero_modified,paste(getwd(),"/plots/zero_modified",sep=""))
+saveRDS(zero_modified,paste(root,"/plots/zero_modified",sep=""))
 
 
 # Conway-Maxwell-Poisson
@@ -87,7 +91,7 @@ cmp <- ggplot(data=graph_DT)+
   labs(x=TeX("$y_{ij}$"), y= TeX("$Pr(Y_{ij}=y_{ij}|\\theta_{1},\\theta_{2})$"))+
   theme_tufte()
 
-saveRDS(cmp,paste(getwd(),"/plots/cmp",sep=""))
+saveRDS(cmp,paste(root,"/plots/cmp",sep=""))
 
 #comparison of mutuality
 n <- 30
@@ -138,4 +142,4 @@ mutual<- ggplot(data=graph_DT)+
       title.position = "left",
       title.theme = element_text(angle = 90)))
 
-saveRDS(mutual,paste(getwd(),"/plots/mutual",sep=""))
+saveRDS(mutual,paste(root,"/plots/mutual",sep=""))

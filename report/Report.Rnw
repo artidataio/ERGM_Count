@@ -1,54 +1,4 @@
-\documentclass[12pt,a4paper,twoside,openany]{book}\usepackage[]{graphicx}\usepackage[]{color}
-%% maxwidth is the original width if it is less than linewidth
-%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
-\makeatletter
-\def\maxwidth{ %
-  \ifdim\Gin@nat@width>\linewidth
-    \linewidth
-  \else
-    \Gin@nat@width
-  \fi
-}
-\makeatother
-
-\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
-\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
-\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
-\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
-\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
-\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
-\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
-\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
-\let\hlipl\hlkwb
-
-\usepackage{framed}
-\makeatletter
-\newenvironment{kframe}{%
- \def\at@end@of@kframe{}%
- \ifinner\ifhmode%
-  \def\at@end@of@kframe{\end{minipage}}%
-  \begin{minipage}{\columnwidth}%
- \fi\fi%
- \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
- \colorbox{shadecolor}{##1}\hskip-\fboxsep
-     % There is no \\@totalrightmargin, so:
-     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
- \MakeFramed {\advance\hsize-\width
-   \@totalleftmargin\z@ \linewidth\hsize
-   \@setminipage}}%
- {\par\unskip\endMakeFramed%
- \at@end@of@kframe}
-\makeatother
-
-\definecolor{shadecolor}{rgb}{.97, .97, .97}
-\definecolor{messagecolor}{rgb}{0, 0, 0}
-\definecolor{warningcolor}{rgb}{1, 0, 1}
-\definecolor{errorcolor}{rgb}{1, 0, 0}
-\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
-
-\usepackage{alltt}
+\documentclass[12pt,a4paper,twoside,openany]{book}
 \usepackage[margin=48pt]{geometry}
 \usepackage{amsthm}
 \usepackage{amssymb}
@@ -56,7 +6,7 @@
 \usepackage{parskip}
 \usepackage{graphicx}
 \usepackage{enumerate}
-\usepackage{subfig}
+\usepackage{subcaption}
 \usepackage[table]{xcolor}
 
 \usepackage{float}
@@ -73,9 +23,13 @@
 
 \newcommand{\BI}[1]{\textit{\textbf{#1}}}
 \newcommand{\me}{\mathrm{e}}
+<<echo=F >>=
+  opts_chunk$set(fig.align="center",echo=F,cache=F,eval = T,warning=F,message=F)
+  library(rprojroot)
+  root <- find_root(is_rstudio_project)
+  data_LS <- readRDS(paste(root,"/processed data/data_LS",sep=""))
+@
 
-
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 
 \chapter{Introduction}
@@ -145,16 +99,10 @@ Notice that the 2 models have different model parameter constraints.
 We illustrate the shape of Poisson and Geometric Distribution in Figure \ref{fig: Geometric and Poisson} below.
 
 \begin{figure}[H] 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/geom_pois-1} 
-
-}
-
-
-
-\end{knitrout}
+<<geom_pois,fig.asp=0.4>>=
+geom_pois <- readRDS(paste(root,"/plots/geom_pois",sep=""))
+plot(geom_pois)
+@
 \caption [Geometric and Poisson Distribution with Mean = 3.5]{These plots show the shape of Geometric and Poisson Distribution. Both distributions have equal mean, $\mu = \frac{3}{2}$. Differs from Poisson, Geometric Distribution has a strictly decreasing probability as $y_{ij}$ increased.}
 \label{fig: Geometric and Poisson}
 \end{figure}
@@ -179,7 +127,7 @@ In this section, we will focus on \textit{poisson-reference} ERGM Count without 
 
 Furthermore, the linear ERGM Count restriction will also be applied where $\eta(\bm{\theta}) = \bm{\theta}$ and thus $q = p$. 
 This restriction makes the model comprehensible. 
-In linear ERGM, if $\Theta_{N}$ is an open set, then $\theta_{k}^{\prime} >\theta_{k} \implies E(g_k(\bm{Y})|\theta,\theta_k^{\prime})>E(g_k(\bm{Y})|\theta,\theta_k)$. 
+In linear ERGM Count, if $\Theta_{N}$ is an open set, then $\theta_{k}^{\prime} >\theta_{k} \implies E(g_k(\bm{Y})|\theta,\theta_k^{\prime})>E(g_k(\bm{Y})|\theta,\theta_k)$. 
 In other words, if other model parameters $\theta \setminus \theta_k$ are fixed, the expected sufficient statistics $g_k$ is strictly increasing in $\theta_k$.
 Larger $\theta_k$ will result in a distribution of networks with more feature gauged by $g_k$.
 
@@ -187,7 +135,7 @@ Larger $\theta_k$ will result in a distribution of networks with more feature ga
 Let the possibly predictive variables outside the network structure or exogenous covariate be $x_{ijk}$.
 A \textit{poisson-reference} ERGM Count will reduce to Poisson Regression Model if we introduce an edge-independent sufficient statistics:
 \begin{align}
-g_k(\bm{y})= \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ijk}.c
+g_k(\bm{y})= \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ijk}.
 \end{align}
 
 Let the model sufficient statistics only be exogenous covariate and \BI{sum}  the PMF will reduce to:
@@ -195,7 +143,7 @@ Let the model sufficient statistics only be exogenous covariate and \BI{sum}  th
 Pr(\bm{Y}=\bm{y}|\theta) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_k \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ijk} \right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!} \\
 &= \prod_{(i,j) \in \mathbb{Y}} \frac{(\exp(\theta_1+\theta_k x_{ijk}))^{y_{ij}}}{y_{ij}!}
 \end{align*}
-This can be recognised as an edge-wise distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{poisson}(\lambda =\exp(\theta_1 + \theta_k x_{ijk} ))$ .
+This can be recognised as an edge-wise distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{poisson}(\lambda =\exp(\theta_1 + \theta_k x_{ijk}))$ .
 Notice that adding exogenous covariate will maintain the poisson relationship yet changing the parameter $\lambda$ for edge $(i,j)$ by multiplication of factor $e^{\theta_k x_{ijk}}$.
 It is obvious that further addition of another exogenous covariate will give the same effect.
 Hence, this model is equivalent to applying Poisson regression model to the network data.  
@@ -224,16 +172,10 @@ If $\theta_2 <0$, then the probability of an edge to take value of zero is highe
 Whereas if $\theta_2>0$, the number of non-zero edge has higher probability than Poisson Distribution, thus giving the name \textit{\textbf{nonzero}}. Figure \ref{fig: Zero Modified Poisson} will illustrate this relatioship.
 
 \begin{figure}[H]
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-2-1} 
-
-}
-
-
-
-\end{knitrout}
+<<fig.asp=0.5,eval=T>>=
+zero_modified<- readRDS(paste(root,"/plots/zero_modified",sep=""))
+plot(zero_modified)
+@
 \caption ["Illustration of Zero-Modified Poisson"]{This figure shows the effect of adding on \textit{\textbf{nonzero}} to the Poisson model. The top axis indicates parameter $\theta_2$, which affect the probability of zero edges. Notice that the effect diminished as parameter $\theta_1$ (right axis) gets higher. Furthermore, $e^{\theta_1}$ is the mean parameter when $\theta_2=0$.}
 \label{fig: Zero Modified Poisson}
 \end{figure}
@@ -249,21 +191,15 @@ g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)
 When only sufficient statistics use in the model is \textit{\textbf{sum}} and \textit{\textbf{CMP}} with poisson reference, the PMF:
 \begin{align*}
 Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
-&\propto \prod_{(i,j) \in \mathbb{Y}} (\exp(\theta_1))^{y_{ij}} (y_{ij}!)^{\theta_1-1}
+&\propto \prod_{(i,j) \in \mathbb{Y}} (\exp(\theta_1))^{y_{ij}} (y_{ij}!)^{\theta_2-1}
 \end{align*}
 Hence the model reduced to edge-wise \textit{Conway-Maxwell-Poisson} \textit{\textbf{CMP}} distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{CMP}(\lambda =\exp(\theta_1),\nu = 1-\theta_2)$ where $\theta_2 \le 1$. When $\theta_2$ goes from 0 to $-\infty$, the distribution become less and less dispersed compare to Poisson. When $\theta_2 \to -\infty$, it is reduced to Bernoulli Distribution. Whereas if as $\theta_2$ from 0 to 1, the distribution is more dispersed compare to Poisson. It is reduced  to Geometric Distribution at $\theta_2=1$. Figure ... will illustrate the various shapes of CMP distribution.
 
 \begin{figure}[H]
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-3-1} 
-
-}
-
-
-
-\end{knitrout}
+<<fig.asp=0.5>>=
+cmp<- readRDS(paste(root,"/plots/cmp",sep=""))
+plot(cmp)
+@
 \caption ["Illustration of Conway-Maxwell-Poisson Distribution"]{This image shows the various shapes of Conway-Maxwell-Poisson Distribution (CMP). The right axis corresponds to parameter $\theta_1$. Whereas the top axis indicates parameter $\theta_2$, which dominates the dispersion effect of the distribution. When $\theta_2 = 0$, CMP reduce to Poisson with mean $e^{\theta_1}$. When $\theta_2 >0$ the distribution become more dispersed, then it gets less dispersed when $\theta_2<0$.}  
 \end{figure}
 
@@ -285,12 +221,12 @@ The proposed statistics to represent mutuality are:
 
 \item \textit{\textbf{Minimum}}
 
-One of the proposed statistics to represent mutuality is minimum value or \textit{\textbf{mutual("min")}}: 
+One of the proposed statistics to represent mutuality is minimum value or \textit{\textbf{mutual(min)}}: 
 \begin{align}
 g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})
 \end{align}
 This is simply taking minimum values between 2 opposite edges of a dyad, and sum it for every possible pair.
-When a model only use the \textit{\textbf{sum}} and \textit{\textbf{mutual("min")}}, the PMF:
+When a model only use the \textit{\textbf{sum}} and \textit{\textbf{mutual(min)}}, the PMF:
 \begin{align*}
 Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_{2}\sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
 &= \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y},i<j} (y_{ij}+y_{ji}) + \theta_{2}\sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})\right)}{\prod_{(i,j) \in \mathbb{Y},i<j}y_{ij}!y_{ji}!}\\
@@ -303,7 +239,7 @@ P(Y_{ij}=y_{ij},Y_{ji}=y_{ji}|\theta_1,\theta_2) \propto \frac{\exp(\theta_1(y_{
 
 \item \textit{\textbf{Negative Absolute Difference}}
 
-Another proposed statistics is negative absolute difference or \textit{\textbf{mutual("nabsdiff")}} which has the form:
+Another proposed statistics is negative absolute difference or \textit{\textbf{mutual(nabsdiff)}} which has the form:
 \begin{align}
 g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} -|y_{ij} - y_{ji}| 
 \end{align}
@@ -312,32 +248,26 @@ It is achieved when $\forall(i,j) \in\mathbb{Y},i<j (y_{ij}=y_{ji})$ or every pa
 The negation of the statistics is necessary as the higher the statistics, the higher strength of mutuality. 
 With the same method as above, the pairwise distribution $(Y_{ij},Y_{ji})$ has PMF:
 \begin{align*}
-Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) - \theta_2 |y_{ij}-y_{ji}|)}{y_{ij}!y_{ji}!F} 
+Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) - \theta_2 |y_{ij}-y_{ji}|)}{y_{ij}!y_{ji}!} 
 \end{align*}
 
 \item \textit{\textbf{Geometric Mean}}
 
-The last proposed statistics is geometric mean or \textit{\textbf{mutual("geomean")}} which has the form:
+The last proposed statistics is geometric mean or \textit{\textbf{mutual(geomean)}} which has the form:
 \begin{align}
 g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \sqrt{y_{ij}}\sqrt{y_{ji}} 
 \end{align}
-Similarly the model with statistics \textit{\textbf{sum}} and \textit{\textbf{mutual("geomean")}} will have independent pairwise ditribution $(Y_{ij},Y_{ji})$ with PMF:
+Similarly the model with statistics \textit{\textbf{sum}} and \textit{\textbf{mutual(geomean)}} will have independent pairwise ditribution $(Y_{ij},Y_{ji})$ with PMF:
 \begin{align*}
 Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) + \theta_2 \sqrt{y_{ij}}\sqrt{y_{ji}})}{y_{ij}!y_{ji}!} 
 \end{align*}
 \end{itemize}
 Before we discuss the differences of each parameter, it is best to look at the  shapes of the joint distribution. 
 \begin{figure}[H]
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-1} 
-
-}
-
-
-
-\end{knitrout}
+<< fig.asp=0.5,>>=
+mutual<- readRDS(paste(root,"/plots/mutual",sep=""))
+plot(mutual)
+@
 \caption [Joint distribution with mutual statistics]{This image shows the various PMF of the joint distribution with $\theta_1 =1 $. The different shades of black indicate the region that has higher probability. Here the top axis represent $\theta_2$ which coressponds to the parameter of \textit{\textbf{mutual}} statistics. When $\theta_2 = 0$, the joint distibution follows 2 independent Poisson with $\lambda = e^{\theta_1}$}
 \end{figure}
 
@@ -386,18 +316,207 @@ We can then fit ERGM Count to the EPL data.
 One example of the graph that will be fitted is shown in Figure \ref{fig:EPL2015}
 
 \begin{figure}[H]
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+<< fig.asp=1,fig.height = 7, fig.width=7>>= 
+library(igraph)
+library(scales)
+library(RColorBrewer)
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-5-1} 
-
+radian.rescale <- function(x, start=0, direction=1) {
+  c.rotate <- function(x) (x + start) %% (2 * pi) * direction
+  c.rotate(scales::rescale(x, c(0, 2 * pi), range(x)))
 }
+par(mfrow = c(1,1),mar=c(3, 3, 3, 3))
+data_igraph <- data_LS[[2]]$igraph
+
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+z <- plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
+     vertex.label.dist=0.8,
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
+     vertex.frame.color="NA",
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
+     edge.curved = 0.1,
+     edge.lty =1,
+     edge.width=0.5*E(data_igraph)$weight,
+     frame = T)
+
+legend(x=-1.40, y=1.3, legend=0:8,lwd=0.5*(0:8), cex =1,
+       col = c("white",brewer.pal(8,"Greens")),
+       y.intersp = 1,bty = "n",title="Goals(Home)")
+
+legend(x=.95, y=1.3, legend=0:8,lwd=0.5*(0:8), cex = 1,
+       col = c("white",brewer.pal(8,"Reds")),
+       y.intersp = 1,bty ="n",title= "Goals(Away)")
+#making the legend of the circle is hard
+@
+\caption [Graph Representation of a Football League]{This is the graph representation of the dataset used. The circles denote the 20 teams that are participating. The participating teams vary annually. The size of the circles corresponds to the average market value of the players in the team. The bigger the circle, the average price of the players is higher. The arrow represents the goal scored by the team it orginates from, to the team pointed by the arrow head. The green hue indicates the scoring team is playing at home stadium. Whereas the red hue shows the goal scored in opponent stadium. The intensity of the color represents the total goal scored. The higher intensity of the color, the more goals were scored.}
+\label{fig: EPL}
+\end{figure}
 
 
+%This is for the igraph figure
+<<>>=
+library(igraph)
+library(scales)
+library(RColorBrewer)
 
-\end{knitrout}
-\caption [Graph Representation of a Football League]{This is the graph representation of the first half of EPL 2015-2016. The red circles denote the 20 teams that are participating. Its size corresponds to the average market value of the players in the team. The bigger the circle, the average price of the players is higher. The color of the arrow arrow represents total goal scored by the team it orginates from, to the team pointed by the arrow head. The darker the color, the more goals scored in the match. Note that zero total goals scored are omitted.}
-\label{fig:EPL2015}
+radian.rescale <- function(x, start=0, direction=1) {
+  c.rotate <- function(x) (x + start) %% (2 * pi) * direction
+  c.rotate(scales::rescale(x, c(0, 2 * pi), range(x)))
+}
+@
+
+\begin{figure}[H] % "[t!]" placement specifier just for this example
+
+\hspace*{\fill}
+\begin{subfigure}{0.40\textwidth}
+<<>>=
+data_igraph <- data_LS[[1]]$igraph
+par(mfrow = c(1,1),mar=c(3, 3, 3, 3))
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
+     vertex.label.dist=0.8,
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
+     vertex.frame.color="NA",
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
+     edge.curved = 0.1,
+     edge.lty =1,
+     edge.width=0.5*E(data_igraph)$weight)
+@
+\caption{\Sexpr{paste(data_LS[[1]]$name,"1st Half",sep = ", ")}}
+\end{subfigure}\hspace*{\fill}
+\begin{subfigure}{0.40\textwidth}
+<<>>=
+par(mfrow = c(1,1),mar=c(3, 3, 3, 3))
+data_igraph <- data_LS[[2]]$igraph
+
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
+     vertex.label.dist=0.8,
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
+     vertex.frame.color="NA",
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
+     edge.curved = 0.1,
+     edge.lty =1,
+     edge.width=0.5*E(data_igraph)$weight)
+
+@
+\caption{\Sexpr{paste(data_LS[[2]]$name,"2nd Half",sep = ", ")}} 
+\end{subfigure}
+\hspace*{\fill}
+
+\hspace*{\fill}
+\begin{subfigure}{0.40\textwidth}
+<<>>=
+par(mfrow = c(1,1),mar=c(3, 3, 3, 3))
+data_igraph <- data_LS[[3]]$igraph
+
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
+     vertex.label.dist=0.8,
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
+     vertex.frame.color="NA",
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
+     edge.curved = 0.1,
+     edge.lty =1,
+     edge.width=0.5*E(data_igraph)$weight)
+@
+\caption{\Sexpr{paste(data_LS[[3]]$name,"1st Half",sep = ", ")}}
+\end{subfigure}\hspace*{\fill}
+\begin{subfigure}{0.4\textwidth}
+<<>>=
+par(mfrow = c(1,1),mar=c(3, 3, 3, 3))
+data_igraph <- data_LS[[2]]$igraph
+
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
+     vertex.label.dist=0.8,
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
+     vertex.frame.color="NA",
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
+     edge.curved = 0.1,
+     edge.lty =1,
+     edge.width=0.5*E(data_igraph)$weight)
+
+@
+\caption{\Sexpr{paste(data_LS[[4]]$name,"2nd Half",sep = ", ")}} 
+\end{subfigure}
+\hspace*{\fill}
+
+\hspace*{\fill}
+\begin{subfigure}{0.40\textwidth}
+<<>>=
+par(mfrow = c(1,1),mar=c(3, 3, 3, 3))
+data_igraph <- data_LS[[5]]$igraph
+
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
+     vertex.label.dist=0.8,
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
+     vertex.frame.color="NA",
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
+     edge.curved = 0.1,
+     edge.lty =1,
+     edge.width=0.5*E(data_igraph)$weight)
+
+@
+\caption{\Sexpr{paste(data_LS[[5]]$name,"1st Half",sep = ", ")}}
+\end{subfigure}\hspace*{\fill}
+\begin{subfigure}{0.40\textwidth}
+<<>>=
+par(mfrow = c(1,1),mar=c(3, 3, 3, 3))
+data_igraph <- data_LS[[6]]$igraph
+
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
+     vertex.label.dist=0.8,
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
+     vertex.frame.color="NA",
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
+     edge.curved = 0.1,
+     edge.lty =1,
+     edge.width=0.5*E(data_igraph)$weight)
+
+@
+\caption{\Sexpr{paste(data_LS[[6]]$name,"2nd Half",sep = ", ")}}
+\end{subfigure}
+\hspace*{\fill}
+ 
+\caption [Graph Representation of a Football League]{This is the graph representation of the dataset used. The circles denote the 20 teams that are participating. The teams participating vary annually. Its size corresponds to the average market value of the players in the team. The bigger the circle, the average price of the players is higher. The arrow represents the goal scored by the team it orginates from, to the team pointed by the arrow head. The green hue indicates the scoring team is playing at home stadium. Whereas the red hue shows the goal scored in opponent stadium. The intensity of the color represents the total goals scored. The higher intensity of the color, the more goals were scored.} \label{fig:1}
 \end{figure}
 
 The interpretation of sufficient statistics will differs significantly from Krivistky's examples. 

@@ -9,10 +9,14 @@ output:
 ---
 
 ```{r, echo=FALSE,message=FALSE}
+root <- 
 knitr::opts_chunk$set(fig.align="center",echo=F,warning = F,cache=F,eval =T, message = F)
+library(rprojroot)
 library(ztable)
 library(ggplot2)
-table_LS <- readRDS(paste(getwd(),"/processed data/table_LS",sep=""))
+root <- find_root(is_rstudio_project)
+table_LS <- readRDS(paste(root,"/processed data/table_LS",sep=""))
+
 ```
 
 #Specification of ERGM Count
@@ -33,7 +37,7 @@ $$
 
 ***
 ```{r geom_pois,fig.asp=0.4,fig.cap= "Geometric and Poisson Distribution with Mean = 1.5"}
-geom_pois <- readRDS(paste(getwd(),"/plots/geom_pois",sep=""))
+geom_pois <- readRDS(paste(root,"/plots/geom_pois",sep=""))
 plot(geom_pois)
 ```
 
@@ -147,7 +151,7 @@ $$
 
 ***
 ```{r, fig.asp=0.5, fig.cap = "Zero Modified Poisson"}
-zero_modified<- readRDS(paste(getwd(),"/plots/zero_modified",sep=""))
+zero_modified<- readRDS(paste(root,"/plots/zero_modified",sep=""))
 plot(zero_modified)
 ```
 
@@ -182,7 +186,7 @@ $$
 
 ***
 ```{r, fig.asp=0.5, fig.cap = "Conway-Maxwell-Poisson Distribution"}
-cmp<- readRDS(paste(getwd(),"/plots/cmp",sep=""))
+cmp<- readRDS(paste(root,"/plots/cmp",sep=""))
 plot(cmp)
 ```
 
@@ -200,7 +204,7 @@ Addition of mutuality will reduce to model with independent pair-wise distributi
 
 ***
 ```{r,fig.asp=0.5}
-mutual<- readRDS(paste(getwd(),"/plots/mutual",sep=""))
+mutual<- readRDS(paste(root,"/plots/mutual",sep=""))
 plot(mutual)
 ```
 
@@ -276,6 +280,6 @@ print(table_LS$geomean,type="html")
 
 ***
 ```{r, results='asis'}
-aic_table <- readRDS(paste(getwd(),"/processed data/aic_table",sep=""))
+aic_table <- readRDS(paste(root,"/processed data/aic_table",sep=""))
 print(aic_table,type="html")
 ```

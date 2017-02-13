@@ -4,9 +4,11 @@ library(network)
 library(igraph)
 library(ergm)
 library(ergm.count)
-library(xtable)
+library(rprojroot)
 
-data_LS <- readRDS(paste(getwd(),"/processed data/data_LS",sep=""))
+root <- find_root(is_rstudio_project)
+
+data_LS <- readRDS(paste(root,"/processed data/data_LS",sep=""))
 
 fit_LS <- list()
 coef_LS <- list()
@@ -365,5 +367,5 @@ fit_LS[["geometric_LS"]] <- LS
 coef_LS[["geometric_DT"]] <- DT 
 
 
-saveRDS(fit_LS,paste(getwd(),"/processed data/fit_LS",sep=""))
-saveRDS(coef_LS,paste(getwd(),"/processed data/coef_LS",sep=""))
+saveRDS(fit_LS,paste(root,"/processed data/fit_LS",sep=""))
+saveRDS(coef_LS,paste(root,"/processed data/coef_LS",sep=""))

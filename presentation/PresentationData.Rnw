@@ -3,8 +3,10 @@
 \usepackage[margin=48pt]{geometry}
 
 <<echo=F >>=
+  library(rprojroot)
   opts_chunk$set(fig.align="center",echo=F,cache=F,eval = T,warning=F,message=F)
-  data_LS <- readRDS(paste(getwd(),"/processed data/data_LS",sep=""))
+  root <- find_root(is_rstudio_project)
+  data_LS <- readRDS(paste(root,"/processed data/data_LS",sep=""))
 @
 
 \begin{document}

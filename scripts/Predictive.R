@@ -1,6 +1,9 @@
 library(data.table)
+library(rprojroot)
 
-fit_LS <- readRDS(paste(getwd(),"/processed data/fit_LS",sep=""))
+root <- find_root(is_rstudio_project)
+
+fit_LS <- readRDS(paste(root,"/processed data/fit_LS",sep=""))
 fit_LS$transitivity_LS 
 fit_LS$geometric_LS <- NULL#Best model choice for each training data
 
