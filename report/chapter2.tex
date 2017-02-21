@@ -1,4 +1,5 @@
-\documentclass[12pt,a4paper,twoside,openany]{book}\usepackage[]{graphicx}\usepackage[]{color}
+\documentclass[12pt,a4paper,twoside,openany]{book}
+\usepackage[]{graphicx}\usepackage[]{color}
 %% maxwidth is the original width if it is less than linewidth
 %% otherwise use linewidth (to make sure the graphics do not exceed the margin)
 \makeatletter
@@ -49,6 +50,11 @@
 \newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
 
 \usepackage{alltt}
+\newcommand{\SweaveOpts}[1]{}  % do not interfere with LaTeX
+\newcommand{\SweaveInput}[1]{} % because they are not real TeX commands
+\newcommand{\Sexpr}[1]{}       % will only be parsed by R
+
+
 \usepackage[margin=48pt]{geometry}
 \usepackage{amsthm}
 \usepackage{amssymb}
@@ -75,30 +81,12 @@
 \newcommand{\me}{\mathrm{e}}
 
 
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+
+
 \begin{document}
-
-%chapter 1(Introduction) 
-
-%This is the text for chapter 1 of the report 
-
-%<<set-parent, echo=FALSE, cache=FALSE>>=
-%set_parent('report.Rnw')
-%@
-\chapter{Introduction}
-Contrasting with ERGM where edges can only be binary (exist or not exist), the valued networks enable the extension of edges definition. The idea is to model network that edges can be any value of count, measurement, or rank \citep{countergmdefined}. However, the paper only discuss ergm extension to count values where it can take on any positive integer value. 
-
-Note that count and rank is different here. Although both can take on any positive integer values, rank only determines the relative position of an order while count determines the total number of items. In a sense that, rank is ordered categeorical values where arithmetic operation is not possible.
-
-Interestingly, ERGM Count has only been applied to rank data. .....
-
-%Chapter 2(Specification of ERGM Count)
-
 %This is the text for chapter 2 of the report 
 
-%<<set-parent, echo=FALSE, cache=FALSE>>=
-%set_parent('report.Rnw')
-%@
+
 
 \chapter{Specification of ERGM Count}
 In this chapter, we will first define ERGM Count and its relevant shaping functions as proposed by \citet{countergmdefined}. 
@@ -240,7 +228,7 @@ Whereas if $\theta_2>0$, the number of non-zero edge has higher probability than
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-2-1} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-1-1} 
 
 }
 
@@ -270,7 +258,7 @@ Hence the model reduced to edge-wise \textit{Conway-Maxwell-Poisson} \textit{\te
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-3-1} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-2-1} 
 
 }
 
@@ -344,7 +332,7 @@ Before we discuss the differences of each parameter, it is best to look at the  
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-1} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-3-1} 
 
 }
 
@@ -373,199 +361,6 @@ Since now the level of $y_{ij}$ or $y_{ji}$ affect the increase, the distributio
 
 \subsection{Transitivity}
 not done
-
-%Chapter 3(Application)
-
-% This is the text for chapter 3 of the report
-
-%<<set-parent, echo=FALSE, cache=FALSE>>=
-%set_parent('report.Rnw')
-%@
-
-\chapter{Application}
-Most of application in ERGM Count has been focusing on social network analysis. 
-Whether it is ... and ... 
-
-Here we will fit English Premier League(EPL) data to ERGM COunt.
-EPL is the top tier of footbal competition in England.
-It is regarded as the world most watched sports league in the world. 
-
-At the first glance, it may not be seem that EPL exhibit a graph representation. We will try to justify the fitting of ERGM Count in the next section.  
-
-\section{Justification ERGM Count Fitting}
-
-In EPL there are 20 teams which represent the nodes of the graph. There will be football matches wehre 2 teams will be playing aginst one another. 
-Within 90 minutes period, each team are supposed to score as many goals as possible to the opponent.
-At the end of the match the team with the highest accumulated goals will win the match. 
-We can then define $y_{ij}$ as the total number of goals scored from team $i$ to team $j$.
-The opposing edge $y_{ji}$ will then represent the number of goals from team $i$ to team $j$ in the same match. 
-The game may end up in draw if both of the team have equal goals.
-On halfway of the league, each team has finished exactly one match against every other team. 
-The graph is now complete such that, all the edges combination have probability to attain values other than 0. 
-We can then fit ERGM Count to the EPL data.
-One example of the graph that will be fitted is shown in Figure \ref{fig:EPL2015}
-
-\begin{figure}[H]
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-5-1} 
-
-}
-
-
-
-\end{knitrout}
-\caption [Graph Representation of a Football League]{This is the graph representation of the dataset used. The circles denote the 20 teams that are participating. The participating teams vary annually. The size of the circles corresponds to the average market value of the players in the team. The bigger the circle, the average price of the players is higher. The arrow represents the goal scored by the team it orginates from, to the team pointed by the arrow head. The green hue indicates the scoring team is playing at home stadium. Whereas the red hue shows the goal scored in opponent stadium. The intensity of the color represents the total goal scored. The higher intensity of the color, the more goals were scored.}
-\label{fig: EPL}
-\end{figure}
-
-
-%This is for the igraph figure
-
-
-\begin{figure}[H] % "[t!]" placement specifier just for this example
-
-\hspace*{\fill}
-\begin{subfigure}{0.40\textwidth}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-7-1} 
-
-}
-
-
-
-\end{knitrout}
-\caption{EPL 2013-2014, 1st Half}
-\end{subfigure}\hspace*{\fill}
-\begin{subfigure}{0.40\textwidth}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-8-1} 
-
-}
-
-
-
-\end{knitrout}
-\caption{EPL 2013-2014, 2nd Half} 
-\end{subfigure}
-\hspace*{\fill}
-
-\hspace*{\fill}
-\begin{subfigure}{0.40\textwidth}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-9-1} 
-
-}
-
-
-
-\end{knitrout}
-\caption{EPL 2014-2015, 1st Half}
-\end{subfigure}\hspace*{\fill}
-\begin{subfigure}{0.4\textwidth}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-10-1} 
-
-}
-
-
-
-\end{knitrout}
-\caption{EPL 2014-2015, 2nd Half} 
-\end{subfigure}
-\hspace*{\fill}
-
-\hspace*{\fill}
-\begin{subfigure}{0.40\textwidth}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-11-1} 
-
-}
-
-
-
-\end{knitrout}
-\caption{EPL 2015-2016, 1st Half}
-\end{subfigure}\hspace*{\fill}
-\begin{subfigure}{0.40\textwidth}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-12-1} 
-
-}
-
-
-
-\end{knitrout}
-\caption{EPL 2015-2016, 2nd Half}
-\end{subfigure}
-\hspace*{\fill}
- 
-\caption [Graph Representation of a Football League]{This is the graph representation of the dataset used. The circles denote the 20 teams that are participating. The teams participating vary annually. Its size corresponds to the average market value of the players in the team. The bigger the circle, the average price of the players is higher. The arrow represents the goal scored by the team it orginates from, to the team pointed by the arrow head. The green hue indicates the scoring team is playing at home stadium. Whereas the red hue shows the goal scored in opponent stadium. The intensity of the color represents the total goals scored. The higher intensity of the color, the more goals were scored.} \label{fig:1}
-\end{figure}
-
-The interpretation of sufficient statistics will differs significantly from Krivistky's examples. 
-First of all, it is unclear whether the goals scored can be modelled with Poisson or Geometric Distribution.
-Maybe the \BI{nonzero} or \BI{CMP} distributions may also fit better. 
-Here we are interested in finding the best shape of edge-wise distribution.
-The notion behind the distribution is not of our interest.
-For example, the goals may be well described by Geometric Distribution. 
-However, the fact on Geometric Distribution represents the number of trials until the first success is not meaningful in this scenario.
-
-Assuming Poisson Distribution is appropriate, we can further explore the exogenous covariates that may affect the mean. 
-As mentioned in Figure \ref{fig:EPL2015}, one of the exogenous covariates is average market value of the players in the team attribute. 
-This attribute will be explained further in Data Abstraction Section.
-We will also consider whether 
-There maybe other covariates that may provide a better fit.
-However, as of now these 2 attributes are the only readily available data that is deemed to be appropriate.
-
-Furthermore, we can assess the strength of the \BI{mutuality} of the network with ERGM Count.
-Here \BI{mutuality} depicts the tendency for both teams in a match to score the same goals.
-This seems to be unlikely as each team main goal is to win the match. 
-Whereas the negative or \BI{anti-mutuality} can be interpreted as dominating effect.
-When one of the team scores really high, the opposing tends to score low or none at all.
-Anecdotal cases show such event may occur. 
-We will investigate this effect further in Model Fitting and Analysis section.
-
-The \BI{transitivity} attribute of the network is also interesting. 
-If transitivity is found to be significant, when one team scores many goal to other team  
-
-\section{More on The Data}
-MOst of the data was retrieved from \textit{www.football-data.co.uk}.
-The data files are downloadable csv files with consistent format for every different years.
-These includes total goals scored by every team, from every football matches. 
-The Home and Away attributes can also be abstracted easily from the files. 
-There are many discrepancies in the name of the team with regards to the reality.
-As a result, combining with other data source was found to be troublesome and laborious.
-
-However, I managed to manually retrieve other attributes from \textit{www.transfermarkt.com}.
-The attribute is the average market value of each player on that team during the particular competition period. 
-The derivation of the market value of a player is not fully disclosed.
-Users can express their opinion on the value itself.
-Experts claim that there is high degree of correlation of the market value with actual sampled salary.
-The market value has also been studied by ...
-
-There are 6 complete graph that can be fit to each of different model. The data is summarised by the figure.
-
-\section{Analysis on EPL based on ERGM Count}
-\subsection{Analysis on Baseline Distribution}
-We would like check whether 
-
 \bibliography{my_bib}{}
-
-
-
 \bibliographystyle{apalike}
 \end{document}
