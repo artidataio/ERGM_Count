@@ -9,7 +9,8 @@ output:
 ---
 
 ```{r, echo=FALSE,message=FALSE}
-root <- 
+library(rprojroot)
+root <- find_root(is_rstudio_project)
 knitr::opts_chunk$set(fig.align="center",echo=F,warning = F,cache=F,eval =T, message = F)
 library(rprojroot)
 library(ztable)

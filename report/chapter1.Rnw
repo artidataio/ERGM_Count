@@ -1,0 +1,11 @@
+%This is the text for chapter 1 of the report 
+
+%<<set-parent, echo=FALSE, cache=FALSE>>=
+%set_parent('report.Rnw')
+%@
+\chapter{Introduction}
+Contrasting with ERGM where edges can only be binary (exist or not exist), the valued networks enable the extension of edges definition. The idea is to model network that edges can be any value of count, measurement, or rank \citep{countergmdefined}. However, the paper only discuss ergm extension to count values where it can take on any positive integer value. 
+
+Note that count and rank is different here. Although both can take on any positive integer values, rank only determines the relative position of an order while count determines the total number of items. In a sense that, rank is ordered categeorical values where arithmetic operation is not possible.
+
+Interestingly, ERGM Count has only been applied to rank data. .....
