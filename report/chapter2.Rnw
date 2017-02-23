@@ -1,8 +1,8 @@
 %This is the text for chapter 2 of the report 
 
-%<<set-parent, echo=FALSE, cache=FALSE>>=
-%set_parent('report.Rnw')
-%@
+<<set-parent, echo=FALSE, cache=FALSE>>=
+set_parent('report.Rnw')
+@
 
 \chapter{Specification of ERGM Count}
 In this chapter, we will first define ERGM Count and its relevant shaping functions as proposed by \citet{countergmdefined}. 
@@ -135,7 +135,7 @@ If $\theta_2 <0$, then the probability of an edge to take value of zero is highe
 Whereas if $\theta_2>0$, the number of non-zero edge has higher probability than Poisson Distribution, thus giving the name \textit{\textbf{nonzero}}. Figure \ref{fig: Zero Modified Poisson} will illustrate this relatioship.
 
 \begin{figure}[H]
-<<fig.asp=0.5,eval=T>>=
+<<fig.asp=.7,eval=T>>=
 zero_modified<- readRDS(paste(root,"/plots/zero_modified",sep=""))
 plot(zero_modified)
 @

@@ -3,7 +3,11 @@ library(ggthemes)
 library(ggplot2)
 library(latex2exp)
 library(rprojroot)
-
+library(igraph)
+library(alluvial)
+library(RColorBrewer)
+library(leaflet)
+library(colorspace)
 #setup
 root <- find_root(is_rstudio_project)
 
@@ -25,7 +29,7 @@ saveRDS(geom_pois, paste(root,"/plots/geom_pois",sep=""))
 
 #Zero Modified Poisson
 n <- 10
-x_grid <- 5
+x_grid <- 3
 y_grid <- 3
 y_ij <- rep(rep(0:n,x_grid),y_grid)
 theta_1 <- NULL
@@ -62,7 +66,7 @@ saveRDS(zero_modified,paste(root,"/plots/zero_modified",sep=""))
 
 # Conway-Maxwell-Poisson
 n <- 20
-x_grid <- 5
+x_grid <- 3
 y_grid <- 3
 y_ij <- rep(rep(0:n,x_grid),y_grid)
 theta_1 <- NULL
@@ -94,8 +98,8 @@ cmp <- ggplot(data=graph_DT)+
 saveRDS(cmp,paste(root,"/plots/cmp",sep=""))
 
 #comparison of mutuality
-n <- 30
-x_grid <- 5
+n <- 20
+x_grid <- 3
 y_ij <- rep(rep(0:n,n+1),x_grid)
 y_ji <- NULL
 for(i in 0:n){y_ji <- c(y_ji,rep(i,n+1))}
@@ -103,7 +107,7 @@ for(i in 0:n){y_ji <- c(y_ji,rep(i,n+1))}
 y_ji <- rep(y_ji,x_grid)
 theta_1 <- rep(1, (n+1)^2*x_grid)
 theta_2 <- NULL
-for(i in seq(-2,2,length.out = x_grid)){theta_2 <- c(theta_2,rep(i,(n+1)^2))}
+for(i in seq(-1,1,length.out = x_grid)){theta_2 <- c(theta_2,rep(i,(n+1)^2))}
 
 graph_DT <- data.table(y_ij,y_ji,theta_1,theta_2)
 graph_DT[,minimum:= ifelse(y_ij <= y_ji,y_ij,y_ji),]
@@ -132,7 +136,7 @@ for(i in 1:length(levels(graph_DT$theta_2))){
 }
 
 mutual<- ggplot(data=graph_DT)+
-    geom_raster(aes(x=y_ij,y=y_ji,fill=probability)) +
+    geom_tile(aes(x=y_ij,y=y_ji,fill=probability),colour="white") +
     geom_rangeframe(aes(x=y_ij,y=y_ji))+
     theme_tufte()+
     facet_grid(statistics~theta_2,labeller = label_parsed)+
