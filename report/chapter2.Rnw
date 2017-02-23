@@ -62,7 +62,7 @@ Notice that the 2 models have different model parameter constraints.
 We illustrate the shape of Poisson and Geometric Distribution in Figure \ref{fig: Geometric and Poisson} below.
 
 \begin{figure}[H] 
-<<geom_pois,fig.asp=0.4>>=
+<<geom_pois,fig.asp=0.45>>=
 geom_pois <- readRDS(paste(root,"/plots/geom_pois",sep=""))
 plot(geom_pois)
 @
@@ -79,7 +79,7 @@ Besides the Poisson and Geometric Distribution, there are other \textit{referenc
 \citet{countergmapplied} introduced \textit{binomial-reference} and \textit{truncated geometric-reference} where it still focus on count edge's value, but there is a cap on the maximum attainable value.  
 These constrained models will not  be explored in this paper.
 
-\section{ERGM Count Modelling}
+\section{\textit{Poisson-Reference} ERGM Count Modelling}
 Previously, the form of the ERGM Count was reduced to edge-wise Poisson and Geometric Distribution. 
 These two models are rather simple and easily interpreted. 
 However, both may not be the model that best fit the later application on Chapter 4.
@@ -98,16 +98,16 @@ Larger $\theta_k$ will result in a distribution of networks with more feature ga
 Let the possibly predictive variables outside the network structure or exogenous covariate be $x_{ijk}$.
 A \textit{poisson-reference} ERGM Count will reduce to Poisson Regression Model if we introduce an edge-independent sufficient statistics:
 \begin{align}
-g_k(\bm{y})= \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ijk}.
+g(\bm{y})= \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ij}.
 \end{align}
 
 Let the model sufficient statistics only be exogenous covariate and \BI{sum}  the PMF will reduce to:
 \begin{align*}
-Pr(\bm{Y}=\bm{y}|\theta) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_k \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ijk} \right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!} \\
-&= \prod_{(i,j) \in \mathbb{Y}} \frac{(\exp(\theta_1+\theta_k x_{ijk}))^{y_{ij}}}{y_{ij}!}
+Pr(\bm{Y}=\bm{y}|\theta) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ij} \right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!} \\
+&= \prod_{(i,j) \in \mathbb{Y}} \frac{(\exp(\theta_1+\theta_2 x_{ij2}))^{y_{ij}}}{y_{ij}!}
 \end{align*}
-This can be recognised as an edge-wise distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{poisson}(\lambda =\exp(\theta_1 + \theta_k x_{ijk}))$ .
-Notice that adding exogenous covariate will maintain the poisson relationship yet changing the parameter $\lambda$ for edge $(i,j)$ by multiplication of factor $e^{\theta_k x_{ijk}}$.
+This can be recognised as an edge-wise distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{poisson}(\lambda =\exp(\theta_1 + \theta_2 x_{ij}))$ .
+Notice that adding exogenous covariate will maintain the poisson relationship yet changing the parameter $\lambda$ for edge $(i,j)$ by multiplication of factor $e^{\theta_2 x_{ij}}$.
 It is obvious that further addition of another exogenous covariate will give the same effect.
 Hence, this model is equivalent to applying Poisson regression model to the network data.  
 
@@ -135,7 +135,7 @@ If $\theta_2 <0$, then the probability of an edge to take value of zero is highe
 Whereas if $\theta_2>0$, the number of non-zero edge has higher probability than Poisson Distribution, thus giving the name \textit{\textbf{nonzero}}. Figure \ref{fig: Zero Modified Poisson} will illustrate this relatioship.
 
 \begin{figure}[H]
-<<fig.asp=.7,eval=T>>=
+<<fig.asp=0.65,eval=T>>=
 zero_modified<- readRDS(paste(root,"/plots/zero_modified",sep=""))
 plot(zero_modified)
 @
@@ -145,34 +145,41 @@ plot(zero_modified)
 
 
 \subsection{Dispersion Modelling}
-Poisson distribution has only 1 parameter that affect the distribution. This parameter found to affect the mean and the spread of the distribution. For one particular value of mean, there is only one particular spread poisson can attain. In other words, the spread is fixed and not adjustable. The same occurs with other one parameter distributions such as geometric.
-
-One method to overcome this limitation is by adding sufficient statistic,\textit{\textbf{CMP}}:
+Poisson distribution has only one parameter which control the mean and the spread of the distribution. 
+The variance is constrained to be equal to the mean and is not adjustable.
+One method to overcome this constrain is by adding sufficient statistic, \BI{CMP}:
 \begin{align}
 g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)
 \end{align}
-When only sufficient statistics use in the model is \textit{\textbf{sum}} and \textit{\textbf{CMP}} with poisson reference, the PMF:
+Suppose the sufficient statistics use in the model are \BI{sum} and \BI{CMP} with poisson reference, the PMF:
 \begin{align*}
 Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
 &\propto \prod_{(i,j) \in \mathbb{Y}} (\exp(\theta_1))^{y_{ij}} (y_{ij}!)^{\theta_2-1}
 \end{align*}
-Hence the model reduced to edge-wise \textit{Conway-Maxwell-Poisson} \textit{\textbf{CMP}} distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{CMP}(\lambda =\exp(\theta_1),\nu = 1-\theta_2)$ where $\theta_2 \le 1$. When $\theta_2$ goes from 0 to $-\infty$, the distribution become less and less dispersed compare to Poisson. When $\theta_2 \to -\infty$, it is reduced to Bernoulli Distribution. Whereas if as $\theta_2$ from 0 to 1, the distribution is more dispersed compare to Poisson. It is reduced  to Geometric Distribution at $\theta_2=1$. Figure ... will illustrate the various shapes of CMP distribution.
+Hence the model reduces to the edge-wise \textit{Conway-Maxwell-Poisson} \textit{\textbf{CMP}} distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{CMP}(\lambda =\exp(\theta_1),\nu = 1-\theta_2)$ where $\theta_2 \le 1$. 
+When $\theta_2$ decreases from 0 to $-\infty$, the distribution become less and less dispersed compare to Poisson.
+When $\theta_2 \to -\infty$, it is reduced to Bernoulli Distribution \citep{countergmdefined}. 
+Whereas if as $0 < \theta_2 < 1$, the distribution become more dispersed as compared to Poisson. 
+It reduces  to Geometric Distribution at $\theta_2=1$. 
+Figure \ref{fig: CMP} will illustrate the various shapes of CMP distribution.
 
 \begin{figure}[H]
-<<fig.asp=0.5>>=
+<<fig.asp=.65>>=
 cmp<- readRDS(paste(root,"/plots/cmp",sep=""))
 plot(cmp)
 @
-\caption ["Illustration of Conway-Maxwell-Poisson Distribution"]{This image shows the various shapes of Conway-Maxwell-Poisson Distribution (CMP). The right axis corresponds to parameter $\theta_1$. Whereas the top axis indicates parameter $\theta_2$, which dominates the dispersion effect of the distribution. When $\theta_2 = 0$, CMP reduce to Poisson with mean $e^{\theta_1}$. When $\theta_2 >0$ the distribution become more dispersed, then it gets less dispersed when $\theta_2<0$.}  
+\caption ["Illustration of Conway-Maxwell-Poisson Distribution"]{This figure shows the various shapes of Conway-Maxwell-Poisson Distribution (CMP). The right axis corresponds to parameter $\theta_1$. Whereas the top axis indicates parameter $\theta_2$, which dominates the dispersion effect of the distribution. When $\theta_2 = 0$, CMP reduce to Poisson with mean $e^{\theta_1}$. When $\theta_2 >0$ the distribution become more dispersed and it gets less dispersed when $\theta_2<0$.}  
+\label{fig: CMP}
 \end{figure}
 
-
 \subsection{Mutuality}
-The previous sections discussed the various models that has independent edge-wise assumption. Although, normalization constants tend to be intractable, they can be easily recognised as one particular distribution. However, fitting network data to independent edge-wise model will undermine the inherent relational characteristic of network properties. 
+The previous sections discussed the various models that have independent edge-wise assumption. 
+Although, normalization constants tend to be intractable, they can be easily recognised as one particular distribution. 
+However, fitting network data to independent edge-wise model will undermine the inherent relational characteristics of networks. 
 
-In directed network, the strength of mutuality is one of the network structure that one might consider. In friendship network, mutuality might be defined as when one person claimed to be friend with someone, the opposite party will reciprocate and claim the same. It can also be defined when one declare to be an enemy, the other party also declare the referral to be an enemy. Surely, the tendency to be mutual differs on different network. Hence being mutual in binary network can be defined as $y_{ij}=y_{ji}=1$ or sometimes $y_{ij}=y_{ji}$.
+In directed networks, the strength of mutuality is one of the network structure that one might consider. In friendship network, mutuality might be defined as when one person claimed to be friend with someone, the opposite party will reciprocate and claim the same. It can also be defined when one declare to be an enemy, the other party also declare the referral to be an enemy. Surely, the tendency to be mutual differs on different network. Hence being mutual in binary network can be defined as $y_{ij}=y_{ji}=1$ or sometimes $y_{ij}=y_{ji}$.
 
-Addition of mutuality will make the ERGM Count model difficult to interpret. Krivitsky suggest that we can understand the model through conditional distribution:
+Addition of mutuality will make the ERGM Count model difficult to interpret. \citet{countergmdefined} suggest that we can understand the model through conditional distribution:
 $Pr(Y_{ij}=y_{ij}| \bm{Y} \in \mathcal{Y}_{ij}(y))$ where 
 $\mathcal{Y}_{ij}(y)$ is a set where only edge $y_{ij}$ can change it's value where others assumed to be constant.
 This means that we will know which value $y_{ij} \in \mathbb{N}_0$ will random variable $Y_{ij}$ likely to attain, given one particular network values. 
@@ -227,7 +234,7 @@ Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (
 \end{itemize}
 Before we discuss the differences of each parameter, it is best to look at the  shapes of the joint distribution. 
 \begin{figure}[H]
-<< fig.asp=0.5,>>=
+<< fig.asp=0.7,>>=
 mutual<- readRDS(paste(root,"/plots/mutual",sep=""))
 plot(mutual)
 @
