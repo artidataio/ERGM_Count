@@ -158,7 +158,7 @@ Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j
 \end{align*}
 Hence the model reduces to the edge-wise \textit{Conway-Maxwell-Poisson} \textit{\textbf{CMP}} distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{CMP}(\lambda =\exp(\theta_1),\nu = 1-\theta_2)$ where $\theta_2 \le 1$. 
 When $\theta_2$ decreases from 0 to $-\infty$, the distribution become less and less dispersed compare to Poisson.
-When $\theta_2 \to -\infty$, it is reduced to Bernoulli Distribution \citep{countergmdefined}. 
+When $\theta_2 \to -\infty$, it reduces to Bernoulli Distribution \citep{countergmdefined}. 
 Whereas if as $0 < \theta_2 < 1$, the distribution become more dispersed as compared to Poisson. 
 It reduces  to Geometric Distribution at $\theta_2=1$. 
 Figure \ref{fig: CMP} will illustrate the various shapes of CMP distribution.
@@ -177,53 +177,59 @@ The previous sections discussed the various models that have independent edge-wi
 Although, normalization constants tend to be intractable, they can be easily recognised as one particular distribution. 
 However, fitting network data to independent edge-wise model will undermine the inherent relational characteristics of networks. 
 
-In directed networks, the strength of mutuality is one of the network structure that one might consider. In friendship network, mutuality might be defined as when one person claimed to be friend with someone, the opposite party will reciprocate and claim the same. It can also be defined when one declare to be an enemy, the other party also declare the referral to be an enemy. Surely, the tendency to be mutual differs on different network. Hence being mutual in binary network can be defined as $y_{ij}=y_{ji}=1$ or sometimes $y_{ij}=y_{ji}$.
+In directed networks, the strength of mutuality is one of the network structure that one might consider. 
+In friendship networks, mutuality is an important characteristic. 
+This is because, when one person claimed to be friend with another person the opposite party is likely to  reciprocate and claim the same. 
+Additionaly, when one declare to be not-a-friend, the other party will have a tendency to declare the same. 
+Hence being mutual in binary network can be defined as $y_{ij}=y_{ji}=1$ or sometimes $y_{ij}=y_{ji}$.
 
-Addition of mutuality will make the ERGM Count model difficult to interpret. \citet{countergmdefined} suggest that we can understand the model through conditional distribution:
-$Pr(Y_{ij}=y_{ij}| \bm{Y} \in \mathcal{Y}_{ij}(y))$ where 
-$\mathcal{Y}_{ij}(y)$ is a set where only edge $y_{ij}$ can change it's value where others assumed to be constant.
-This means that we will know which value $y_{ij} \in \mathbb{N}_0$ will random variable $Y_{ij}$ likely to attain, given one particular network values. 
+The inclusion of mutuality will make the ERGM Count model more difficult to interpret.
+\citet{countergmdefined} suggest that we can understand the model through conditional distribution: $Pr(Y_{ij}=y_{ij}| \bm{Y} \in \mathcal{Y}_{ij}(y))$ where $\mathcal{Y}_{ij}(y)$ is a set where only edge $y_{ij}$ can change its value while others remain constant.
+This means that we will know which value $y_{ij} \in \mathbb{N}_0$ the random variable $Y_{ij}$ likely to attain, given one particular network values. 
 
-However, we will proof that addition of mutuality will reduce to model with independent pair-wise distribution. 
+However, we will prove that addition of mutuality will reduce the model  to one with independent pair-wise distribution. 
 Where a pair represents 2 edges where the origin and destinaton nodes are opposite of each other.
 The proposed statistics to represent mutuality are:
-\begin{itemize}
+\begin{enumerate}
 
-\item \textit{\textbf{Minimum}}
+\item \BI{Minimum}
 
-One of the proposed statistics to represent mutuality is minimum value or \textit{\textbf{mutual(min)}}: 
+One of the proposed statistics to represent mutuality is the \BI{mutual(min)}: 
 \begin{align}
 g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})
 \end{align}
 This is simply taking minimum values between 2 opposite edges of a dyad, and sum it for every possible pair.
-When a model only use the \textit{\textbf{sum}} and \textit{\textbf{mutual(min)}}, the PMF:
+When a model only use the \BI{sum} and \BI{mutual(min)}, the PMF:
 \begin{align*}
 Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_{2}\sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
 &= \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y},i<j} (y_{ij}+y_{ji}) + \theta_{2}\sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})\right)}{\prod_{(i,j) \in \mathbb{Y},i<j}y_{ij}!y_{ji}!}\\
 &= \prod_{(i,j) \in \mathbb{Y},i<j} \frac{\exp(\theta_1(y_{ij}+y_{ji})+\theta_2 \min(y_{ij},y_{ji}))}{y_{ij}!y_{ji}!}
 \end{align*}
-Note that this cant be reduced into edge-wise distribution as per previous sections. Yet it has indendent pair-wise distribution where $\forall(i,j) \in\mathbb{Y},i<j$, the joint distribution of $(Y_{ij},Y_{ji})$ has PMF:
+Note that this does not reduce into edge-wise distribution as per previous sections. 
+Yet, it has independent pair-wise distribution where $\forall(i,j) \in\mathbb{Y},i<j$, the joint distribution of $(Y_{ij},Y_{ji})$ has PMF:
 \begin{align*}
 P(Y_{ij}=y_{ij},Y_{ji}=y_{ji}|\theta_1,\theta_2) \propto \frac{\exp(\theta_1(y_{ij}+y_{ji})+\theta_2 \min(y_{ij},y_{ji}))}{y_{ij}!y_{ji}!}
 \end{align*}
 
 \item \textit{\textbf{Negative Absolute Difference}}
 
-Another proposed statistics is negative absolute difference or \textit{\textbf{mutual(nabsdiff)}} which has the form:
+Another proposed statistics is negative absolute difference or \BI{mutual(nabsdiff)} which has the form:
 \begin{align}
 g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} -|y_{ij} - y_{ji}| 
 \end{align}
-Note that the statistics g's maximum value is 0. 
+Note that this statistic maximum value is 0. 
 It is achieved when $\forall(i,j) \in\mathbb{Y},i<j (y_{ij}=y_{ji})$ or every pair is equal. 
-The negation of the statistics is necessary as the higher the statistics, the higher strength of mutuality. 
-With the same method as above, the pairwise distribution $(Y_{ij},Y_{ji})$ has PMF:
+The negation of the statistic is necessary as the higher the statistics, the higher strength of mutuality. 
+Hence the coefficient will conform with other mutuality statistics.
+
+With the same method above, the pairwise distribution $(Y_{ij},Y_{ji})$ has PMF:
 \begin{align*}
 Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) - \theta_2 |y_{ij}-y_{ji}|)}{y_{ij}!y_{ji}!} 
 \end{align*}
 
-\item \textit{\textbf{Geometric Mean}}
+\item \BI{Geometric Mean}
 
-The last proposed statistics is geometric mean or \textit{\textbf{mutual(geomean)}} which has the form:
+The last proposed statistics is geometric mean or \BI{mutual(geomean)} which has the form:
 \begin{align}
 g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \sqrt{y_{ij}}\sqrt{y_{ji}} 
 \end{align}
@@ -231,14 +237,14 @@ Similarly the model with statistics \textit{\textbf{sum}} and \textit{\textbf{mu
 \begin{align*}
 Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) + \theta_2 \sqrt{y_{ij}}\sqrt{y_{ji}})}{y_{ij}!y_{ji}!} 
 \end{align*}
-\end{itemize}
+\end{enumerate}
 Before we discuss the differences of each parameter, it is best to look at the  shapes of the joint distribution. 
 \begin{figure}[H]
 << fig.asp=0.7,>>=
 mutual<- readRDS(paste(root,"/plots/mutual",sep=""))
 plot(mutual)
 @
-\caption [Joint distribution with mutual statistics]{This image shows the various PMF of the joint distribution with $\theta_1 =1 $. The different shades of black indicate the region that has higher probability. Here the top axis represent $\theta_2$ which coressponds to the parameter of \textit{\textbf{mutual}} statistics. When $\theta_2 = 0$, the joint distibution follows 2 independent Poisson with $\lambda = e^{\theta_1}$}
+\caption [Joint distribution with mutual statistics]{This figure shows the various PMF of the joint distribution with $\theta_1 =1 $. The different shades of black indicate the region that has higher probability. Here the top axis represent $\theta_2$ which coressponds to the parameter of \textit{\textbf{mutual}} statistics. When $\theta_2 = 0$, the joint distibution follows 2 independent Poisson with $\lambda = e^{\theta_1}$}
 \end{figure}
 
 The differences of the joint distributions lies on the dependency statistics $\min(y_ij,y_ji),-|y_{ij}-y_{ji}|, \text{ and} \sqrt{y_{ij}}\sqrt{y_{ji}}$ for 
