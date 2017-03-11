@@ -1,5 +1,9 @@
-\documentclass[12pt,a4paper,twoside,openany]{book}
-\usepackage[margin=48pt]{geometry}
+\documentclass[12pt,a4paper,twoside]{book}
+\pagestyle{myheadings}%remove headers
+
+\usepackage{geometry}
+\geometry{margin = 1in}
+
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -7,7 +11,9 @@
 \usepackage{graphicx}
 \usepackage{enumerate}
 \usepackage{subcaption}
+
 \usepackage[table]{xcolor}
+\usepackage{multirow}
 
 \usepackage{float}
 \floatstyle{boxed} 
@@ -22,12 +28,15 @@
 
 
 \newcommand{\BI}[1]{\textit{\textbf{#1}}}
+\newcommand{\I}[1]{\textit{#1}}
 \newcommand{\me}{\mathrm{e}}
-<<echo=F >>=
+<<echo=F, include=FALSE>>=
   opts_chunk$set(fig.align="center",echo=F,cache=F,eval = T,warning=F,message=F)
   library(rprojroot)
+  library(ztable)
   root <- find_root(is_rstudio_project)
   data_LS <- readRDS(paste(root,"/processed data/data_LS",sep=""))
+  table_LS <- readRDS(paste(root,"/processed data/table_LS",sep=""))
 @
 
 \begin{document}

@@ -1,8 +1,8 @@
 %This is the text for chapter 2 of the report 
 
-<<set-parent, echo=FALSE, cache=FALSE>>=
-set_parent('report.Rnw')
-@
+%<<set-parent, echo=FALSE, cache=FALSE>>=
+%set_parent('report.Rnw')
+%@
 
 \chapter{Specification of ERGM Count}
 In this chapter, we will first define ERGM Count and its relevant shaping functions as proposed by \citet{countergmdefined}. 
@@ -22,11 +22,11 @@ Let the random network of count configuration be $\bm{Y} \in \mathcal{Y}$, with 
 
 The unknown model parameter $\bm{\theta} \in \Theta$ where $\Theta \subseteq \mathbb{R}^{q}$ is then mapped to $\mathbb{R}^p$ by the function $\eta:\Theta \to \mathbb{R}^p$. Given chosen sufficient statistics $g:\mathcal{Y} \to \mathbb{R}^{p}$ (which may also depend on external covariate $\bm{x}$), and reference measure $h:\mathcal{Y} \to [0,\infty)$. The ERGM Count of $\bm{Y}$ has Probability Mass Function (PMF):
 \begin{align}
-Pr_{\bm{\theta};h,\eta,g}(\bm{Y}=\bm{y})=\frac{h(\bm{y})\exp(\eta(\bm{\theta})\cdot g(\bm{y}))}{k_{h,\eta,g}(\bm{\theta})},
+Pr_{\bm{\theta};h,\eta,g}(\bm{Y}=\bm{y})=\frac{h(\bm{y})\exp(\eta(\bm{\theta})\bullet g(\bm{y}))}{k_{h,\eta,g}(\bm{\theta})},
 \end{align}
 where the denominator is a normalization constant defined as:
 \begin{align}
-k_{h,\eta,g}(\bm{\theta}) = \sum_{\bm{y} \in \mathcal{Y}}h(\bm{y})\exp(\eta(\bm{\theta})\cdot g(\bm{y})).
+k_{h,\eta,g}(\bm{\theta}) = \sum_{\bm{y} \in \mathcal{Y}}h(\bm{y})\exp(\eta(\bm{\theta})\bullet g(\bm{y})).
 \end{align}
 There is an additional constraint for model parameter $\bm{\theta}$ to be an element from the set:
 \begin{align} \label{eq: parameter constraint}
@@ -37,7 +37,7 @@ In many occasions, the constraint for the parameters is not known explicitly.
 
 To simplify the notation, the PMF can be defined up to normalization constant as:
 \begin{align}
-Pr(\bm{Y}=\bm{y}|\bm{\theta}) \propto h(\bm{y})\exp(\eta(\bm{\theta})\cdot g(\bm{y}))
+Pr(\bm{Y}=\bm{y}|\bm{\theta}) \propto h(\bm{y})\exp(\eta(\bm{\theta})\bullet g(\bm{y}))
 \end{align}
 This assumes the constraint \ref{eq: parameter constraint} is met.
 
@@ -86,11 +86,13 @@ However, both may not be the model that best fit the later application on Chapte
 In addition, these two modes do not take into account the complex relationship of a network.
 We will explore more complex models and their interpretations later.
 
-In this section, we will focus on \textit{poisson-reference} ERGM Count without complex constraints: $\mathcal{Y} \in \mathcal{N}_0^{\mathcal{Y}}$ and $h(\bm{y}) = \prod_{(i,j) \in \mathbb{Y}}(y_{ij}!)^{-1}$. 
-
+In this section, we will focus on \textit{poisson-reference} ERGM Count without complex constraints: $\mathcal{Y} \in \mathcal{N}_0^{\mathcal{Y}}$ and $h(\bm{y}) = \prod_{(i,j) \in \mathbb{Y}}(y_{ij}!)^{-1}$.
 Furthermore, the linear ERGM Count restriction will also be applied where $\eta(\bm{\theta}) = \bm{\theta}$ and thus $q = p$. 
 This restriction makes the model comprehensible. 
-In linear ERGM Count, if $\Theta_{N}$ is an open set, then $\theta_{k}^{\prime} >\theta_{k} \implies E(g_k(\bm{Y})|\theta,\theta_k^{\prime})>E(g_k(\bm{Y})|\theta,\theta_k)$. 
+In linear ERGM Count, if $\Theta_{N}$ is an open set, then: 
+\begin{align} \label{eq: Barndorff Nielsen}
+\theta_{k}'>\theta_{k} \implies E(g_k(\bm{Y})|\theta,\theta_k'>E(g_k(\bm{Y})|\theta,\theta_k)
+\end{align}
 In other words, if other model parameters $\theta \setminus \theta_k$ are fixed, the expected sufficient statistics $g_k$ is strictly increasing in $\theta_k$.
 Larger $\theta_k$ will result in a distribution of networks with more feature gauged by $g_k$.
 
@@ -238,31 +240,56 @@ Similarly the model with statistics \textit{\textbf{sum}} and \textit{\textbf{mu
 Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) + \theta_2 \sqrt{y_{ij}}\sqrt{y_{ji}})}{y_{ij}!y_{ji}!} 
 \end{align*}
 \end{enumerate}
-Before we discuss the differences of each parameter, it is best to look at the  shapes of the joint distribution. 
+
 \begin{figure}[H]
 << fig.asp=0.7,>>=
 mutual<- readRDS(paste(root,"/plots/mutual",sep=""))
 plot(mutual)
 @
-\caption [Joint distribution with mutual statistics]{This figure shows the various PMF of the joint distribution with $\theta_1 =1 $. The different shades of black indicate the region that has higher probability. Here the top axis represent $\theta_2$ which coressponds to the parameter of \textit{\textbf{mutual}} statistics. When $\theta_2 = 0$, the joint distibution follows 2 independent Poisson with $\lambda = e^{\theta_1}$}
+\caption [Joint distribution with mutual statistics]{This graph illustrates the various PMF of the pairwise distribution with $\theta_1 =1 $. The different shades of black indicate the region that has higher probability. Here the top axis represent $\theta_2$ which coressponds to the parameter of \textit{\textbf{mutual}} statistics. When $\theta_2 = 0$, the joint distibution follows 2 independent Poisson with $\lambda = e^{\theta_1}$}
+\label{fig: pairwise distribution}
 \end{figure}
 
-The differences of the joint distributions lies on the dependency statistics $\min(y_ij,y_ji),-|y_{ij}-y_{ji}|, \text{ and} \sqrt{y_{ij}}\sqrt{y_{ji}}$ for 
- \BI{min}, \BI{nabsdiff} and \BI{geomean} respectively.
+The differences of the joint distributions are due to the statistics $\min(y_{ij},y_{ji}),-|y_{ij}-y_{ji}|, \text{ and} \sqrt{y_{ij}}\sqrt{y_{ji}}$ for \BI{min}, \BI{nabsdiff} and \BI{geomean} respectively.
 When $\theta_2>0$ for \BI{min} and \BI{geomean}, the probability will increase as $y_{ij}$ and $y_{ji}$ increase. 
-This shifted the distribution to higher pair values. 
-For \BI{nabsdiff} the level of $y_{ij}$ and $y_{ji}$ does not affect the reduction of probability. 
-However, the reduction occurs less when disparity between $y_{ij}$ and $y_{ji}$ is low and 0 reduction at $y_{ij}=y_{ji}$. 
-Hence the distribution is "pulled-in" to the mutual values. 
-The same occurs in \BI{min}, such that the highest increase occurs when $y_{ij}=y_{ji}$. 
-Hence the distribution is "pulled-up" to mutual values.
+Thus the distribution will place a greater mass on pairs with higher edge values. 
+In the case of \BI{min}, for each level of $y_{ij}$ and $y_{ji}$, the highest increase of mass occur when $y_{ij} = y_{ji}$. 
+This increases the probability of having equal pair values. \citet{countergmdefined} referred it as the "pulled-up" effect of \BI{min} statistics.
+On the other hand, \BI{nabsdiff} implements the reduction of mass.  
+The higher disparity between the pair $y_{ij}$ and $y_{ji}$ will result in higher mass reduction.
+The reduction occurs less when disparity between $y_{ij}$ and $y_{ji}$ is low and 0 reduction at $y_{ij}=y_{ji}$. 
+The characteristic is similar with \BI{min}. 
+However, it does not increase the probability of higher edge values. 
+Hence the distribution is "pulled-in" to the mutual values.
+\citet{countergmdefined} referred it as the "pulled-in" effect of \BI{nabsdiff} statistic. 
+These characteristics are demonstrated in Figure \ref{fig: pairwise distribution} when $\theta_2 = 1$.  
 
-When $\theta_2 <0$, \BI{min} and \BI{geomean} will experience higher reduction at higher values of $y_{ij}$ and $y_{ji}$. The reduction stop as $y_{ij}$ or $y_{ji}$ equals to zero. 
-Hence, it creates bimodal distribution that has low values with opposing edge has zero value. 
-The \BI{min} shows less abrupt clouds as the reduction varies. 
-The effect differs significantly from \BI{nabsdiff}. 
-There is increase in probability especially when the disparity is high, which creates the bimodal distribution. 
-Since now the level of $y_{ij}$ or $y_{ji}$ affect the increase, the distribution cloud clutter on the higher values with opposinge edge is close to 0.
+When $\theta_2 <0$, \BI{min} and \BI{geomean} will give the reduction effect. 
+The reduction for occurs less on smaller value of the pair $(y_{ij},y_{ji}$.
+In the case of \BI{min}, for each level of $y_{ij}$ and $y_{ji}$, the highest reduction occur when $y_{ij} = y_{ji}$. 
+This emphasizes the non equal and highly dissimilar pair, such that it creates bimodal distribution. 
+Statistics \BI{nabsdiff} also introduce the same effect to the model by placing the higher mass on pairs with high disparity.
+Hence, \BI{nabsdiff} also creates bimodal distribution. 
+However, as $y_{ij}$ or $y_{ji}$ gets higher, the disparity can get higher so that the mass addition is higher. 
+This causes the bimodal distribution to occupy the higher values which results to a more distinctive bimodal compare with statistics \BI{min}.
+These characteristics are demonstrated in Figure \ref{fig: pairwise distribution} when $\theta_2 = -1$.  
 
 \subsection{Transitivity}
-not done
+
+The last network statistics that will be discussed is the measure of transitivity.
+In the friendship network, transitivity can be defined as the tendency of actor $i$ claiming a friendship tie with actor $j$, given that actor $i$ claimed a friendship tie with actor $k$ and actor $k$ claimed a friendship tie with actor $j$.
+In layman term, transitive relations gives the notion "if you are a friend of my friend, you are my friend too".
+
+Transitivity in binary network can simply be represented with $y_{ik}=y_{kj}=y_{ij}=1$. 
+Binary ERGM allows statistics \BI{transitive triads},  $g(\bm{y}) = \sum_{i,j,k \in N} y_{ij}y_{ik}y_{kj}$ to represent transitivity.  
+However, this definition cannot be applied to network with count edges \citep{countergmdefined}.
+Applying the statistics will result in violation of constraint \ref{eq: parameter constraint}.
+When the corresponding parameter $\theta>0$, the normalization constant $k_{h,\eta,g}(\bm{\theta}) \nless \infty$.
+
+\citet{countergmdefined} suggested to the use of statistics, \BI{transitive weights}: 
+\begin{align}
+g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \min \left(y_{ij},\max_{k \in N} \left(\min(y_{ik},y_{kj}) \right) \right)
+\end{align}
+This statistics search through every intermediate actor $k \in N/\{i,j\}$ for which actor k has the strongest intermediary relation ($\min(y_{ik},y_{kj})$). 
+Then, we compare the intermediary relation with the strength of direct relation ($y_{ij}$).........
+
