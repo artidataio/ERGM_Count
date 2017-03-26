@@ -1,0 +1,196 @@
+%<<set-parent, echo=FALSE, cache=FALSE>>=
+%set_parent('report.Rnw')
+%@
+
+\chapter{Network Representation of Football Goals and ERGM Count Justification}
+Most of the applications in ERGM Count have been focusing on social network analysis.
+\citet{countergmapplied} applied the model to the social relation of Zachary's Karate Club and Sampson's Monks dataset. 
+The network structure is obvious, friendship levels as the edges and individuals as the nodes.
+Another implementation of ERGM Count is an assessment of the effectiveness of government-sponsored collaboration written by \citet{countergmexamplepsj}.
+Here the edges are collaboration level and companies as the nodes.
+ 
+Although football goals are relational, they are rarely represented as a network structure.
+Hence, in Section \ref{sec: justification}, we will justify the network structure of goals that is appropriate for ERGM Count.
+Through ERGM Count, we will investigate the variables that are significant in modeling the goals (Chapter \ref{chapter: analysis}).
+But before everything else, it is essential to introduce the relevant dataset. 
+
+
+\section{Introduction to The Dataset}\label{sec: introduction to dataset}
+
+\subsection{Football Matches and Goals}
+Football is a ball game played between two teams of 11 players.
+It is the world's most popular sport \citep{giulianotti2012football}. 
+By contrast, English Premier League (EPL) is the top tier of football competition in England. 
+It is the most watched football competition in the world \citep{ebner2013mostwatched}. 
+
+EPL's football match is played within a duration of 90 minutes.
+The match is played on a rectangular pitch with one goalpost appointed to each team. 
+There is one spherical ball contested.
+The objective of the game is to score goals by getting the ball into the opposing team goalpost.
+At the end of the match, the team with the highest accumulated goals will win the match.
+In EPL, the match may end with a draw when the total goals of both teams are the same.
+
+\subsection{English Premier League}
+EPL is a 38 weeks championship participated by 20 football club. 
+On each week, each club will play exactly once totaling 10 matches a week.
+By the end of the championship, there are 380 matches with each club has played against 19 other clubs exactly twice.
+The champion is decided by a point system which is not of our interest.
+
+EPL lasted a year long starting in the mid of August. 
+The winter break in January marks the end of the first half of the championship. 
+By this period, every club has played against every other clubs exactly once. 
+The next 190 matches are conducted until May, the summer break. 
+During these 2 breaks, the clubs are allowed to transfer their players locally or internationally.
+The EPL is then restarted in the mid of August.
+
+The period of one EPL championship is called the season.
+For example, EPL that started in August 2013 and end in May 2014 is called EPL 2013-14 season. 
+The next EPL will be called as EPL 2014-15 season. 
+At the end of each season, the team will be rank based on the point system.
+The bottom 3 clubs with lowest points will be replaced by top clubs from the lower-tier competition in the next season.
+
+Furthermore, each football club participating in EPL has its own stadium.
+In each match, there is the home team (the stadium owner) and the away team.
+Recall that each club has played against every other club exactly twice.
+The club has to be the home team in one match and away team on the other. 
+
+\subsection{Average Market Value}\label{sub: average market value}
+Market value is a statistic derived by \textit{www.transfermarkt.com} (transfermarkt) to measure the overall quality of a football player.
+In this paper, the unit value is measured in Euro, the official currency of Eurozone.
+Average market value (AMV) refers to the average value of the players' market value for a given club.
+
+The derivation of the statistics is not fully disclosed.
+\citet{Sarkar2014money} stated that market value often reported as the transfer value, where it may predict the sum of money required to acquire the player.
+\citet{ECIN:ECIN360} claimed that there is a high degree of correlation of the market value with the actual salary.
+
+Market values of the players change over time.
+One can track the history of the market value of a player since their early career until the present.
+Once again the consideration of the changes is not fully disclosed.
+However, visitors of \textit{www.transfermarkt.com} can express their opinion on the value itself.
+
+The AMV is the preferred statistic to assess the overall quality of a football club. 
+AMV does not get affected by the number of players in a football club which varied greatly.
+AMV has been used by \citet{Sarkar2014money} to predict the World Cup 2014.
+Spain which has the highest AMV at that point of time did not do well in the competition. 
+Hence, AMV is found to be an imperfect predictor of football club's performance \citep{Sarkar2014money}. 
+
+\subsection{The Dataset}
+Previously, we are introduced with the gameplay of football matches and how total goals are derived.
+Then, EPL was mentioned to be a championship that consist of 380 matches each season. 
+We also discussed the difference between the home and the away team of the match.
+Lastly, the AMV statistic was mentioned to be a reasonable indicator of football club's performance.
+
+I have then retrieved a data on every matches of 3 consecutive EPL seasons starting from EPL 2013-14.
+The data is retrieved from \textit{www.football-data.co.uk}.
+On each match, the data includes the clubs' name and the number of goals scored from each club.
+It also points  the home and away team of the match.
+Furthermore, I retrieved AMV data from \textit{www.transfermarkt.com} for each season. 
+Since AMV changes over time, I retrieved the value of AMV at the end of the season.
+
+The full data is shown by Figure \ref{fig: EPL 2013-14}, \ref{fig: EPL 2014-15} and \ref{fig: EPL 2015-16}.
+The goals data are represented by the 2 adjacent heatmaps.
+Each heatmap represents a square matrix where the column name is the same with the row name.
+The row name represents the club who score the goal.
+The column name represents which club the goal is directed to.
+The bottom axis represents whether the goal scorer is playing as the home or the away team.
+
+Furthermore, each entry of the matrix is color-coded as specified by the legend.
+For example in Figure \ref{fig: EPL 2015-16}, the square with row number 1 and column number 8 on the left heatmap represents the goals scored by Chelsea onto Everton, where Chelsea is playing as the home team. In this case the number of goals is 3.
+When the row number equals to the column number, the goals value is "na".
+This is because there is no football match of a club against its own.
+
+In addition, the Average Market Value's x-axis also behaves like the column name.
+For example, the AMV of Man City in EPL 2013-2014 is around 17 Million Euros.
+Notice that the rows and columns are ordered by AMV. 
+This arrangement will be further discussed in Chapter \ref{chapter: analysis}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,trim=0 0 5 20,clip]{"EPL 2013-14"}
+\caption [EPL 2013-14]{EPL 2013-14 dataset.}
+\label{fig: EPL 2013-14}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,trim=0 0 5 20,clip]{"EPL 2014-15"}
+\caption [EPL 2014-15]{EPL 2014-15 dataset.}
+\label{fig: EPL 2014-15}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,trim=0 0 5 20,clip]{"EPL 2015-16"}
+\caption [EPL 2015-16]{EPL 2015-16 dataset.}
+\label{fig: EPL 2015-16}
+\end{figure}
+
+
+\section{Justification ERGM Count Fitting}\label{sec: justification}
+
+\subsection{Football Matches as a Network Structure}
+Suppose there is a football match between Club A and Club B.
+The 2 football clubs competing will represent the node of the network. 
+The total goals scored by Club A represent the value of the edge originating from Club A to Club B.
+Whereas, The total goals scored by Club B represent the opposite edge's value.
+Now we have a simple network structure with 2 nodes and 2 edges that is valid to model with ERGM Count.
+
+Suppose there is another match between Club B and Club C.
+There is one additional node of Club C and 2 more edges between Club B and Club C to the network.
+Notice that at this point, there is no match between Club A and Club C.
+The edges between them has not formed.
+Modelling this network with ERGM Count is not appropriate.
+Forcing ERGM Count to model the network is similar with assuming the edges' values between Club A and Club C to be zeros. 
+On the other hand, suppose there is another match between Club A and Club B.
+Now there are 4 edges between Club A and Club B.
+This is also invalid for ERGM Count as it does not support multiple edges network. 
+
+Consider EPL as a collection of matches.
+By the winter break, There are 190 matches where each team has played 19 other teams exactly once.
+Here we have 20 nodes with every possible edges (380 in total) has  formed.
+Modelling this network with ERGM Count is then appropriate.
+From the winter break to the end of the season, the same scenario applies.
+We then have another network that is appropriate for ERGM Count.
+As mentioned in the previous section, the dataset consists of every matches on 3 seasons of EPL.
+Here, we can abstract 6 different network that is valid for ERGM.
+
+Furthermore, ERGM Count allows the inclusion of exogenous covariates (see Subsection \ref{sub: exogenous covariates}). 
+Our dataset provides 2 exogenous covariates. 
+One of them is the node attribute AMV at the end of the season.
+Another one is the edge attribute of the home or away effect.
+Figure \ref{fig: EPL Network} represents the visualization of 6 different networks and their attributes.
+Afterwards, we will discuss on how ERGM Count may explain these networks.
+
+
+\begin{figure}[H] % "[t!]" placement specifier just for this example
+\includegraphics[width=\textwidth,trim=0 0 5 20,clip]{"EPL Network"}
+\caption [Graph Representation of a Football League]{This is the network representation of the dataset. The circles denote the 20 teams that are participating. Its size corresponds to the average market value of the players in the team. The bigger the circle, the AMV of the club is higher. The arrow represents the goal scored by the team it orginates from, to the team pointed by the arrow head. The green hue indicates the scoring team is playing as the home team. Whereas the red hue shows the goal scored as the away team. The intensity of the color represents the total goals scored. The higher intensity of the color, the more goals were scored.} 
+\label{fig: EPL Network}
+\end{figure}
+
+\subsection{Interpretation of ERGM Count to EPL Network}\label{sub: interpretation}
+
+Previously, we are able to abstract 6 networks that are valid for ERGM Count.
+With ERGM Count, we can decide whether the goals are modeled better with Poisson or Geometric Distribution.
+It is also possible that the goals simulate \BI{nonzero} or \BI{CMP} distributions.  
+Here we are interested in finding the best shape of its distribution.
+
+Assuming Poisson Distribution is appropriate, we can further explore the exogenous covariates that may affect the mean. 
+Here, we can analyse whether AMV of a club affect its goals distribution.
+We will also consider whether playing as home team give additional effect to the mean.
+
+
+Furthermore, we can assess the strength of the \BI{mutuality} of the network with ERGM Count.
+Here \BI{mutuality} depicts the tendency for both teams in a match to score the same goals.
+This seems to be unlikely as each team objective is to win the match. 
+Whereas the negative or \BI{anti-mutuality} can be interpreted as dominating effect.
+The dominating effect is a condition where one of the team played really well such that the opposing team unable to perform as expected.
+We will investigate this effect further in the next chapter.
+
+%The \BI{transitivity} attribute of the network is also interesting. 
+%If transitivity is found to be significant, the goals of different matches are interrelated. 
+%For example, If Club A scored many goals to Club B, and Club B scored many goals to Club C, Club A will likely to score even more goals to team C. 
+%Hence, team A performance against team C is affected by the result of team B against team C.
+%This effect differs from the general understanding of transivity. 
+%Although team A naturally has higher scoring tendency to team C, transitivity gives an extra effect on their performance.
+

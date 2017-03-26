@@ -1,4 +1,5 @@
 \documentclass[12pt,a4paper,twoside]{book}
+\raggedbottom
 \pagestyle{myheadings}%remove headers
 
 \usepackage{geometry}
@@ -26,32 +27,53 @@
 \usepackage{bm}
 \usepackage{natbib}%citation purposes
 
+\usepackage{pdflscape}
+
 
 \newcommand{\BI}[1]{\textit{\textbf{#1}}}
 \newcommand{\I}[1]{\textit{#1}}
 \newcommand{\me}{\mathrm{e}}
 <<echo=F, include=FALSE>>=
   opts_chunk$set(fig.align="center",echo=F,cache=F,eval = T,warning=F,message=F)
+  options(digits=2)
   library(rprojroot)
   library(ztable)
+  library(data.table)
   root <- find_root(is_rstudio_project)
   data_LS <- readRDS(paste(root,"/processed data/data_LS",sep=""))
   table_LS <- readRDS(paste(root,"/processed data/table_LS",sep=""))
+  assessment_LS <- readRDS(paste(root,"/processed data/assessment_LS",sep=""))
 @
+
+
 
 \begin{document}
 
-%chapter 1(Introduction) 
+<<child='coverpage.Rnw'>>=
+@
+
+
+%%chapter 1(Introduction) 
 <<chapter1, child='chapter1.Rnw'>>=
 @
 
-%Chapter 2(Specification of ERGM Count)
+%%Chapter 2(Specification of ERGM Count)
 <<chapter2, child='chapter2.Rnw'>>=
 @
 
 %Chapter 3(Application)
 <<chapter3, child='chapter3.Rnw'>>=
 @
+
+%Chapter 4
+<<child='chapter4.Rnw'>>=
+@
+
+%Chapter 5
+<<child='chapter5.Rnw'>>=
+@
+
+
 
 \bibliography{my_bib}{}
 

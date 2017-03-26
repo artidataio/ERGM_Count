@@ -1,15 +1,16 @@
-library(data.table)
 library(ggthemes)
 library(ggplot2)
 library(latex2exp)
 library(rprojroot)
 library(igraph)
 library(RColorBrewer)
-
 library(gridExtra)
+library(data.table)
+
 #setup
 root <- find_root(is_rstudio_project)
-
+data_LS <- readRDS(paste(root,"/processed data/data_LS",sep=""))
+coef_LS <- readRDS(paste(root,"/processed data/coef_LS",sep=""))
 
 #Geometric and Poisson
 n <- 10
@@ -148,9 +149,7 @@ mutual<- ggplot(data=graph_DT)+
 
 saveRDS(mutual,paste(root,"/plots/mutual",sep=""))
 
-data_LS <- readRDS(paste(root,"/processed data/data_LS",sep=""))
-
-#1st plot
+#plot of EPL 2013-14
 i<-1
 graph_DT <- rbind(data.table(data_LS[[i*2]]$edges_DT),data.table(data_LS[[i*2-1]]$edges_DT))
 graph_DT[,home:= ifelse(home==1,"home","away")]
@@ -163,6 +162,7 @@ na_DT <- data.table(from = amv_DT$team,
                     to = amv_DT$team, 
                     weight ="na" , 
                     home = rep(c("home","away"),each = nrow(amv_DT)))
+
 graph_DT <- rbind(graph_DT,na_DT)
   
 setkey(amv_DT,"market_value")
@@ -170,37 +170,49 @@ setkey(amv_DT,"market_value")
 graph_DT$home <- factor(graph_DT$home,levels=c("home","away"))
 graph_DT$from <-  factor(graph_DT$from, levels = amv_DT$team)
 graph_DT$to <- factor(graph_DT$to,levels = amv_DT$team)
-amv_DT$team <- factor(amv_DT$team,levels = amv_DT$team)
+amv_DT$team <- factor(amv_DT$team,levels = rev(amv_DT$team))
   
-  
+colormap <- c("na" = "black", "0" = "white",
+              "1" = '#f7fbff',"2" = '#deebf7',"3" = '#c6dbef',"4" = '#9ecae1',
+              "5" = '#6baed6',"6" = '#4292c6',"7" = '#2171b5',"8" = '#084594')
+
+legend_DT <- data.table(from = "foo", to=names(colormap))
+
+legend_1_gg <- ggplot(legend_DT)+
+  geom_tile(aes(y=from,x=to,fill=to),color="black")+
+  scale_fill_manual(values=colormap)+
+  coord_equal()+
+  theme_tufte()+
+  theme(legend.position = "none",
+        axis.title= element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        text = element_text(size=40))
+
 heatmap_1_gg <- ggplot(graph_DT)+
   geom_tile(aes(y=from,x=to,fill=weight),color="black")+
   xlim(rev(levels(graph_DT$to)))+
-  scale_fill_manual(values = c("na" = "black", "0" = "white",
-                               "1" = '#f7fbff',"2" = '#deebf7',"3" = '#c6dbef',"4" = '#9ecae1',
-                               "5" = '#6baed6',"6" = '#4292c6',"7" = '#2171b5',"8" = '#084594'))+
+  scale_fill_manual(values = colormap)+
   theme_tufte()+
+  coord_equal()+
   theme(axis.ticks=element_blank(),
         axis.text.x = element_blank(),
         axis.title = element_blank(),
         legend.position = "none")+
-  facet_grid(.~home)
-  
+  facet_grid(.~home,switch="x")
+
+
 barplot_1_gg <- ggplot(amv_DT)+
   geom_col(aes(x = team, y = market_value),fill = "black",color = "white")+
-  geom_text(data = amv_DT[market_value>=3],
-            aes(x = team, y= market_value-1.5,label = market_value),color="white",size=3)+
-  geom_text(data = amv_DT[market_value<3],
-            aes(x = team, y= market_value+1.5,label = market_value),color="black",size=3)+
-  coord_fixed()+
-  coord_flip()+
-  scale_y_continuous(position = "top",limits = c(0,20))+
-  theme_tufte()+
+  scale_y_continuous(limits = c(0,20))+
+  geom_hline(data =data.table(y=seq(0,20,5)) ,aes(yintercept=y),col="white")+
+  theme_tufte(ticks=F)+
   theme(axis.ticks = element_blank(),
-        axis.text =  element_blank(),
-        axis.title.y = element_blank())
+        axis.text.x =  element_blank(),
+        axis.title = element_blank(),
+        text = element_text(size=20))
 
-#2nd plot
+#Plot of EPL 2014-15
 i<-2
 graph_DT <- rbind(data.table(data_LS[[i*2]]$edges_DT),data.table(data_LS[[i*2-1]]$edges_DT))
 graph_DT[,home:= ifelse(home==1,"home","away")]
@@ -213,6 +225,7 @@ na_DT <- data.table(from = amv_DT$team,
                     to = amv_DT$team, 
                     weight ="na" , 
                     home = rep(c("home","away"),each = nrow(amv_DT)))
+
 graph_DT <- rbind(graph_DT,na_DT)
 
 setkey(amv_DT,"market_value")
@@ -220,37 +233,49 @@ setkey(amv_DT,"market_value")
 graph_DT$home <- factor(graph_DT$home,levels=c("home","away"))
 graph_DT$from <-  factor(graph_DT$from, levels = amv_DT$team)
 graph_DT$to <- factor(graph_DT$to,levels = amv_DT$team)
-amv_DT$team <- factor(amv_DT$team,levels = amv_DT$team)
+amv_DT$team <- factor(amv_DT$team,levels = rev(amv_DT$team))
 
+colormap <- c("na"= "black", "0"= "white",
+              "1"= '#f7fcf5', "2"= '#e5f5e0', "3"= '#c7e9c0',"4"= '#a1d99b',
+              "5"= '#74c476',"6"='#41ab5d',"7"= '#238b45',"8"='#005a32')
+
+legend_DT <- data.table(from = "foo", to=names(colormap))
+
+legend_2_gg <- ggplot(legend_DT)+
+  geom_tile(aes(y=from,x=to,fill=to),color="black")+
+  scale_fill_manual(values=colormap)+
+  coord_equal()+
+  theme_tufte()+
+  theme(legend.position = "none",
+        axis.title= element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        text = element_text(size=40))
 
 heatmap_2_gg <- ggplot(graph_DT)+
   geom_tile(aes(y=from,x=to,fill=weight),color="black")+
   xlim(rev(levels(graph_DT$to)))+
-  scale_fill_manual(values = c("na"= "black", "0"= "white",
-                               "1"= '#f7fcf5', "2"= '#e5f5e0', "3"= '#c7e9c0',"4"= '#a1d99b',
-                               "5"= '#74c476',"6"='#41ab5d',"7"= '#238b45',"8"='#005a32'))+
+  scale_fill_manual(values = colormap)+
   theme_tufte()+
+  coord_equal()+
   theme(axis.ticks=element_blank(),
         axis.text.x = element_blank(),
         axis.title = element_blank(),
         legend.position = "none")+
-  facet_grid(.~home)
+  facet_grid(.~home,switch="x")
+
 
 barplot_2_gg <- ggplot(amv_DT)+
   geom_col(aes(x = team, y = market_value),fill = "black",color = "white")+
-  geom_text(data = amv_DT[market_value>=3],
-            aes(x = team, y= market_value-1.5,label = market_value),color="white",size=3)+
-  geom_text(data = amv_DT[market_value<3],
-            aes(x = team, y= market_value+1.5,label = market_value),color="black",size=3)+
-  coord_fixed()+
-  coord_flip()+
-  scale_y_continuous(position = "top",limits = c(0,20))+
-  theme_tufte()+
+  scale_y_continuous(limits = c(0,20))+
+  geom_hline(data =data.table(y=seq(0,20,5)) ,aes(yintercept=y),col="white")+
+  theme_tufte(ticks=F)+
   theme(axis.ticks = element_blank(),
-        axis.text =  element_blank(),
-        axis.title.y = element_blank())
+        axis.text.x =  element_blank(),
+        axis.title = element_blank(),
+        text = element_text(size=20))
 
-#3rd plot
+#Plot of EPL 2015-16
 i<-3
 graph_DT <- rbind(data.table(data_LS[[i*2]]$edges_DT),data.table(data_LS[[i*2-1]]$edges_DT))
 graph_DT[,home:= ifelse(home==1,"home","away")]
@@ -263,6 +288,7 @@ na_DT <- data.table(from = amv_DT$team,
                     to = amv_DT$team, 
                     weight ="na" , 
                     home = rep(c("home","away"),each = nrow(amv_DT)))
+
 graph_DT <- rbind(graph_DT,na_DT)
 
 setkey(amv_DT,"market_value")
@@ -270,39 +296,191 @@ setkey(amv_DT,"market_value")
 graph_DT$home <- factor(graph_DT$home,levels=c("home","away"))
 graph_DT$from <-  factor(graph_DT$from, levels = amv_DT$team)
 graph_DT$to <- factor(graph_DT$to,levels = amv_DT$team)
-amv_DT$team <- factor(amv_DT$team,levels = amv_DT$team)
+amv_DT$team <- factor(amv_DT$team,levels = rev(amv_DT$team))
 
+colormap <- c("na"= "black", "0"= "white",
+              "1"= '#fff5f0',"2"= '#fee0d2',"3"= '#fcbba1',"4"= '#fc9272',
+              "5"= '#fb6a4a',"6"= '#ef3b2c',"7"= '#cb181d',"8" ='#99000d')
+
+legend_DT <- data.table(from = "foo", to=names(colormap))
+
+legend_3_gg <- ggplot(legend_DT)+
+  geom_tile(aes(y=from,x=to,fill=to),color="black")+
+  scale_fill_manual(values=colormap)+
+  coord_equal()+
+  theme_tufte()+
+  theme(legend.position = "none",
+        axis.title= element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        text = element_text(size=40))
 
 heatmap_3_gg <- ggplot(graph_DT)+
   geom_tile(aes(y=from,x=to,fill=weight),color="black")+
   xlim(rev(levels(graph_DT$to)))+
-  scale_fill_manual(values = c("na"= "black", "0"= "white",
-                               "1"= '#fff5f0',"2"= '#fee0d2',"3"= '#fcbba1',"4"= '#fc9272',
-                               "5"= '#fb6a4a',"6"= '#ef3b2c',"7"= '#cb181d',"8" ='#99000d'))+
+  scale_fill_manual(values = colormap)+
   theme_tufte()+
+  coord_equal()+
   theme(axis.ticks=element_blank(),
         axis.text.x = element_blank(),
         axis.title = element_blank(),
         legend.position = "none")+
-  facet_grid(.~home)
+  facet_grid(.~home,switch="x")
+
 
 barplot_3_gg <- ggplot(amv_DT)+
   geom_col(aes(x = team, y = market_value),fill = "black",color = "white")+
-  geom_text(data = amv_DT[market_value>=3],
-            aes(x = team, y= market_value-1.5,label = market_value),color="white",size=3)+
-  geom_text(data = amv_DT[market_value<3],
-            aes(x = team, y= market_value+1.5,label = market_value),color="black",size=3)+
-  coord_fixed()+
-  coord_flip()+
-  scale_y_continuous(position = "top",limits = c(0,20))+
-  theme_tufte()+
+  scale_y_continuous(limits = c(0,20))+
+  geom_hline(data =data.table(y=seq(0,20,5)) ,aes(yintercept=y),col="white")+
+  theme_tufte(ticks=F)+
   theme(axis.ticks = element_blank(),
-        axis.text =  element_blank(),
-        axis.title.y = element_blank())
+        axis.text.x =  element_blank(),
+        axis.title = element_blank(),
+        text = element_text(size=20))
 
+
+#Network representation
+library(igraph)
+library(scales)
+library(RColorBrewer)
+
+radian.rescale <- function(x, start=0, direction=1) {
+  c.rotate <- function(x) (x + start) %% (2 * pi) * direction
+  c.rotate(scales::rescale(x, c(0, 2 * pi), range(x)))
+}
+par(mfrow = c(1,1),mar=c(3, 3, 3, 3))
+data_igraph <- data_LS[[2]]$igraph
+
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
+     vertex.label.dist=0.8,
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
+     vertex.frame.color="NA",
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
+     edge.curved = 0.1,
+     edge.lty =1,
+     edge.width=0.5*E(data_igraph)$weight)
+
+legend(x=1.2, y=1.3, legend=0:8,lwd=0.5*(0:8), cex =1,
+       col = c("white",brewer.pal(8,"Greens")),
+       y.intersp = .5,bty = "n",title="Goals(Home)")
+
+legend(x=1.2, y=1.3, legend=0:8,lwd=0.5*(0:8), cex = 1,
+       col = c("white",brewer.pal(8,"Reds")),
+       y.intersp = .5,bty ="n",title= "Goals(Away)")
+#making the legend of the circle is hard
+
+
+
+par(mfrow = c(1,1),mar=c(3, 3, 3, 3))
+data_igraph <- data_LS[[3]]$igraph
+
+vertex_order <- order(V(data_igraph)$market_value,decreasing=T)
+lab_locs <- radian.rescale(order(vertex_order), direction=-1, start=0)
+
+plot(data_igraph, 
+     layout=layout_in_circle(data_igraph, order = vertex_order),
+     vertex.label.dist=0.8,
+     vertex.label.degree=lab_locs,
+     vertex.size=sqrt(V(data_igraph)$market_value)*15/max(sqrt(V(data_igraph)$market_value)),
+     vertex.frame.color="NA",
+     vertex.color="#081d58",
+     edge.arrow.size=.5,
+     edge.curved = 0.1,
+     edge.lty =1,
+     edge.width=0.5*E(data_igraph)$weight)
+
+
+###Independent edgewise Visualization
+
+max_goal <- 10
+
+#poisson
+get_p_geometric<- function(SUM){
+  p<- exp(SUM*(0:max_goal))
+  return(p/sum(p))
+}
+
+get_p_poisson <- function(SUM){
+  p <- exp(SUM*(0:max_goal))/factorial(0:10)
+  return(p/sum(p))
+}
+
+get_p_nonzero <- function(SUM,nonzero){
+  p <- exp(SUM*(0:max_goal)+nonzero*(0:10 >0))/factorial(0:10)
+  return(p/sum(p))
+}
+
+get_p_CMP <- function(SUM, CMP){
+  p <- exp(SUM*(0:max_goal))*factorial(0:10)^(CMP-1)
+  return(p/sum(p))
+}
+
+graph_DT <-data.table()
+
+#poisson
+#model #data #goal #p #goal #coef1 #coef2
+for(i in 1:6){
+  model <- "geometric"
+  data <- i
+  coef_1 <- coef_LS$geometric_DT$Estimate[i]
+  coef_2 <- NA
+  goal <- 0:max_goal
+  p <- get_p_geometric(coef_1)
+  graph_DT <- rbind(graph_DT,data.table(model,data,coef_1,coef_2,goal,p))
+}
+for(i in 1:6){
+  model <- "poisson"
+  data <- i
+  coef_1 <- coef_LS$poisson_DT$Estimate[i]
+  coef_2 <- NA
+  goal <- 0:max_goal
+  p <- get_p_poisson(coef_1)
+  graph_DT <- rbind(graph_DT,data.table(model,data,coef_1,coef_2,goal,p))
+}
+for(i in 1:6){
+  model <- "nonzero"
+  data <- i
+  coef_1 <- coef_LS$nonzero_DT$Estimate[i*2-1]
+  coef_2 <- coef_LS$nonzero_DT$Estimate[i*2]
+  goal <- 0:max_goal
+  p <- get_p_nonzero(coef_1,coef_2)
+  graph_DT <- rbind(graph_DT,data.table(model,data,coef_1,coef_2,goal,p))
+}
+for(i in 1:6){
+  model <- "cmp"
+  data <- i
+  coef_1 <- coef_LS$cmp_DT$Estimate[i*2-1]
+  coef_2 <- coef_LS$cmp_DT$Estimate[i*2]
+  goal <- 0:max_goal
+  p <- get_p_CMP(coef_1,coef_2)
+  graph_DT <- rbind(graph_DT,data.table(model,data,coef_1,coef_2,goal,p))
+}
+
+col_DT <- data.table()
+for(i in 1:length(data_LS)){
+  foo_DT <- data.table(data = i,data_LS[[i]]$edges_DT)
+  col_DT <- rbind(col_DT,foo_DT)
+}
+
+col_DT <- col_DT[,.(count=.N),by=.(data,weight)]
+col_DT[,total:=sum(count),by=data]
+col_DT[,p:=count/total ,]
+graph_DT[,goal:=goal+0.5]
+
+edgewise <- ggplot()+
+  geom_col(data=col_DT,aes(x=as.factor(weight),y=p),width=1,color="white")+
+  geom_step(data=graph_DT,aes(x=goal,y=p,group = model,color = model),size=1.2)+
+  geom_rangeframe(data=graph_DT,aes(x=goal,y=p))+
+  facet_wrap(~data,ncol=2)+
+  theme_tufte()+
+  theme(legend.position="top")+
+  labs(x=TeX("$y_{ij}$"), y= TeX("$Pr(Y_{ij}=y_{ij})$"))
   
-grid.arrange(heatmap_1_gg, barplot_1_gg, 
-             heatmap_2_gg, barplot_2_gg,
-             heatmap_3_gg, barplot_3_gg,
-             layout_matrix = rbind(c(1,1,1,2),c(3,3,3,4),c(5,5,5,6)))
-  
+saveRDS(edgewise, paste(root,"/plots/edgewise",sep=""))
+

@@ -321,7 +321,7 @@ DT <- data.table()
 for(i in 1:6){
   training <- asNetwork(data_LS[[i]]$igraph)
   home_mat <- as.matrix(as_adjacency_matrix(data_LS[[i]]$igraph,attr="home"))
-  model <- ergm(training~ CMP +mutual("nabsdiff")+edgecov(home_mat) + nodeocov("market_value") + nodeicov("market_value"),
+  model <- ergm(training~ CMP +nonzero +mutual("nabsdiff")+edgecov(home_mat) + nodeocov("market_value") + nodeicov("market_value"),
                 response = "weight",reference = ~Poisson)
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)

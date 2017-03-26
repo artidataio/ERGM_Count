@@ -4,7 +4,7 @@
 %set_parent('report.Rnw')
 %@
 
-\chapter{Specification of ERGM Count}
+\chapter{Specification of ERGM Count}\label{chapter: specification}
 In this chapter, we will first define ERGM Count and its relevant shaping functions as proposed by \citet{countergmdefined}. 
 Then, we will introduce the simplest form of ERGM Count which are modeled Poisson and Geometric Distribution. 
 The various shapes of ERGM Count will then be explored and the interpretation of each the shapes will also be discussed accordingly. 
@@ -41,7 +41,7 @@ Pr(\bm{Y}=\bm{y}|\bm{\theta}) \propto h(\bm{y})\exp(\eta(\bm{\theta})\bullet g(\
 \end{align}
 This assumes the constraint \ref{eq: parameter constraint} is met.
 
-\section{Reference Measure and Baseline Distribution}
+\section{Reference Measure and Baseline Distribution}\label{sec: baseline distribution}
 In Binary ERGM, if the model has \textit{dyadic independence} property, the model will reduce to edge-wise logistic regression. 
 \citet{countergmdefined} stated that ERGM of valued network should reduce into Generalized Linear Model given \textit{dyadic independence}.
 
@@ -57,7 +57,7 @@ Whereas  if the reference measure is $h(\bm{y}) = \prod_{(i,j) \in \mathbb{Y}}(y
 Pr(\bm{Y}=\bm{y}|\theta) \propto \frac{\exp\left(\theta \sum_{(i,j) \in \mathbb{Y}} y_{ij}\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!} = \prod_{(i,j) \in \mathbb{Y}} \frac{(\exp(\theta))^{y_{ij}}}{y_{ij}!}
 \end{align}
 We recognize this as another edge-wise distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{Poisson}(\lambda =\exp(\theta))$ where $\theta \in \mathbb{R}$. 
-This corresponds to the baseline distribution of \textit{poisson-reference}. 
+This corresponds to the baseline distribution of \textit{Poisson-reference}. 
 Notice that the 2 models have different model parameter constraints. 
 We illustrate the shape of Poisson and Geometric Distribution in Figure \ref{fig: Geometric and Poisson} below.
 
@@ -86,7 +86,7 @@ However, both may not be the model that best fit the later application on Chapte
 In addition, these two modes do not take into account the complex relationship of a network.
 We will explore more complex models and their interpretations later.
 
-In this section, we will focus on \textit{poisson-reference} ERGM Count without complex constraints: $\mathcal{Y} \in \mathcal{N}_0^{\mathcal{Y}}$ and $h(\bm{y}) = \prod_{(i,j) \in \mathbb{Y}}(y_{ij}!)^{-1}$.
+In this section, we will focus on \textit{Poisson-reference} ERGM Count without complex constraints: $\mathcal{Y} \in \mathcal{N}_0^{\mathcal{Y}}$ and $h(\bm{y}) = \prod_{(i,j) \in \mathbb{Y}}(y_{ij}!)^{-1}$.
 Furthermore, the linear ERGM Count restriction will also be applied where $\eta(\bm{\theta}) = \bm{\theta}$ and thus $q = p$. 
 This restriction makes the model comprehensible. 
 In linear ERGM Count, if $\Theta_{N}$ is an open set, then: 
@@ -96,9 +96,9 @@ In linear ERGM Count, if $\Theta_{N}$ is an open set, then:
 In other words, if other model parameters $\theta \setminus \theta_k$ are fixed, the expected sufficient statistics $g_k$ is strictly increasing in $\theta_k$.
 Larger $\theta_k$ will result in a distribution of networks with more feature gauged by $g_k$.
 
-\subsection{Exogenous Covariates}
+\subsection{Exogenous Covariates}\label{sub: exogenous covariates}
 Let the possibly predictive variables outside the network structure or exogenous covariate be $x_{ijk}$.
-A \textit{poisson-reference} ERGM Count will reduce to Poisson Regression Model if we introduce an edge-independent sufficient statistics:
+A \textit{Poisson-reference} ERGM Count will reduce to Poisson Regression Model if we introduce an edge-independent sufficient statistics:
 \begin{align}
 g(\bm{y})= \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ij}.
 \end{align}
@@ -106,10 +106,10 @@ g(\bm{y})= \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ij}.
 Let the model sufficient statistics only be exogenous covariate and \BI{sum}  the PMF will reduce to:
 \begin{align*}
 Pr(\bm{Y}=\bm{y}|\theta) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ij} \right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!} \\
-&= \prod_{(i,j) \in \mathbb{Y}} \frac{(\exp(\theta_1+\theta_2 x_{ij2}))^{y_{ij}}}{y_{ij}!}
+&= \prod_{(i,j) \in \mathbb{Y}} \frac{(\exp(\theta_1+\theta_2 x_{ij}))^{y_{ij}}}{y_{ij}!}
 \end{align*}
-This can be recognised as an edge-wise distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{poisson}(\lambda =\exp(\theta_1 + \theta_2 x_{ij}))$ .
-Notice that adding exogenous covariate will maintain the poisson relationship yet changing the parameter $\lambda$ for edge $(i,j)$ by multiplication of factor $e^{\theta_2 x_{ij}}$.
+This can be recognized as an edge-wise distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{Poisson}(\lambda =\exp(\theta_1 + \theta_2 x_{ij}))$ .
+Notice that adding exogenous covariate will maintain the Poisson relationship yet changing the parameter $\lambda$ for edge $(i,j)$ by multiplication of factor $e^{\theta_2 x_{ij}}$.
 It is obvious that further addition of another exogenous covariate will give the same effect.
 Hence, this model is equivalent to applying Poisson regression model to the network data.  
 
@@ -117,7 +117,7 @@ In current R implementation of ERGM Count, there can be 3 representation of exog
 These are \BI{nodeocov} which is the attribute of the actor where the edge originate $x_{i}$ and \BI{nodeicov} which is the attribute of receiving actor $x_j$. 
 The last one is $x_{ij}$ or \BI{edgecov} which represent the external edge attribute.
 
-\subsection{Zero Modification}
+\subsection{Zero Modification}\label{sub: zero modification}
 The idea behind zero modification is to move away from the baseline distribution with new PMF that has more accurate representation of its $Pr(Y_{ij}=0)$. 
 The proposed statistics to represent zero modification is \BI{nonzero}:
 \begin{align}
@@ -134,10 +134,10 @@ Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j
 This can be recognised as independent edge-wise Zero Modified Poisson, which is a Poisson Distribution with $Pr(Y_{ij}=0)$ can be adjusted by $\theta_2$ while $Pr(Y_{ij}=y_{ij}), y_{ij}=1,2,\ldots,$ maintain their relative proportion.
 The corresponding parameter $\theta_2$ can take on any real values. 
 If $\theta_2 <0$, then the probability of an edge to take value of zero is higher than Poisson Distribution. 
-Whereas if $\theta_2>0$, the number of non-zero edge has higher probability than Poisson Distribution, thus giving the name \textit{\textbf{nonzero}}. Figure \ref{fig: Zero Modified Poisson} will illustrate this relatioship.
+Whereas if $\theta_2>0$, the number of non-zero edge has higher probability than Poisson Distribution, thus giving the name \textit{\textbf{nonzero}}. Figure \ref{fig: Zero Modified Poisson} will illustrate this relationship.
 
 \begin{figure}[H]
-<<fig.asp=0.65,eval=T>>=
+<<,fig.asp=0.65,eval=T>>=
 zero_modified<- readRDS(paste(root,"/plots/zero_modified",sep=""))
 plot(zero_modified)
 @
@@ -146,14 +146,14 @@ plot(zero_modified)
 \end{figure}
 
 
-\subsection{Dispersion Modelling}
+\subsection{Dispersion Modelling}\label{sub: dispersion modelling}
 Poisson distribution has only one parameter which control the mean and the spread of the distribution. 
 The variance is constrained to be equal to the mean and is not adjustable.
 One method to overcome this constrain is by adding sufficient statistic, \BI{CMP}:
 \begin{align}
 g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)
 \end{align}
-Suppose the sufficient statistics use in the model are \BI{sum} and \BI{CMP} with poisson reference, the PMF:
+Suppose the sufficient statistics use in the model are \BI{sum} and \BI{CMP} with Poisson reference, the PMF:
 \begin{align*}
 Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
 &\propto \prod_{(i,j) \in \mathbb{Y}} (\exp(\theta_1))^{y_{ij}} (y_{ij}!)^{\theta_2-1}
@@ -163,7 +163,7 @@ When $\theta_2$ decreases from 0 to $-\infty$, the distribution become less and 
 When $\theta_2 \to -\infty$, it reduces to Bernoulli Distribution \citep{countergmdefined}. 
 Whereas if as $0 < \theta_2 < 1$, the distribution become more dispersed as compared to Poisson. 
 It reduces  to Geometric Distribution at $\theta_2=1$. 
-Figure \ref{fig: CMP} will illustrate the various shapes of CMP distribution.
+Figure \ref{fig: cmp} will illustrate the various shapes of CMP distribution.
 
 \begin{figure}[H]
 <<fig.asp=.65>>=
@@ -171,10 +171,10 @@ cmp<- readRDS(paste(root,"/plots/cmp",sep=""))
 plot(cmp)
 @
 \caption ["Illustration of Conway-Maxwell-Poisson Distribution"]{This figure shows the various shapes of Conway-Maxwell-Poisson Distribution (CMP). The right axis corresponds to parameter $\theta_1$. Whereas the top axis indicates parameter $\theta_2$, which dominates the dispersion effect of the distribution. When $\theta_2 = 0$, CMP reduce to Poisson with mean $e^{\theta_1}$. When $\theta_2 >0$ the distribution become more dispersed and it gets less dispersed when $\theta_2<0$.}  
-\label{fig: CMP}
+\label{fig: cmp}
 \end{figure}
 
-\subsection{Mutuality}
+\subsection{Mutuality}\label{sub: mutuality}
 The previous sections discussed the various models that have independent edge-wise assumption. 
 Although, normalization constants tend to be intractable, they can be easily recognised as one particular distribution. 
 However, fitting network data to independent edge-wise model will undermine the inherent relational characteristics of networks. 
@@ -182,7 +182,7 @@ However, fitting network data to independent edge-wise model will undermine the 
 In directed networks, the strength of mutuality is one of the network structure that one might consider. 
 In friendship networks, mutuality is an important characteristic. 
 This is because, when one person claimed to be friend with another person the opposite party is likely to  reciprocate and claim the same. 
-Additionaly, when one declare to be not-a-friend, the other party will have a tendency to declare the same. 
+Additionally, when one declare to be not-a-friend, the other party will have a tendency to declare the same. 
 Hence being mutual in binary network can be defined as $y_{ij}=y_{ji}=1$ or sometimes $y_{ij}=y_{ji}$.
 
 The inclusion of mutuality will make the ERGM Count model more difficult to interpret.
@@ -190,7 +190,7 @@ The inclusion of mutuality will make the ERGM Count model more difficult to inte
 This means that we will know which value $y_{ij} \in \mathbb{N}_0$ the random variable $Y_{ij}$ likely to attain, given one particular network values. 
 
 However, we will prove that addition of mutuality will reduce the model  to one with independent pair-wise distribution. 
-Where a pair represents 2 edges where the origin and destinaton nodes are opposite of each other.
+Where a pair represents 2 edges where the origin and destination nodes are opposite of each other.
 The proposed statistics to represent mutuality are:
 \begin{enumerate}
 
@@ -235,7 +235,7 @@ The last proposed statistics is geometric mean or \BI{mutual(geomean)} which has
 \begin{align}
 g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \sqrt{y_{ij}}\sqrt{y_{ji}} 
 \end{align}
-Similarly the model with statistics \textit{\textbf{sum}} and \textit{\textbf{mutual(geomean)}} will have independent pairwise ditribution $(Y_{ij},Y_{ji})$ with PMF:
+Similarly the model with statistics \textit{\textbf{sum}} and \textit{\textbf{mutual(geomean)}} will have independent pairwise distribution $(Y_{ij},Y_{ji})$ with PMF:
 \begin{align*}
 Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) + \theta_2 \sqrt{y_{ij}}\sqrt{y_{ji}})}{y_{ij}!y_{ji}!} 
 \end{align*}
@@ -246,7 +246,7 @@ Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (
 mutual<- readRDS(paste(root,"/plots/mutual",sep=""))
 plot(mutual)
 @
-\caption [Joint distribution with mutual statistics]{This graph illustrates the various PMF of the pairwise distribution with $\theta_1 =1 $. The different shades of black indicate the region that has higher probability. Here the top axis represent $\theta_2$ which coressponds to the parameter of \textit{\textbf{mutual}} statistics. When $\theta_2 = 0$, the joint distibution follows 2 independent Poisson with $\lambda = e^{\theta_1}$}
+\caption [Joint distribution with mutual statistics]{This graph illustrates the various PMF of the pairwise distribution with $\theta_1 =1 $. The different shades of black indicate the region that has higher probability. Here the top axis represent $\theta_2$ which corresponds to the parameter of \textit{\textbf{mutual}} statistics. When $\theta_2 = 0$, the joint distribution follows 2 independent Poisson with $\lambda = e^{\theta_1}$}
 \label{fig: pairwise distribution}
 \end{figure}
 
@@ -290,6 +290,5 @@ When the corresponding parameter $\theta>0$, the normalization constant $k_{h,\e
 \begin{align}
 g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \min \left(y_{ij},\max_{k \in N} \left(\min(y_{ik},y_{kj}) \right) \right)
 \end{align}
-This statistics search through every intermediate actor $k \in N/\{i,j\}$ for which actor k has the strongest intermediary relation ($\min(y_{ik},y_{kj})$). 
-Then, we compare the intermediary relation with the strength of direct relation ($y_{ij}$).........
-
+This statistic search through every intermediate actor $k \in N/\{i,j\}$ for which actor k has the strongest intermediary relation ($\min(y_{ik},y_{kj})$). 
+Then, we compare the intermediary relation with the strength of direct relation ($y_{ij}$).

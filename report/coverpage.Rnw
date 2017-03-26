@@ -1,0 +1,27 @@
+%<<set-parent, echo=FALSE, cache=FALSE>>=
+%set_parent('report.Rnw')
+%@
+\begin{titlepage}
+  \begin{center}
+  \includegraphics[width=3in]{NUSlogo.jpg}\\
+  \vspace{0.3in}
+  \large\textbf{
+  Modelling Network Representation of Football Goals\\
+  With Exponential Random Graph Model of Count Edges\\
+  \vspace{0.85in}
+  By\\
+  Imaduddin Haetami\\
+  \vspace{0.85in}
+  Supervisor:\\
+  Tan Siew Li, Linda\\
+  \vspace{0.85in}
+  ST4199 Honours Project in Statistics\\
+  Department of Statistics and Applied Probability\\
+  National University of Singapore\\
+  2016/2017
+  }
+                %\vspace*{\fill}
+\end{center}
+\end{titlepage}
+
+\tableofcontents
