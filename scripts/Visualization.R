@@ -4,7 +4,6 @@ library(latex2exp)
 library(rprojroot)
 library(igraph)
 library(RColorBrewer)
-library(gridExtra)
 library(data.table)
 
 #setup
@@ -99,7 +98,7 @@ saveRDS(cmp,paste(root,"/plots/cmp",sep=""))
 
 #comparison of mutuality
 n <- 20
-x_grid <- 3
+x_grid <- 4
 y_ij <- rep(rep(0:n,n+1),x_grid)
 y_ji <- NULL
 for(i in 0:n){y_ji <- c(y_ji,rep(i,n+1))}
@@ -107,7 +106,7 @@ for(i in 0:n){y_ji <- c(y_ji,rep(i,n+1))}
 y_ji <- rep(y_ji,x_grid)
 theta_1 <- rep(1, (n+1)^2*x_grid)
 theta_2 <- NULL
-for(i in seq(-1,1,length.out = x_grid)){theta_2 <- c(theta_2,rep(i,(n+1)^2))}
+for(i in seq(-1,2,length.out = x_grid)){theta_2 <- c(theta_2,rep(i,(n+1)^2))}
 
 graph_DT <- data.table(y_ij,y_ji,theta_1,theta_2)
 graph_DT[,minimum:= ifelse(y_ij <= y_ji,y_ij,y_ji),]
@@ -483,4 +482,28 @@ edgewise <- ggplot()+
   labs(x=TeX("$y_{ij}$"), y= TeX("$Pr(Y_{ij}=y_{ij})$"))
   
 saveRDS(edgewise, paste(root,"/plots/edgewise",sep=""))
+
+
+#Another visualization logarithmic score
+
+assessment_LS <- readRDS(paste(root,"/processed data/assessment_LS",sep=""))
+graph_DT <- assessment_LS$logarithmic_DT
+graph_DT$`Sufficient Statistics`= factor(graph_DT$`Sufficient Statistics`,
+                                         levels = rev(graph_DT$`Sufficient Statistics`))
+graph_DT <- melt(graph_DT,id.vars = "Sufficient Statistics",
+                 variable.name = "dataset",
+                 value.name = "log_score")
+
+log_score <- ggplot()+
+  geom_tile(data=graph_DT, aes(y = `Sufficient Statistics`,x=as.factor(dataset),
+                               fill=log_score))+
+  theme_tufte()+
+  theme(axis.ticks = element_blank(),
+        axis.title = element_blank(),
+        legend.position = "top")+
+  labs(fill="Average Logarithmic Scores")+
+  scale_x_discrete(position = "top") 
+  
+
+saveRDS(log_score, paste(root,"/plots/log_score",sep=""))
 

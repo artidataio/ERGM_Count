@@ -25,9 +25,8 @@
 
 \usepackage{listings}
 \usepackage{bm}
-\usepackage{natbib}%citation purposes
-
-\usepackage{pdflscape}
+\usepackage{natbib,hyperref}%citation purposes
+\usepackage{url}%
 
 
 \newcommand{\BI}[1]{\textit{\textbf{#1}}}
@@ -49,19 +48,22 @@
 
 \begin{document}
 
+
+\frontmatter
+
 <<child='coverpage.Rnw'>>=
 @
 
-
-%%chapter 1(Introduction) 
+\mainmatter
+%chapter 1(Introduction) 
 <<chapter1, child='chapter1.Rnw'>>=
 @
 
-%%Chapter 2(Specification of ERGM Count)
+%Chapter 2(Specification of ERGM Count)
 <<chapter2, child='chapter2.Rnw'>>=
 @
 
-%Chapter 3(Application)
+%Chapter 3
 <<chapter3, child='chapter3.Rnw'>>=
 @
 
@@ -69,15 +71,12 @@
 <<child='chapter4.Rnw'>>=
 @
 
-%Chapter 5
-<<child='chapter5.Rnw'>>=
-@
 
 
 
-\bibliography{my_bib}{}
-
-
+\nocite{*}
+\bibliography{my_bib}
 
 \bibliographystyle{apalike}
-\end{document}
+
+\end{document}]

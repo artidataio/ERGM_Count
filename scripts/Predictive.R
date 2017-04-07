@@ -13,22 +13,28 @@ coef_LS$geometric_DT <- NULL
 coef_LS$min_DT <- NULL
 coef_LS$geomean_DT <- NULL
 
-DT <- data.table()
-for(i in 1:6){
-  DT_i <- data_LS[[i]]$data
-  DT_i[,":="(name = data_LS[[i]]$name,
-             season = data_LS[[i]]$season),]
-  foo_DT_i <- data_LS[[i]]$vertices_DT #contain amv
-  
-  setnames(foo_DT_i,c("HomeTeam","home_amv"))
-  DT_i <- merge(DT_i,foo_DT_i,by= "HomeTeam",all.x=T)
-  
-  setnames(foo_DT_i,c("AwayTeam","away_amv"))
-  DT_i <- merge(DT_i,foo_DT_i,by= "AwayTeam",all.x=T)
-  
-  DT <- rbind(DT,DT_i)
-}
+DT <- fread(paste(root,"/dataset/prediction/EPL 2016-17.txt",sep=""))
+DT <- DT[,c(3,4,5,6)]
+(team <- DT[,unique(HomeTeam)])
+#[1] "Burnley"        "Crystal Palace" "Everton"        "Hull"          
+#[5] "Man City"       "Middlesbrough"  "Southampton"    "Arsenal"       
+#[9] "Bournemouth"    "Chelsea"        "Man United"     "Leicester"     
+#[13] "Stoke"          "Swansea"        "Tottenham"      "Watford"       
+#[17] "West Brom"      "Sunderland"     "West Ham"       "Liverpool" 
+market_value <- c(3.70, 6.67, 9.96,3.89,
+                  21.89, 3.98, 7.93, 18.22,
+                  4.08, 20.60, 19.42, 8.21,
+                  6.73, 4.72, 17.88,4.89,
+                  4.70, 3.64, 7.76, 14.28)
 
+vertices_DT <- data.table(team,market_value)
+setnames(vertices_DT,c("HomeTeam","home_amv"))
+DT <- merge(DT,vertices_DT,by= "HomeTeam",all.x=T)
+setnames(vertices_DT,c("AwayTeam","away_amv"))
+DT <- merge(DT,vertices_DT,by= "AwayTeam",all.x=T)
+
+
+#Important Functions
 make_p_MAT <- function(SUM,
                        nonzero,
                        CMP,
@@ -144,15 +150,14 @@ for(names in names(coef_LS)){
   coef_name <- str_c(coef_name,collapse = " + ")
   model <- c(model,coef_name)
 }
-colnames(pearson_DT) <- c("model","I","II","III","IV","V","VI")
 logarithmic_DT <- data.table(model,logarithmic_MAT)
-colnames(logarithmic_DT) <- c("model","I","II","III","IV","V","VI")
+colnames(logarithmic_DT) <- c("Sufficient Statistics","I","II","III","IV","V","VI")
 
 quadratic_DT <- data.table(model,quadratic_MAT)
-colnames(quadratic_DT) <- c("model","I","II","III","IV","V","VI")
+colnames(quadratic_DT) <- c("Sufficient Statistics","I","II","III","IV","V","VI")
 
 spherical_DT <- data.table(model,spherical_MAT)
-colnames(spherical_DT) <- c("model","I","II","III","IV","V","VI")
+colnames(spherical_DT) <- c("Sufficient Statistics","I","II","III","IV","V","VI")
 
 
 ###################
@@ -240,13 +245,13 @@ for(names in names(coef_LS)){
 }
 
 logarithmic2_DT <- data.table(model,logarithmic2_MAT)
-colnames(logarithmic2_DT) <- c("model","I","II","III","IV","V","VI")
+colnames(logarithmic2_DT) <- c("Sufficient Statistics","I","II","III","IV","V","VI")
 
 quadratic2_DT <- data.table(model,quadratic2_MAT)
-colnames(quadratic2_DT) <- c("model","I","II","III","IV","V","VI")
+colnames(quadratic2_DT) <- c("Sufficient Statistics","I","II","III","IV","V","VI")
 
 spherical2_DT <- data.table(model,spherical2_MAT)
-colnames(spherical2_DT) <- c("model","I","II","III","IV","V","VI")
+colnames(spherical2_DT) <- c("Sufficient Statistics","I","II","III","IV","V","VI")
 
 assessment_LS <- list()
 assessment_LS[["logarithmic_DT"]]<- logarithmic_DT
@@ -259,5 +264,7 @@ assessment_LS[["spherical2_DT"]]<- spherical2_DT
 
 
 saveRDS(assessment_LS,paste(root,"/processed data/assessment_LS",sep=""))
+
+
 
 

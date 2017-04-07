@@ -1,13 +1,15 @@
+
 %<<set-parent, echo=FALSE, cache=FALSE>>=
 %set_parent('report.Rnw')
 %@
+
 \begin{titlepage}
   \begin{center}
   \includegraphics[width=3in]{NUSlogo.jpg}\\
   \vspace{0.3in}
   \large\textbf{
   Modelling Network Representation of Football Goals\\
-  With Exponential Random Graph Model of Count Edges\\
+  With Exponential Random Graph Model of Count Edges (ERGM Count)\\
   \vspace{0.85in}
   By\\
   Imaduddin Haetami\\
@@ -24,4 +26,44 @@
 \end{center}
 \end{titlepage}
 
-\tableofcontents
+\chapter{Acknowledgements}
+Terima kasih Bapa dan Mama yang selama ini selalu berjuang dengan Tami.
+Bantuan dari segi finansial dan emosional sangat Tami hargai. 
+Tanpa bantuan dari Bapa dan Mama, Tami yakin tesis ini tidak akan pernah terselesaikan. 
+Semoga De Tari juga dimudahkan kelulusannya dan A Topik dibahagiakan keluarganya.
+
+I would also like to thank my supervisor Linda. 
+The amount of effort that she has put in guiding me and reviewing my drafts are unimaginable.
+
+Moreover, I am not really certain that other people who have helped me in this journey will read this thesis. 
+So, I will acknowledge them in person.
+
+Oh, I almost forget on one of the most important thing. Thank you the internet.
+
+\chapter{Summary}
+In this thesis, I applied ERGM Count as introduced in \citet{countergmdefined} to the modelling of goals scored in football matches.
+I established the English Premier League matches as a network where football clubs are the actors and the number of goals scored are the edges.
+The number of goals scored in the network of football matches can be modelled in many ways using the various specifications of reference measures and sufficient statistics in ERGM Count.
+
+Assuming the number of goals are sampled from an identical distribution, I demonstrate using ERGM Count that they are better modelled with the zero modified Poisson or the Conway-Maxwell-Poisson (CMP) than the Poisson distribution.    
+Through ERGM Count, I showed that the average market value of the players in a football club (AMV) is a significant factor in the prediction of goals.
+I have also shown that the home team of the match has a tendency to score more goals.
+The predictive scoring further shows that models that consider AMV and the home-away effect perform better than the identical distribution models. 
+This validates my hypothesis on goal scoring in football matches.
+
+In addition, I have proven that the addition of mutuality statistics enables ERGM Count to model a network that assumes independent pair-wise distribution.
+This is a network model where opposing edges may have a tendency to attain mutual or anti-mutual values.
+I illustrated this relationship in Figure \ref{fig: pairwise distribution}.
+This model should be contrasted with the independent edge-wise model where no such dependency can be found.
+I have shown that there is some evidence of anti-mutual relationship in the scoring of football goals by opposing teams.
+However, the predictive scoring shows otherwise.
+
+Furthermore, I have constructed several figures to aid the understanding of several mathematical concepts, such as the contrast between using the geometric and Poisson reference measure in Figure \ref{fig: geometric and poisson}.
+In Figure \ref{fig: zero modified Poisson}, I illustrate the effect of adding the nonzero statistic to the ERGM Count.
+I also demonstrate the flexibility of Conway-Maxwell-Poisson distribution in Figure \ref{fig: cmp} in capturing dispersion.
+Last but not least, I have corrected a minor error on the normalization constant of the baseline-distribution in \citet{countergmdefined}.  
+
+\tableofcontents 
+
+
+

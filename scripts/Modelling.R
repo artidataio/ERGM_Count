@@ -26,7 +26,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["poisson_LS"]] <- LS
@@ -43,7 +43,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["nonzero_LS"]] <- LS
@@ -60,7 +60,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["cmp_LS"]] <- LS
@@ -77,7 +77,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["nodeocov_LS"]] <- LS
@@ -94,7 +94,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["nodeicov_LS"]] <- LS
@@ -112,7 +112,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["edgecov_LS"]] <- LS
@@ -130,7 +130,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["model_7_LS"]] <- LS
@@ -148,7 +148,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["model_8_LS"]] <- LS
@@ -166,7 +166,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["model_9_LS"]] <- LS
@@ -184,7 +184,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["model_10_LS"]] <- LS
@@ -202,7 +202,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["model_11_LS"]] <- LS
@@ -220,7 +220,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["nabsdiff_LS"]] <- LS
@@ -237,7 +237,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["min_LS"]] <- LS
@@ -254,7 +254,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["geomean_LS"]] <- LS
@@ -272,7 +272,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["model_15_LS"]] <- LS
@@ -290,7 +290,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["model_16_LS"]] <- LS
@@ -308,7 +308,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["model_17_LS"]] <- LS
@@ -326,7 +326,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["model_18_LS"]] <- LS
@@ -343,7 +343,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["transitivity_LS"]] <- LS
@@ -360,7 +360,7 @@ for(i in 1:6){
   LS[[i]] <- model 
   coef_DT <- setDT(summary(model)$coef,keep.rownames=T)
   setnames(coef_DT, "rn", "parameter")
-  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$name, season = data_LS[[i]]$season)
+  coef_DT <- cbind(coef_DT,year = data_LS[[i]]$season, time = data_LS[[i]]$time)
   DT <- rbind(DT,coef_DT)
 }
 fit_LS[["geometric_LS"]] <- LS

@@ -6,238 +6,238 @@
 
 \chapter{Specification of ERGM Count}\label{chapter: specification}
 In this chapter, we will first define ERGM Count and its relevant shaping functions as proposed by \citet{countergmdefined}. 
-Then, we will introduce the simplest form of ERGM Count which are modeled Poisson and Geometric Distribution. 
-The various shapes of ERGM Count will then be explored and the interpretation of each the shapes will also be discussed accordingly. 
+Then, we will introduce the simplest form of ERGM Count which are modelled using the Poisson and geometric distributions. 
+The various shapes of ERGM Count will then be explored and the interpretation of each of the shapes will also be discussed accordingly.
+At the end of the chapter, we will briefly discuss the method to fit the models
 
 \section{Model Definition}
 Let the set of actors in the network be $N$ and $n$ represent the number of actors involved, such that $n \equiv |N|$.
 Let $\mathbb{Y}$ be the set of all dyads where a dyad represent a unique pair of actors that may have relational interest. 
 Since the later applied model is directed, $\mathbb{Y} \subseteq N \times N$. 
 
-Let the edge $y_{ij}$ represents the value of relational interest of dyad $(i,j)$ that originates from actor $i$ and received by actor $j$.
+Let the edge $y_{ij}$ represent the value of relational interest of dyad $(i,j)$ that originates from actor $i$ and is received by actor $j$.
 In Binary ERGM, each edge can only have binary values, $y_{ij} \in \{0,1\}$. 
-But in ERGM Count, an edge can take the value of any whole numbers, such that $y_{ij} \in \mathbb{N}_0$. 
-Hence the set of possible network configuration, or the sample space is a set $\mathcal{Y} \subseteq \mathbb{N}_{0}^{\mathbb{Y}}$. 
+But in ERGM Count, an edge can take the value of any whole number, such that $y_{ij} \in \mathbb{N}_0$. 
+Hence the set of possible network configurations, or the sample space is a set $\mathcal{Y} \subseteq \mathbb{N}_{0}^{\mathbb{Y}}$. 
 Let the random network of count configuration be $\bm{Y} \in \mathcal{Y}$, with $\bm{y}$ as its realization.
 
-The unknown model parameter $\bm{\theta} \in \Theta$ where $\Theta \subseteq \mathbb{R}^{q}$ is then mapped to $\mathbb{R}^p$ by the function $\eta:\Theta \to \mathbb{R}^p$. Given chosen sufficient statistics $g:\mathcal{Y} \to \mathbb{R}^{p}$ (which may also depend on external covariate $\bm{x}$), and reference measure $h:\mathcal{Y} \to [0,\infty)$. The ERGM Count of $\bm{Y}$ has Probability Mass Function (PMF):
+The unknown model parameter is $\bm{\theta} \in \Theta$ where $\Theta \subseteq \mathbb{R}^{q}$ is then mapped to $\mathbb{R}^p$ by the function $\eta:\Theta \to \mathbb{R}^p$. Given chosen sufficient statistics $g:\mathcal{Y} \to \mathbb{R}^{p}$ (which may also depend on external covariate $\bm{x}$), and reference measure $h:\mathcal{Y} \to [0,\infty)$, the ERGM Count of $\bm{Y}$ has probability mass function (PMF):
 \begin{align}
-Pr_{\bm{\theta};h,\eta,g}(\bm{Y}=\bm{y})=\frac{h(\bm{y})\exp(\eta(\bm{\theta})\bullet g(\bm{y}))}{k_{h,\eta,g}(\bm{\theta})},
+Pr_{\bm{\theta};h,\eta,g}(\bm{Y}=\bm{y})=\frac{h(\bm{y})\exp(\eta(\bm{\theta})^{\intercal} g(\bm{y}))}{k_{h,\eta,g}(\bm{\theta})},
 \end{align}
 where the denominator is a normalization constant defined as:
 \begin{align}
-k_{h,\eta,g}(\bm{\theta}) = \sum_{\bm{y} \in \mathcal{Y}}h(\bm{y})\exp(\eta(\bm{\theta})\bullet g(\bm{y})).
+k_{h,\eta,g}(\bm{\theta}) = \sum_{\bm{y} \in \mathcal{Y}}h(\bm{y})\exp(\eta(\bm{\theta})^{\intercal} g(\bm{y})).
 \end{align}
-There is an additional constraint for model parameter $\bm{\theta}$ to be an element from the set:
+There is an additional constraint for the model parameter $\bm{\theta}$ to be an element from the set:
 \begin{align} \label{eq: parameter constraint}
-\Theta \subseteq \Theta_{N}=\{\theta' \in \mathbb{R}^q: k_{h,\eta,g}(\bm{\theta}) < \infty\}
+\Theta \subseteq \Theta_{N}=\{\theta' \in \mathbb{R}^q: k_{h,\eta,g}(\bm{\theta}) < \infty\}.
 \end{align}
-This constraint is not necessary in Binary ERGM as their sample space is finite \citep{countergmdefined}. 
+This constraint is not necessary in binary ERGMs as their sample space is finite \citep{countergmdefined}. 
 In many occasions, the constraint for the parameters is not known explicitly. 
 
-To simplify the notation, the PMF can be defined up to normalization constant as:
+To simplify the notation, the PMF can be defined as:
 \begin{align}
-Pr(\bm{Y}=\bm{y}|\bm{\theta}) \propto h(\bm{y})\exp(\eta(\bm{\theta})\bullet g(\bm{y}))
+Pr(\bm{Y}=\bm{y}|\bm{\theta}) \propto h(\bm{y})\exp(\eta(\bm{\theta})^{\intercal} g(\bm{y})).
 \end{align}
-This assumes the constraint \ref{eq: parameter constraint} is met.
+This assumes the constraint \eqref{eq: parameter constraint} is met.
 
 \section{Reference Measure and Baseline Distribution}\label{sec: baseline distribution}
-In Binary ERGM, if the model has \textit{dyadic independence} property, the model will reduce to edge-wise logistic regression. 
-\citet{countergmdefined} stated that ERGM of valued network should reduce into Generalized Linear Model given \textit{dyadic independence}.
+In binary ERGM, if the model has \textit{dyadic independence} property, the model will reduce to edge-wise logistic regression. 
+\citet{countergmdefined} stated that the ERGM of valued network should reduce into generalized linear model given \textit{dyadic independence}.
 
-The specification of an appropriate reference measure enable such relationship to occur. 
+The specification of an appropriate reference measure enables such a relationship to occur. 
 Suppose the model only has one predictor $\theta$, with sufficient statistics, \BI{sum} : $g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} y_{ij}$. 
 If the reference measure, $h(\bm{y}) = 1$, the model's PMF will be:
 \begin{align}\label{eq: edgewise Geometric}
-Pr(\bm{Y}=\bm{y}|\theta) \propto \exp\left(\theta \sum_{(i,j) \in \mathbb{Y}} y_{ij}\right) = \prod_{(i,j) \in \mathbb{Y}} (\exp(\theta))^{y_{ij}}
+Pr(\bm{Y}=\bm{y}|\theta) \propto \exp\left(\theta \sum_{(i,j) \in \mathbb{Y}} y_{ij}\right) = \prod_{(i,j) \in \mathbb{Y}} (\exp(\theta))^{y_{ij}}.
 \end{align} 
-We recognize this as an edge-wise distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{Geometric}(p =1-\exp(\theta))$ where $\theta < 0$. This corresponds to the baseline distribution of \textit{geometric-reference}. 
+We recognize this as an edge-wise distribution, $Y_{ij}\stackrel{\text{iid}}{\sim}\text{Geometric}(p =1-\exp(\theta))$ where $\theta < 0$. This corresponds to the baseline distribution of \textit{geometric-reference}. 
 Whereas  if the reference measure is $h(\bm{y}) = \prod_{(i,j) \in \mathbb{Y}}(y_{ij}!)^{-1}$, the model will have PMF:
 \begin{align}\label{eq: edgewise Poisson}
-Pr(\bm{Y}=\bm{y}|\theta) \propto \frac{\exp\left(\theta \sum_{(i,j) \in \mathbb{Y}} y_{ij}\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!} = \prod_{(i,j) \in \mathbb{Y}} \frac{(\exp(\theta))^{y_{ij}}}{y_{ij}!}
+Pr(\bm{Y}=\bm{y}|\theta) \propto \frac{\exp\left(\theta \sum_{(i,j) \in \mathbb{Y}} y_{ij}\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!} = \prod_{(i,j) \in \mathbb{Y}} \frac{(\exp(\theta))^{y_{ij}}}{y_{ij}!}.
 \end{align}
-We recognize this as another edge-wise distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{Poisson}(\lambda =\exp(\theta))$ where $\theta \in \mathbb{R}$. 
+We recognize this as another edge-wise distribution, $Y_{ij}\stackrel{\text{iid}}{\sim}\text{Poisson}(\lambda =\exp(\theta))$ where $\theta \in \mathbb{R}$. 
 This corresponds to the baseline distribution of \textit{Poisson-reference}. 
-Notice that the 2 models have different model parameter constraints. 
-We illustrate the shape of Poisson and Geometric Distribution in Figure \ref{fig: Geometric and Poisson} below.
+Note that the 2 models have different model parameter constraints. 
+We illustrate the shape of Poisson and geometric distribution in Figure \ref{fig: Geometric and Poisson} below.
 
 \begin{figure}[H] 
-<<geom_pois,fig.asp=0.45>>=
+<<fig.asp=0.45>>=
 geom_pois <- readRDS(paste(root,"/plots/geom_pois",sep=""))
 plot(geom_pois)
 @
-\caption [Geometric and Poisson Distribution with Mean = 3.5]{These plots show the shape of Geometric and Poisson Distribution. Both distributions have equal mean, $\mu = \frac{3}{2}$. Differs from Poisson, Geometric Distribution has a strictly decreasing probability as $y_{ij}$ increased.}
-\label{fig: Geometric and Poisson}
+\caption [Geometric and Poisson distribution with Mean = 3.5]{These plots show the shape of the geometric and Poisson Distributions. Both distributions have equal mean, $\mu = \frac{3}{2}$. Unlike the Poisson, the geometric distribution has a strictly decreasing probability as $y_{ij}$ increase.}
+\label{fig: geometric and poisson}
 \end{figure}
 
 On a side note, there is an error in \citet{countergmdefined} on the normalization constant of the 2 distributions above. 
-For equation \ref{eq: edgewise Geometric}, \citet{countergmdefined} normalization constant is $\prod_{(i,j) \in \mathbb{Y}}\frac{1}{1-\exp(\theta)}$ when it is supposed to be  $\prod_{(i,j) \in \mathbb{Y}}1-\exp(\theta)$.
-Whereas for equation \ref{eq: edgewise Poisson}, the normalization constant is supposed to be $\prod_{(i,j) \in \mathbb{Y}} \me^{-\exp(\theta)}$ instead of $\prod_{(i,j) \in \mathbb{Y}}\frac{1}{\exp(\theta)}$. 
-However, these mentioned errors do not affect his conclusion on the respective models.
+For equation \eqref{eq: edgewise Geometric}, the normalization constant in \citet{countergmdefined} is $\prod_{(i,j) \in \mathbb{Y}}\frac{1}{1-\exp(\theta)}$ when it is supposed to be  $\prod_{(i,j) \in \mathbb{Y}}1-\exp(\theta)$.
+Whereas for equation \eqref{eq: edgewise Poisson}, the normalization constant is supposed to be $\prod_{(i,j) \in \mathbb{Y}} \me^{-\exp(\theta)}$ instead of $\prod_{(i,j) \in \mathbb{Y}}\frac{1}{\exp(\theta)}$. 
+However, these errors do not affect his conclusion on the respective models.
 
-Besides the Poisson and Geometric Distribution, there are other \textit{reference measures} which corresponds to other \textit{baseline distribution}.
-\citet{countergmapplied} introduced \textit{binomial-reference} and \textit{truncated geometric-reference} where it still focus on count edge's value, but there is a cap on the maximum attainable value.  
-These constrained models will not  be explored in this paper.
+Besides the Poisson and geometric distributions, there are other \textit{reference measures} which correspond to other \textit{baseline distributions}.
+\citet{countergmapplied} introduced the \textit{binomial-reference} and \textit{truncated geometric-reference} where the focus is still on count edge's value, but there is a cap on the maximum attainable value.  
+These constrained models will not  be explored in this thesis.
 
 \section{\textit{Poisson-Reference} ERGM Count Modelling}
-Previously, the form of the ERGM Count was reduced to edge-wise Poisson and Geometric Distribution. 
-These two models are rather simple and easily interpreted. 
-However, both may not be the model that best fit the later application on Chapter 4.
-In addition, these two modes do not take into account the complex relationship of a network.
+Previously, the form of the ERGM Count was reduced to the edge-wise Poisson and geometric distributions. 
+These two models are rather simple and easy to interpret. 
+However, neither of them may be the model that best fit the later application on Chapter \ref{chapter: analysis}.
+In addition, these two models do not take into account the complex relationship of a network.
 We will explore more complex models and their interpretations later.
 
-In this section, we will focus on \textit{Poisson-reference} ERGM Count without complex constraints: $\mathcal{Y} \in \mathcal{N}_0^{\mathcal{Y}}$ and $h(\bm{y}) = \prod_{(i,j) \in \mathbb{Y}}(y_{ij}!)^{-1}$.
-Furthermore, the linear ERGM Count restriction will also be applied where $\eta(\bm{\theta}) = \bm{\theta}$ and thus $q = p$. 
-This restriction makes the model comprehensible. 
+In this section, we focus on the \textit{Poisson-reference} ERGM Count without complex constraints: $\mathcal{Y} \in \mathcal{N}_0^{\mathcal{Y}}$ and $h(\bm{y}) = \prod_{(i,j) \in \mathbb{Y}}(y_{ij}!)^{-1}$.
+Furthermore, the linear ERGM Count restriction will also be applied where $\eta(\bm{\theta}) = \bm{\theta}$ and thus $q = p$.  
 In linear ERGM Count, if $\Theta_{N}$ is an open set, then: 
 \begin{align} \label{eq: Barndorff Nielsen}
-\theta_{k}'>\theta_{k} \implies E(g_k(\bm{Y})|\theta,\theta_k'>E(g_k(\bm{Y})|\theta,\theta_k)
+\theta_{k}'>\theta_{k} \implies E(g_k(\bm{Y})|\theta,\theta_k')>E(g_k(\bm{Y})|\theta,\theta_k).
 \end{align}
-In other words, if other model parameters $\theta \setminus \theta_k$ are fixed, the expected sufficient statistics $g_k$ is strictly increasing in $\theta_k$.
-Larger $\theta_k$ will result in a distribution of networks with more feature gauged by $g_k$.
+In other words, if the model parameters $\theta \setminus \theta_k$ are fixed, the expected sufficient statistics $g_k$ is strictly increasing in $\theta_k$.
+A larger $\theta_k$ will result in a distribution of networks with more features gauged by $g_k$.
 
 \subsection{Exogenous Covariates}\label{sub: exogenous covariates}
-Let the possibly predictive variables outside the network structure or exogenous covariate be $x_{ijk}$.
-A \textit{Poisson-reference} ERGM Count will reduce to Poisson Regression Model if we introduce an edge-independent sufficient statistics:
+Let $x_{ij}$ predictive variable outside the network structure or an exogenous covariate corresponding to the edge $(i,j)$.
+A \textit{Poisson-reference} ERGM Count will reduce to the Poisson regression model if we introduce an edge-independent sufficient statistics:
 \begin{align}
 g(\bm{y})= \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ij}.
 \end{align}
 
-Let the model sufficient statistics only be exogenous covariate and \BI{sum}  the PMF will reduce to:
+Let the sufficient statistics in the model include only \BI{sum}  and exogenous covariate $x_{ij}$. Then, the PMF will reduce to:
 \begin{align*}
 Pr(\bm{Y}=\bm{y}|\theta) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} y_{ij}x_{ij} \right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!} \\
-&= \prod_{(i,j) \in \mathbb{Y}} \frac{(\exp(\theta_1+\theta_2 x_{ij}))^{y_{ij}}}{y_{ij}!}
+&= \prod_{(i,j) \in \mathbb{Y}} \frac{(\exp(\theta_1+\theta_2 x_{ij}))^{y_{ij}}}{y_{ij}!}.
 \end{align*}
-This can be recognized as an edge-wise distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{Poisson}(\lambda =\exp(\theta_1 + \theta_2 x_{ij}))$ .
-Notice that adding exogenous covariate will maintain the Poisson relationship yet changing the parameter $\lambda$ for edge $(i,j)$ by multiplication of factor $e^{\theta_2 x_{ij}}$.
-It is obvious that further addition of another exogenous covariate will give the same effect.
-Hence, this model is equivalent to applying Poisson regression model to the network data.  
+This can be recognized as an edge-wise distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{Poisson}(\lambda =\exp(\theta_1 + \theta_2 x_{ij}))$.
+Notice that adding the exogenous covariate will maintain the Poisson relationship yet changing the parameter $\lambda$ for edge $(i,j)$ by multiplication of the factor $e^{\theta_2 x_{ij}}$.
+It is obvious that the further addition of another exogenous covariate will give the same effect.
+Hence, this model is equivalent to applying the Poisson regression model to the network data.  
 
-In current R implementation of ERGM Count, there can be 3 representation of exogenous covariates for directed network. 
-These are \BI{nodeocov} which is the attribute of the actor where the edge originate $x_{i}$ and \BI{nodeicov} which is the attribute of receiving actor $x_j$. 
-The last one is $x_{ij}$ or \BI{edgecov} which represent the external edge attribute.
+In the current R implementation of ERGM Count, there are 3 representations of exogenous covariates for directed network. 
+These are \BI{nodeocov}, which is the attribute of the actor where the edge originate: $x_{i}$, and \BI{nodeicov}, which is the attribute of receiving actor :$x_j$. 
+The last one is $x_{ij}$ or \BI{edgecov}, which represent the external edge attribute.
 
 \subsection{Zero Modification}\label{sub: zero modification}
-The idea behind zero modification is to move away from the baseline distribution with new PMF that has more accurate representation of its $Pr(Y_{ij}=0)$. 
+The idea behind zero modification is to consider a new PMF that has a more accurate representation of $Pr(Y_{ij}=0)$. 
 The proposed statistics to represent zero modification is \BI{nonzero}:
 \begin{align}
-g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \mathbb{I}(y_{ij} > 0)
+g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \mathbb{I}(y_{ij} > 0).
 \end{align}
-This statistics is simply counting the number of edges that has value bigger than 0. 
-Suppose we model ERGM Count that only contain \BI{sum} and \BI{nonzero} statistics. 
+This statistics is simply counting the number of edges that have values bigger than 0. 
+Suppose we consider an ERGM Count that only contain the statistics \BI{sum} and \BI{nonzero}. 
 Then the PMF will reduce to:
 \begin{align*}
 Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} \mathbb{I}(y_{ij} > 0)\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
-&=\prod_{(i,j) \in \mathbb{Y}} \frac{\exp \left(\theta_1 y_{ij} + \theta_2 \mathbb{I}(y_{ij} > 0)\right)}{y_{ij}!}
+&=\prod_{(i,j) \in \mathbb{Y}} \frac{\exp \left(\theta_1 y_{ij} + \theta_2 \mathbb{I}(y_{ij} > 0)\right)}{y_{ij}!}.
 \end{align*}
 
-This can be recognised as independent edge-wise Zero Modified Poisson, which is a Poisson Distribution with $Pr(Y_{ij}=0)$ can be adjusted by $\theta_2$ while $Pr(Y_{ij}=y_{ij}), y_{ij}=1,2,\ldots,$ maintain their relative proportion.
-The corresponding parameter $\theta_2$ can take on any real values. 
-If $\theta_2 <0$, then the probability of an edge to take value of zero is higher than Poisson Distribution. 
-Whereas if $\theta_2>0$, the number of non-zero edge has higher probability than Poisson Distribution, thus giving the name \textit{\textbf{nonzero}}. Figure \ref{fig: Zero Modified Poisson} will illustrate this relationship.
+This can be recognised as independent edge-wise zero modified Poisson, which is a Poisson Distribution with $Pr(Y_{ij}=0)$ adjusted by $\theta_2$ while $Pr(Y_{ij}=y_{ij}), y_{ij}=1,2,\ldots,$ maintain their relative proportion.
+The parameter $\theta_2$ can take on any real values. 
+If $\theta_2 <0$, then the probability of an edge taking a value of zero is higher than the Poisson distribution. 
+Whereas if $\theta_2>0$, the number of non-zero edges has higher probability than in the Poisson Distribution, thus giving rise to the name \textit{\textbf{nonzero}}.
+Figure \ref{fig: Zero Modified Poisson} illustrates this relationship.
 
 \begin{figure}[H]
 <<,fig.asp=0.65,eval=T>>=
 zero_modified<- readRDS(paste(root,"/plots/zero_modified",sep=""))
 plot(zero_modified)
 @
-\caption ["Illustration of Zero-Modified Poisson"]{This figure shows the effect of adding on \textit{\textbf{nonzero}} to the Poisson model. The top axis indicates parameter $\theta_2$, which affect the probability of zero edges. Notice that the effect diminished as parameter $\theta_1$ (right axis) gets higher. Furthermore, $e^{\theta_1}$ is the mean parameter when $\theta_2=0$.}
-\label{fig: Zero Modified Poisson}
+\caption [Illustration of Zero-Modified Poisson]{This figure shows the effect of adding \textit{\textbf{nonzero}} to the Poisson model. The top axis indicates the value of the parameter $\theta_2$, which affects the probability of zero edges. Note that the effect diminishes as the parameter $\theta_1$ (right axis) increases. Furthermore, $e^{\theta_1}$ is the mean parameter when $\theta_2=0$.}
+\label{fig: zero modified Poisson}
 \end{figure}
 
 
 \subsection{Dispersion Modelling}\label{sub: dispersion modelling}
-Poisson distribution has only one parameter which control the mean and the spread of the distribution. 
+The Poisson distribution has only one parameter which controls the mean and the spread of the distribution. 
 The variance is constrained to be equal to the mean and is not adjustable.
-One method to overcome this constrain is by adding sufficient statistic, \BI{CMP}:
+One method to overcome this constrain is by adding the sufficient statistic, \BI{CMP}:
 \begin{align}
-g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)
+g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!).
 \end{align}
-Suppose the sufficient statistics use in the model are \BI{sum} and \BI{CMP} with Poisson reference, the PMF:
+Suppose the sufficient statistics uses in the model are \BI{sum} and \BI{CMP} with a Poisson reference.
+Then the PMF is:
 \begin{align*}
 Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_2 \sum_{(i,j) \in \mathbb{Y}} \log(y_{ij}!)\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
-&\propto \prod_{(i,j) \in \mathbb{Y}} (\exp(\theta_1))^{y_{ij}} (y_{ij}!)^{\theta_2-1}
+&\propto \prod_{(i,j) \in \mathbb{Y}} (\exp(\theta_1))^{y_{ij}} (y_{ij}!)^{\theta_2-1}.
 \end{align*}
 Hence the model reduces to the edge-wise \textit{Conway-Maxwell-Poisson} \textit{\textbf{CMP}} distribution $Y_{ij}\stackrel{\text{iid}}{\sim}\text{CMP}(\lambda =\exp(\theta_1),\nu = 1-\theta_2)$ where $\theta_2 \le 1$. 
-When $\theta_2$ decreases from 0 to $-\infty$, the distribution become less and less dispersed compare to Poisson.
-When $\theta_2 \to -\infty$, it reduces to Bernoulli Distribution \citep{countergmdefined}. 
-Whereas if as $0 < \theta_2 < 1$, the distribution become more dispersed as compared to Poisson. 
-It reduces  to Geometric Distribution at $\theta_2=1$. 
-Figure \ref{fig: cmp} will illustrate the various shapes of CMP distribution.
+When $\theta_2$ decreases from 0 to $-\infty$, the distribution become less dispersed as compared to the Poisson.
+When $\theta_2 \to -\infty$, it reduces to the Bernoulli distribution \citep{countergmdefined}. 
+Whereas if $0 < \theta_2 < 1$, the distribution become more dispersed as compared to the Poisson. 
+It reduces  to the geometric distribution at $\theta_2=1$. 
+Figure \ref{fig: cmp} illustrates the various shapes of the CMP distribution.
 
 \begin{figure}[H]
 <<fig.asp=.65>>=
 cmp<- readRDS(paste(root,"/plots/cmp",sep=""))
 plot(cmp)
 @
-\caption ["Illustration of Conway-Maxwell-Poisson Distribution"]{This figure shows the various shapes of Conway-Maxwell-Poisson Distribution (CMP). The right axis corresponds to parameter $\theta_1$. Whereas the top axis indicates parameter $\theta_2$, which dominates the dispersion effect of the distribution. When $\theta_2 = 0$, CMP reduce to Poisson with mean $e^{\theta_1}$. When $\theta_2 >0$ the distribution become more dispersed and it gets less dispersed when $\theta_2<0$.}  
+\caption [Illustration of Conway-Maxwell-Poisson Distribution]{This figure shows the various shapes of the Conway-Maxwell-Poisson distribution (CMP). The right axis corresponds to the parameter $\theta_1$. The top axis indicates parameter $\theta_2$, which represents the dispersion effect of the distribution. When $\theta_2 = 0$, the CMP reduces to the Poisson with mean $e^{\theta_1}$. When $\theta_2 >0$ the distribution become more dispersed and it gets less dispersed when $\theta_2<0$.}  
 \label{fig: cmp}
 \end{figure}
 
 \subsection{Mutuality}\label{sub: mutuality}
-The previous sections discussed the various models that have independent edge-wise assumption. 
-Although, normalization constants tend to be intractable, they can be easily recognised as one particular distribution. 
-However, fitting network data to independent edge-wise model will undermine the inherent relational characteristics of networks. 
+The previous sections discussed the various models that have independent edge-wise assumption and the underlying distributions can be recognised easily. 
+However, fitting independent edge-wise models to network data will undermine the inherent relational characteristics of networks. 
 
 In directed networks, the strength of mutuality is one of the network structure that one might consider. 
 In friendship networks, mutuality is an important characteristic. 
-This is because, when one person claimed to be friend with another person the opposite party is likely to  reciprocate and claim the same. 
-Additionally, when one declare to be not-a-friend, the other party will have a tendency to declare the same. 
-Hence being mutual in binary network can be defined as $y_{ij}=y_{ji}=1$ or sometimes $y_{ij}=y_{ji}$.
+This is because, when one person claims to be friends with another person, the opposite party is likely to  reciprocate and claim the same. 
+Conversely, when one declares to be not-a-friend, the other party will have a tendency to declare the same. 
+Hence mutuality in a network can be defined as $y_{ij}=y_{ji}=1$ or sometimes $y_{ij}=y_{ji}$.
 
 The inclusion of mutuality will make the ERGM Count model more difficult to interpret.
-\citet{countergmdefined} suggest that we can understand the model through conditional distribution: $Pr(Y_{ij}=y_{ij}| \bm{Y} \in \mathcal{Y}_{ij}(y))$ where $\mathcal{Y}_{ij}(y)$ is a set where only edge $y_{ij}$ can change its value while others remain constant.
-This means that we will know which value $y_{ij} \in \mathbb{N}_0$ the random variable $Y_{ij}$ likely to attain, given one particular network values. 
+\citet{countergmdefined} suggest that we can understand the model through the conditional distribution: $Pr(Y_{ij}=y_{ij}| \bm{Y} \in \mathcal{Y}_{ij}(y))$ where $\mathcal{Y}_{ij}(y)$ is a set where only the edge $y_{ij}$ can change its value while the others remain constant.
+This means that we will know which value $y_{ij} \in \mathbb{N}_0$ the random variable $Y_{ij}$ is likely to attain, given one particular value of the network. 
 
-However, we will prove that addition of mutuality will reduce the model  to one with independent pair-wise distribution. 
-Where a pair represents 2 edges where the origin and destination nodes are opposite of each other.
+However, I will prove that addition of mutuality will reduce the model  to one with independent pair-wise distribution, where a pair represents a sets of 2 edges $y_{ij}$ and $y_{ji}$.
 The proposed statistics to represent mutuality are:
 \begin{enumerate}
 
 \item \BI{Minimum}
 
-One of the proposed statistics to represent mutuality is the \BI{mutual(min)}: 
+One of the proposed statistics to represent mutuality is the \BI{min}: 
 \begin{align}
 g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})
 \end{align}
-This is simply taking minimum values between 2 opposite edges of a dyad, and sum it for every possible pair.
-When a model only use the \BI{sum} and \BI{mutual(min)}, the PMF:
+This is simply taking the minimum value between 2 opposite edges of a dyad, and to sum it for every possible pair.
+When a model only uses the \BI{sum} and \BI{mutual(min)}, the PMF is:
 \begin{align*}
 Pr(\bm{Y}=\bm{y}|\theta_1,\theta_2) &\propto \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y}} y_{ij} + \theta_{2}\sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})\right)}{\prod_{(i,j) \in \mathbb{Y}}y_{ij}!}\\
 &= \frac{\exp\left(\theta_1 \sum_{(i,j) \in \mathbb{Y},i<j} (y_{ij}+y_{ji}) + \theta_{2}\sum_{(i,j)\in\mathbb{Y},i<j} \min(y_{ij},y_{ji})\right)}{\prod_{(i,j) \in \mathbb{Y},i<j}y_{ij}!y_{ji}!}\\
-&= \prod_{(i,j) \in \mathbb{Y},i<j} \frac{\exp(\theta_1(y_{ij}+y_{ji})+\theta_2 \min(y_{ij},y_{ji}))}{y_{ij}!y_{ji}!}
+&= \prod_{(i,j) \in \mathbb{Y},i<j} \frac{\exp(\theta_1(y_{ij}+y_{ji})+\theta_2 \min(y_{ij},y_{ji}))}{y_{ij}!y_{ji}!}.
 \end{align*}
-Note that this does not reduce into edge-wise distribution as per previous sections. 
-Yet, it has independent pair-wise distribution where $\forall(i,j) \in\mathbb{Y},i<j$, the joint distribution of $(Y_{ij},Y_{ji})$ has PMF:
+Note that this does not reduce into an edge-wise distribution as per previous sections. 
+However, it has an independent pair-wise distribution where $\forall(i,j) \in\mathbb{Y},i<j$, the joint distribution of $(Y_{ij},Y_{ji})$ has PMF:
 \begin{align*}
-P(Y_{ij}=y_{ij},Y_{ji}=y_{ji}|\theta_1,\theta_2) \propto \frac{\exp(\theta_1(y_{ij}+y_{ji})+\theta_2 \min(y_{ij},y_{ji}))}{y_{ij}!y_{ji}!}
+P(Y_{ij}=y_{ij},Y_{ji}=y_{ji}|\theta_1,\theta_2) \propto \frac{\exp(\theta_1(y_{ij}+y_{ji})+\theta_2 \min(y_{ij},y_{ji}))}{y_{ij}!y_{ji}!}.
 \end{align*}
 
-\item \textit{\textbf{Negative Absolute Difference}}
+\item \BI{Negative Absolute Difference}
 
-Another proposed statistics is negative absolute difference or \BI{mutual(nabsdiff)} which has the form:
+Another proposed statistics is the negative absolute difference or \BI{nabsdiff} which has the form:
 \begin{align}
-g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} -|y_{ij} - y_{ji}| 
+g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} -|y_{ij} - y_{ji}|.
 \end{align}
-Note that this statistic maximum value is 0. 
-It is achieved when $\forall(i,j) \in\mathbb{Y},i<j (y_{ij}=y_{ji})$ or every pair is equal. 
-The negation of the statistic is necessary as the higher the statistics, the higher strength of mutuality. 
+Note that the maximum value of the statistic is 0. 
+It is achieved when $\forall(i,j) \in\mathbb{Y},i<j, y_{ij}=y_{ji}$ or every pair is equal. 
+The negation of the statistic is necessary as the higher the statistic, the higher strength of mutuality. 
 Hence the coefficient will conform with other mutuality statistics.
 
-With the same method above, the pairwise distribution $(Y_{ij},Y_{ji})$ has PMF:
+Using the same method as above, the pairwise distribution $(Y_{ij},Y_{ji})$ has PMF:
 \begin{align*}
-Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) - \theta_2 |y_{ij}-y_{ji}|)}{y_{ij}!y_{ji}!} 
+Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) - \theta_2 |y_{ij}-y_{ji}|)}{y_{ij}!y_{ji}!}.
 \end{align*}
 
 \item \BI{Geometric Mean}
 
-The last proposed statistics is geometric mean or \BI{mutual(geomean)} which has the form:
+The last proposed statistics is the geometric mean or \BI{geomean} which has the form:
 \begin{align}
-g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \sqrt{y_{ij}}\sqrt{y_{ji}} 
+g(\bm{y}) = \sum_{(i,j)\in\mathbb{Y},i<j} \sqrt{y_{ij}}\sqrt{y_{ji}}. 
 \end{align}
-Similarly the model with statistics \textit{\textbf{sum}} and \textit{\textbf{mutual(geomean)}} will have independent pairwise distribution $(Y_{ij},Y_{ji})$ with PMF:
+Similarly, the model with the statistics \BI{sum} and \BI{geomean}, will have an independent pairwise distribution $(Y_{ij},Y_{ji})$ with PMF:
 \begin{align*}
-Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) + \theta_2 \sqrt{y_{ij}}\sqrt{y_{ji}})}{y_{ij}!y_{ji}!} 
+Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (y_{ij}+y_{ji}) + \theta_2 \sqrt{y_{ij}}\sqrt{y_{ji}})}{y_{ij}!y_{ji}!}. 
 \end{align*}
 \end{enumerate}
 
@@ -246,49 +246,68 @@ Pr(Y_{ij}=y_{ij},Y_{ji}=y_{ji}| \theta_1,\theta_2) \propto \frac{\exp(\theta_1 (
 mutual<- readRDS(paste(root,"/plots/mutual",sep=""))
 plot(mutual)
 @
-\caption [Joint distribution with mutual statistics]{This graph illustrates the various PMF of the pairwise distribution with $\theta_1 =1 $. The different shades of black indicate the region that has higher probability. Here the top axis represent $\theta_2$ which corresponds to the parameter of \textit{\textbf{mutual}} statistics. When $\theta_2 = 0$, the joint distribution follows 2 independent Poisson with $\lambda = e^{\theta_1}$}
+\caption [Joint distribution with mutual statistics]{This graph illustrates the various PMF of the pairwise distribution with $\theta_1 =1 $. The different shades of black indicate which regions have higher probability. The top axis represents $\theta_2$, which corresponds to the parameter of \BI{mutual} statistics. When $\theta_2 = 0$, the joint distribution follows an independent Poisson with $\lambda = e^{\theta_1}$.}
 \label{fig: pairwise distribution}
 \end{figure}
 
-The differences of the joint distributions are due to the statistics $\min(y_{ij},y_{ji}),-|y_{ij}-y_{ji}|, \text{ and} \sqrt{y_{ij}}\sqrt{y_{ji}}$ for \BI{min}, \BI{nabsdiff} and \BI{geomean} respectively.
-When $\theta_2>0$ for \BI{min} and \BI{geomean}, the probability will increase as $y_{ij}$ and $y_{ji}$ increase. 
-Thus the distribution will place a greater mass on pairs with higher edge values. 
-In the case of \BI{min}, for each level of $y_{ij}$ and $y_{ji}$, the highest increase of mass occur when $y_{ij} = y_{ji}$. 
-This increases the probability of having equal pair values. \citet{countergmdefined} referred it as the "pulled-up" effect of \BI{min} statistics.
+The differences in the joint distributions are due to the statistics $\min(y_{ij},y_{ji}),-|y_{ij}-y_{ji}|, \text{ and} \sqrt{y_{ij}}\sqrt{y_{ji}}$ for \BI{min}, \BI{nabsdiff} and \BI{geomean} respectively.
+When $\theta_2>0$ for \BI{min} and \BI{geomean}, the distribution will place a greater mass on pairs with higher edge values. 
+In the case of \BI{min}, the mass is highest when $y_{ij} = y_{ji}$. 
+This increases the probability of a pair having equal values. 
+\citet{countergmdefined} referred it as the \textit{pulled-up} effect of \BI{min} statistics.
 On the other hand, \BI{nabsdiff} implements the reduction of mass.  
-The higher disparity between the pair $y_{ij}$ and $y_{ji}$ will result in higher mass reduction.
+A higher disparity between the pair $y_{ij}$ and $y_{ji}$ will result in higher mass reduction.
 The reduction occurs less when disparity between $y_{ij}$ and $y_{ji}$ is low and 0 reduction at $y_{ij}=y_{ji}$. 
 The characteristic is similar with \BI{min}. 
 However, it does not increase the probability of higher edge values. 
-Hence the distribution is "pulled-in" to the mutual values.
-\citet{countergmdefined} referred it as the "pulled-in" effect of \BI{nabsdiff} statistic. 
+Hence the distribution is \textit{pulled-in} to the mutual values.
+\citet{countergmdefined} referred to this as the \textit{pulled-in} effect of the \BI{nabsdiff} statistic. 
 These characteristics are demonstrated in Figure \ref{fig: pairwise distribution} when $\theta_2 = 1$.  
 
-When $\theta_2 <0$, \BI{min} and \BI{geomean} will give the reduction effect. 
-The reduction for occurs less on smaller value of the pair $(y_{ij},y_{ji}$.
-In the case of \BI{min}, for each level of $y_{ij}$ and $y_{ji}$, the highest reduction occur when $y_{ij} = y_{ji}$. 
-This emphasizes the non equal and highly dissimilar pair, such that it creates bimodal distribution. 
-Statistics \BI{nabsdiff} also introduce the same effect to the model by placing the higher mass on pairs with high disparity.
-Hence, \BI{nabsdiff} also creates bimodal distribution. 
-However, as $y_{ij}$ or $y_{ji}$ gets higher, the disparity can get higher so that the mass addition is higher. 
-This causes the bimodal distribution to occupy the higher values which results to a more distinctive bimodal compare with statistics \BI{min}.
+When $\theta_2 <0$, \BI{min} and \BI{geomean} will produce the reduction effect. 
+The reduction for occurs less on smaller value of the pair $(y_{ij},y_{ji})$.
+In the case of \BI{min}, for each level of $y_{ij}$ and $y_{ji}$, the highest reduction occurs when $y_{ij} = y_{ji}$. 
+This emphasizes the non equal and highly dissimilar pair, such that it creates bimodal distribution.
+The statistic \BI{nabsdiff} also introduces the same effect to the model by placing higher mass on pairs with high disparity.
+Hence, \BI{nabsdiff} also creates a bimodal distribution. 
+However, as $y_{ij}$ or $y_{ji}$ increases, the disparity can increases so that the mass addition is higher. 
+This causes the bimodal distribution to take higher values which results to a more distinctive bimodal compare with statistics \BI{min}.
 These characteristics are demonstrated in Figure \ref{fig: pairwise distribution} when $\theta_2 = -1$.  
 
 \subsection{Transitivity}
 
-The last network statistics that will be discussed is the measure of transitivity.
-In the friendship network, transitivity can be defined as the tendency of actor $i$ claiming a friendship tie with actor $j$, given that actor $i$ claimed a friendship tie with actor $k$ and actor $k$ claimed a friendship tie with actor $j$.
-In layman term, transitive relations gives the notion "if you are a friend of my friend, you are my friend too".
+The last network statistic that will be discussed is the measure of transitivity.
+In a friendship network, transitivity can be defined as the tendency of actor $i$ to claim a friendship tie with actor $j$, given that actor $i$ has claimed a friendship tie with actor $k$ and actor $k$ has claimed a friendship tie with actor $j$.
+In layman term, a transitive relation represents the notion ``if you are a friend of my friend, you are my friend too''.
 
 Transitivity in binary network can simply be represented with $y_{ik}=y_{kj}=y_{ij}=1$. 
-Binary ERGM allows statistics \BI{transitive triads},  $g(\bm{y}) = \sum_{i,j,k \in N} y_{ij}y_{ik}y_{kj}$ to represent transitivity.  
+Binary ERGMs allow the statistic \BI{transitive triads},  $g(\bm{y}) = \sum_{i,j,k \in N} y_{ij}y_{ik}y_{kj}$ to represent transitivity.  
 However, this definition cannot be applied to network with count edges \citep{countergmdefined}.
-Applying the statistics will result in violation of constraint \ref{eq: parameter constraint}.
+Applying the statistic will result in violation of constraint \eqref{eq: parameter constraint}.
 When the corresponding parameter $\theta>0$, the normalization constant $k_{h,\eta,g}(\bm{\theta}) \nless \infty$.
 
-\citet{countergmdefined} suggested to the use of statistics, \BI{transitive weights}: 
+\citet{countergmdefined} suggested to use statistic \BI{transitive weights}: 
 \begin{align}
 g(\bm{y}) = \sum_{(i,j) \in \mathbb{Y}} \min \left(y_{ij},\max_{k \in N} \left(\min(y_{ik},y_{kj}) \right) \right)
 \end{align}
-This statistic search through every intermediate actor $k \in N/\{i,j\}$ for which actor k has the strongest intermediary relation ($\min(y_{ik},y_{kj})$). 
-Then, we compare the intermediary relation with the strength of direct relation ($y_{ij}$).
+This statistic searches through every intermediate actor $k \in N/\{i,j\}$ for which actor $k$ has the strongest intermediary relation ,$\min(y_{ik},y_{kj})$. 
+Then, we compare the intermediary relation with the strength of direct relation ,$y_{ij}$.
+
+
+\section{Model Fitting}\label{sec: model fitting}
+
+Fitting ERGM Count can be done in R, a language and environment for statistical computing \citep{r2017r}.
+The R package \textit{ergm.count} \citep{countergmpackage} is an extension of the R package \textit{ergm} \citep{david2008ergm} that is used for the later analysis.
+Package \textit{ergm.count} defines the function of the reference measures that are specifically designed for count edges.
+\textit{Poisson-reference} and \textit{geometric-reference} that was specified in Section \ref{sec: baseline distribution} are included.
+Package \textit{ergm.count} also defines the function of the sufficient statistic \BI{CMP}.
+These functions will be passed to the package \textit{ergm} as the argument of the function that fit binary ERGM models. 
+
+Essentially, the method to estimates the parameter of ERGM Count is exactly the same with binary ERGM \citep{countergmdefined}.
+Package \textit{ergm.count} use package \textit{ergm}'s Monte Carlo maximum likelihood estimates (MCMLE) approximation in the fitting process.
+\citet{countergmpackage} warned that the parameter estimation process may violate constraint \eqref{eq: parameter constraint}.
+One way to validate the estimation result is by monitoring the trace plot \citet{countergmpackage}.  
+
+
+
+

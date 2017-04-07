@@ -1,196 +1,277 @@
+
 %<<set-parent, echo=FALSE, cache=FALSE>>=
 %set_parent('report.Rnw')
 %@
 
-\chapter{Network Representation of Football Goals and ERGM Count Justification}
-Most of the applications in ERGM Count have been focusing on social network analysis.
-\citet{countergmapplied} applied the model to the social relation of Zachary's Karate Club and Sampson's Monks dataset. 
-The network structure is obvious, friendship levels as the edges and individuals as the nodes.
-Another implementation of ERGM Count is an assessment of the effectiveness of government-sponsored collaboration written by \citet{countergmexamplepsj}.
-Here the edges are collaboration level and companies as the nodes.
- 
-Although football goals are relational, they are rarely represented as a network structure.
-Hence, in Section \ref{sec: justification}, we will justify the network structure of goals that is appropriate for ERGM Count.
-Through ERGM Count, we will investigate the variables that are significant in modeling the goals (Chapter \ref{chapter: analysis}).
-But before everything else, it is essential to introduce the relevant dataset. 
+\chapter{Analysis on Football Goals with ERGM Count}\label{chapter: analysis}
+In this chapter, we will analyse football goals with ERGM Count.
+ERGM Count models vary substantially depending on the choice of reference measure and sufficient statistics.
+We will use the various models specified in Chapter \ref{chapter: specification}.
+The methods for estimating the parameters are discussed in Section \ref{sec: model fitting}.
+
+The data suitable for ERGM Count fitting have been discussed in Section \ref{sec: introduction to dataset}.
+As there are 6 different networks to fit, we can also investigate whether there is consistency in the model accross different networks.
+In the last section, we will choose the best model based on predictive scoring.
+
+\section{Analysis Using Identical Distribution Models}
+In Chapter \ref{chapter: specification}, we have shown that some of the ERGM Count models reduce to independent edge-wise distributions. 
+Some of them assume that every possible edges of the network exhibits the same distribution.
+Applying such models to the network of goals are essentially assuming that the total number of goals for any match by any team is sampled from the same distribution.
+
+\subsection{Geometric Model} 
+The first model reduces to Geometric distribution as specified in Equation \eqref{eq: edgewise Geometric}.
+In this model, the \textit{geometric-reference} measure is applied with sufficient statistic \BI{sum}.
+The parameter estimates ($\hat{\theta}$) for each of the six networks are:
+<<results='asis'>>=
+z <- table_LS$geometric
+update_ztable(z, label="table: Geometric",caption = "Parameter estimates of Geometric Model")
+@
+As seen in Table \ref{table: Geometric}, for every network the parameter of the statistic \BI{sum} is significant at the 0.05 level.
+Therefore, we reject the hypothesis that $\theta = 0$.
+The lowest of the parameter estimates of the statistic \BI{sum} is $-0.5794$ from network \textbf{IV}.
+This corresponds to a geometric distribution with $\hat{p} = 1-\exp(-0.5794) = \Sexpr{1-exp(-0.5794)}$.
+Hence, the estimated number of goals based on the distribution is around \Sexpr{1/(1-exp(-0.5794))}.
+However, according to Table \ref{table: summary statistics}, the observed mean for  the network  \textbf{IV} is 1.27.
+The difference between the fitted model and observed value is very large.
+Consequently, even though the parameter estimate is found to be significant, the model may not be appropriate.
+This issue will be further discussed at the end of the section.
+
+\subsection{Poisson Model}
+The second model reduces to the Poisson distribution as specified in Equation \eqref{eq: edgewise Poisson}.
+In this model, the \textit{Poisson-reference} measure is applied with sufficient statistic \BI{sum}.
+The parameter estimates ($\hat{\theta}$) for each of the six networks are:
+<<results='asis'>>=
+z <- table_LS$poisson
+update_ztable(z,label="table: poisson",caption = "Parameter estimates of Poisson Model")
+@
+From Table \ref{table: poisson}, the parameter estimates are significant at 0.05 level for every network.
+Therefore, we reject the hypothesis that $\theta = 0$.
+Furthermore, we  can compare the observed mean and standard deviation with $\hat{\lambda}=\exp(\hat{\theta})$ in Table \ref{table: lambda}.
+
+<<results = "asis">>=
+z <- readRDS(paste(root,"/processed data/lambda_table",sep=""))
+update_ztable(z, 
+              label="table: lambda",
+              caption = "Comparison of $\\hat{\\lambda}$ against the observed mean and the standard deviation.",
+              caption.placement = "bottom",
+              placement = "H",
+              digits = 4,
+              size = 3)
+@
+As seen in Table \ref{table: lambda}, the values of $\hat{\lambda}$ are almost identical with the values of the observed mean accross the 6 networks.
+The values of the standard deviation are also similar with the values of $\hat{\lambda}$.
+Thus, Table \ref{table: lambda} indicates that the Poisson model is appropriate for modelling the goals.
+
+\subsection{Zero Modified Poisson Model}
+The third model reduces to zero modified Poisson distribution as specified in Section \ref{sub: zero modification}.
+In this model, the \textit{Poisson-reference} measure is applied with sufficient statistics \BI{sum} and \BI{nonzero}.
+The parameter estimates ($\bm{\hat{\theta}}$) for each of the six networks are:
+<<results='asis'>>=
+z <- table_LS$nonzero
+update_ztable(z,label="table: Zero Modified Poisson",caption = "Parameter estimates of Zero Modified Poisson Model")
+@
+Table \ref{table: Zero Modified Poisson} shows that the parameter estimates of \BI{nonzero} statistic are significant at 0.05 level only in network \textbf{I}, \textbf{II}.
+However, the estimates of the \BI{nonzero} are always negative. 
+Compared with the Poisson distribution, this model puts less mass on the non-zero values and more mass on the probability of zero (see Figure \ref{fig: Zero Modified Poisson}).
+
+\subsection{Conway-Maxwell-Poisson Distribution}
+The fourth model reduces to the CMP Distribution as specified in Section \ref{sub: dispersion modelling}.
+In this model, the \textit{Poisson-reference} measure is applied with sufficient statistics \BI{sum} and \BI{CMP}.
+The parameter estimates ($\bm{\hat{\theta}}$) for each of the six networks are:
+<<results='asis'>>=
+z <- table_LS$cmp
+update_ztable(z,label="table: cmp",caption = "Parameter estimates of CMP Model")
+@
+Table \ref{table: cmp} shows that the parameter estimates of statistic \BI{sum} are insignificant at 0.05 level in a number of networks.
+However, the model still reduces to the CMP distribution on any real value of parameter \BI{sum} (see Section \ref{sub: dispersion modelling}).
+The parameter estimates of CMP statistics are significant at 0.05 level in 4 out of 6 networks.
+Furthermore, the estimates are always positive.
+This gives a model that is more dispersed than the Poisson distribution (see Figure \ref{fig: cmp}). 
+
+Assuming identical and independent edge-wise distribution is appropriate, the 4 models can then be compared. 
+Figure \ref{fig: edgewise} illustrates the differences of the 4 models.
+\begin{figure}[H] 
+<<f>>=
+edgewise <- readRDS(paste(root,"/plots/edgewise",sep=""))
+plot(edgewise)
+@
+\caption [Independent Edgewise Model]{These plots represents the comparison of the 4 models on the 6 networks. The barchart represents the empirical distribution or the relative frequency of the observed values. Each line corresponds to the probability mass function (PMF) of the 4 models reconstructed from the estimates.}
+\label{fig: edgewise}
+\end{figure}
+As shown in the Figure \ref{fig: edgewise}, geometric distribution provides the worst model.
+The gap between its PMF and the empirical distribution is the highest.
+Poisson Distribution performs slightly worse than the zero modified Poisson and CMP Distribution.
+The figure shows that the Poisson distribution consistently underestimate the zero values and overestimate $P(Y_{ij}=1)$.
+Hence, assuming identical and independent edge-wise distribution is appropriate, the number goals for any team in any match are better modelled with CMP and Zero Modified Poisson Distribution.
 
 
-\section{Introduction to The Dataset}\label{sec: introduction to dataset}
+\section{Analysis Using Exogenous Covariates}
+In Section \ref{sub: average market value}, it was mentioned thet the market value indicative of the price of a player.
+Thus, the average market value (AMV) of a football club indicates the club's wealth.
+The higher the AMV, the wealthier the club. 
+Figure \ref{fig: EPL 2013-14}, \ref{fig: EPL 2014-15} and \ref{fig: EPL 2015-16} shows the relationship between AMV and the number of goals scored by a cub.
+Since each heatmap is sorted based on the AMV, the upper triangular of each matrix indicates the number of goals scored by the higher AMV clubs.
+The lower triangle indicates the goals scored by the lower AMV clubs. 
+Note that the upper triangles are bluer, greener and redder than the lower triangle.
+This indicates that football clubs with higher AMV tend to score more goals against lower AMV clubs.
+Conversely, football clubs tend to score less goals against higher AMV clubs.
+We will then investigate this relationship using ERGM Count.
 
-\subsection{Football Matches and Goals}
-Football is a ball game played between two teams of 11 players.
-It is the world's most popular sport \citep{giulianotti2012football}. 
-By contrast, English Premier League (EPL) is the top tier of football competition in England. 
-It is the most watched football competition in the world \citep{ebner2013mostwatched}. 
+AMV is a node attribute of the network.
+It is mentioned in Section \ref{sub: exogenous covariates} that we may use \BI{nodeocov} and \BI{nodeicov} to represent the node attribute. 
+In this analysis, \BI{nodeocov} eveluates the effect of the AMV of the club that score the goals.
+While, \BI{nodeicov} evaluates the effect of the AMV of the receiving end.
 
-EPL's football match is played within a duration of 90 minutes.
-The match is played on a rectangular pitch with one goalpost appointed to each team. 
-There is one spherical ball contested.
-The objective of the game is to score goals by getting the ball into the opposing team goalpost.
-At the end of the match, the team with the highest accumulated goals will win the match.
-In EPL, the match may end with a draw when the total goals of both teams are the same.
+Another exogenous covariates that was introduced is the home and away effect. 
+Since the home team is playing in their own stadium, they are more familiar with the field conditions.
+The tickets audience also tend to consist more of the home team supporters. 
+Numerous studies show that football clubs tend to perform better in their own stadium \citep{Gelade2015home}.
+In addition, Figures \ref{fig: EPL 2013-14}, \ref{fig: EPL 2014-15} and \ref{fig: EPL 2015-16} also show some evidence of this argument.
+The color of the \textit{home} heatmap tends to be bluer, greener and redder than the \textit{away} heatmap.
+This indicates that football clubs score more goals when being the home team.
+We will also investigate this belief using ERGM Count. 
 
-\subsection{English Premier League}
-EPL is a 38 weeks championship participated by 20 football club. 
-On each week, each club will play exactly once totaling 10 matches a week.
-By the end of the championship, there are 380 matches with each club has played against 19 other clubs exactly twice.
-The champion is decided by a point system which is not of our interest.
+Home-away effect is an edge attribute of the network (see Figure \ref{fig: EPL Network}). 
+In this analysis, the edge $(i,j)$ is coded as 1 if i is the home team and and j is the away team and 0 vice versa.
+The statistic that represents the home-away effect is \BI{edgecov} (see Section \ref{sub: exogenous covariates}).
 
-EPL lasted a year long starting in the mid of August. 
-The winter break in January marks the end of the first half of the championship. 
-By this period, every club has played against every other clubs exactly once. 
-The next 190 matches are conducted until May, the summer break. 
-During these 2 breaks, the clubs are allowed to transfer their players locally or internationally.
-The EPL is then restarted in the mid of August.
+AMV and home-away effect will be studied simultenously.
+In this model, \textit{Poisson-reference} measure is applied with sufficient statistics \BI{sum}, \BI{edgecov}, \BI{nodeocov} and \BI{nodeicov}.
+The parameter estimates ($\bm{\hat{\theta}}$) for each of the six networks are:
+<<results='asis'>>=
+z <- table_LS$model_7
+update_ztable(z,label="table: exco",caption = "Parameter estimates of Exogenous Model")
+@
+As shown in Table \ref{table: exco}, the statistics \BI{edgecov}, \BI{nodeocov} and \BI{nodeicov} are significant at 0.05 level in almost every network.
+Furthermore, the signs of the estimates are consistent throughout each networks.
+As mentioned in Section \ref{sub: exogenous covariates}, the exogenoues covariates model reduces to the Poisson regression model.
+For example, network \textbf{IV} can be modelled using the Poisson distribution with mean parameter, $\lambda = \exp(0.2948(\BI{edgecov}) + 0.0486(\BI{nodeocov}) - 0.0364(\BI{nodeicov}))$.
+In this case, playing at home increase the expected number of goals by a multiplication factor of $\exp(0.2948)$.
+The AMV of the club increase the expected goals by a multiplication factor of $\exp(0.0486 \text{ AMV})$.
+The AMV of the opposing club reduces the expected number of goals by a division factor of $\exp(0.0364 \text{ AMV})$.
+Hence, this model is consistent with our initial belief on the home-away effect and the relationship of AMV with goals.
 
-The period of one EPL championship is called the season.
-For example, EPL that started in August 2013 and end in May 2014 is called EPL 2013-14 season. 
-The next EPL will be called as EPL 2014-15 season. 
-At the end of each season, the team will be rank based on the point system.
-The bottom 3 clubs with lowest points will be replaced by top clubs from the lower-tier competition in the next season.
+\section{Analysis Using Independent Pair-wise Model}
+In Section \ref{sub: mutuality}, we discussed the complexity of analyzing mutuality of network with count edges.
+However, I have proven that the addition of mutuality terms as suggested by \citet{countergmdefined} always reduce the ERGM Count to an independent pair-wise model.
+An independent pair-wise model essentially means that there is a dependency relationship between the values of a pair of opposing edges, yet these values are independent of every other pair in the network.
+This is in contrast with previous independent edge-wise models where we can treat every edge as independent of the rest.
 
-Furthermore, each football club participating in EPL has its own stadium.
-In each match, there is the home team (the stadium owner) and the away team.
-Recall that each club has played against every other club exactly twice.
-The club has to be the home team in one match and away team on the other. 
+Modelling Football goals with an independent pair-wise model allows a study on the dependency of the opposing goals in a match. 
+The dependency can exist in the form of \BI{mutuality}, where the goals between the 2 teams have a higher tendency to achieve equal values.
+It can also be \BI{anti-mutual} where the pair avoids having similar values (see Figure \ref{fig: pairwise distribution}).
+If the \BI{mutuality} statistic is found to be insignificant, then the independent pair-wise model is equivalent to an independent edge-wise model.
+An independent edge-wise model is nested by independent pair-wise model, and it provides more flexibility in the modelling.
 
-\subsection{Average Market Value}\label{sub: average market value}
-Market value is a statistic derived by \textit{www.transfermarkt.com} (transfermarkt) to measure the overall quality of a football player.
-In this paper, the unit value is measured in Euro, the official currency of Eurozone.
-Average market value (AMV) refers to the average value of the players' market value for a given club.
+\citet{countergmdefined} suggested 3 statistics to represent mutuality.
+In this analysis, \textit{Poisson-reference} measure is applied with sufficient statistics \BI{sum} and \BI{nabsdiff} as the mutuality statistic.
+The parameter estimates ($\bm{\hat{\theta}}$) for each of the six networks are:
 
-The derivation of the statistics is not fully disclosed.
-\citet{Sarkar2014money} stated that market value often reported as the transfer value, where it may predict the sum of money required to acquire the player.
-\citet{ECIN:ECIN360} claimed that there is a high degree of correlation of the market value with the actual salary.
+<<results='asis'>>=
+z <- table_LS$nabsdiff
+update_ztable(z,label="table: nabsdiff",caption = "Parameter estimates of independent pairwise model")
+@
+Table \ref{table: nabsdiff}, shows that \BI{mutual} is insignificant at 0.05 level in network \textbf{III}, \textbf{IV} and \textbf{VI}.
+However, all the estimates of \BI{mutual} statistic are consistently negative.
+Hence, there is some evidence of an \BI{anti-mutual} relationship.
+The opposing teams in a match have a tendency to score different number of goals; if one team score many goals, the other team tend to score fewer goals.
+In this context, independent pair-wise distribution is more appropriate than independent edge-wise distribution.
 
-Market values of the players change over time.
-One can track the history of the market value of a player since their early career until the present.
-Once again the consideration of the changes is not fully disclosed.
-However, visitors of \textit{www.transfermarkt.com} can express their opinion on the value itself.
+\section{Comparison of Models Based on Predictive Scoring} \label{sec: predictive}
+In the previous sections, we have discussed the basic shapes of ERGM Count and their interpretation in modelling the number of goals.
+We have shown that the geometric distribution is less appropriate than the Poisson distribution, while AMV and home-away effect are significant predictors under \textit{Poisson-reference} measure.
+We also show that based on the \BI{mutual} statistic, the independent pair-wise model is preferred to the independent edge-wise model.
 
-The AMV is the preferred statistic to assess the overall quality of a football club. 
-AMV does not get affected by the number of players in a football club which varied greatly.
-AMV has been used by \citet{Sarkar2014money} to predict the World Cup 2014.
-Spain which has the highest AMV at that point of time did not do well in the competition. 
-Hence, AMV is found to be an imperfect predictor of football club's performance \citep{Sarkar2014money}. 
+In this section, we will consider different shapes of ERGM count which combines various statistics.
+We consider a total of 16 combinations of the sufficient statistics (see Table \ref{table: sufficient statistics}).
+Note that each of the 6 networks has their own parameter estimates.
+Hence, we will assess a total of 96 different models. 
+Models with sufficent statistics 1-11 are independent edge-wise models, whereas 12-16 are independent pair-wise models.
+<<results='asis'>>=
+z <- assessment_LS$logarithmic_DT[,1]
+ztable(z, label="table: sufficient statistics",
+       caption = "16 combinations of sufficient statistics",
+       caption.placement = "bottom",
+       placement="H",
+       type="latex",
+       size=3)
+@
 
-\subsection{The Dataset}
-Previously, we are introduced with the gameplay of football matches and how total goals are derived.
-Then, EPL was mentioned to be a championship that consist of 380 matches each season. 
-We also discussed the difference between the home and the away team of the match.
-Lastly, the AMV statistic was mentioned to be a reasonable indicator of football club's performance.
+We compare the performance of the models in predicting the number goals scored by the 2 teams in a match.
+Let the number of goals scored by the home and away team be denoted by the random variables $X$ and $Y$ respectively. 
+Hence, the response sample space is a bivariate of count $(x,y)\in \mathbb{N}_0^2$.
+Based on the parameter estimates of each model, we can construct the predictive distribution for each match.
+The predictive distribution of independent pair-wise model 12-16 can be computed as in Section \ref{sub: mutuality}.
+For the independent edge-wise model 1-11, the predictive distribution is the product of predictive distribution of the number goals scored by the home team with the predictive distribution of the number of goals scored by the away team, ($Pr(X,Y)= Pr(X) \times Pr(Y)$).
 
-I have then retrieved a data on every matches of 3 consecutive EPL seasons starting from EPL 2013-14.
-The data is retrieved from \textit{www.football-data.co.uk}.
-On each match, the data includes the clubs' name and the number of goals scored from each club.
-It also points  the home and away team of the match.
-Furthermore, I retrieved AMV data from \textit{www.transfermarkt.com} for each season. 
-Since AMV changes over time, I retrieved the value of AMV at the end of the season.
 
-The full data is shown by Figure \ref{fig: EPL 2013-14}, \ref{fig: EPL 2014-15} and \ref{fig: EPL 2015-16}.
-The goals data are represented by the 2 adjacent heatmaps.
-Each heatmap represents a square matrix where the column name is the same with the row name.
-The row name represents the club who score the goal.
-The column name represents which club the goal is directed to.
-The bottom axis represents whether the goal scorer is playing as the home or the away team.
+The next step is to evaluate the acuracy of the predictive distribution based on another set of observed data.
+I have retrieved 283 matches result of EPL 2016-17 season.
+These includes the number of goals scored between the 2 teams in each match.
+It also indicates the home and the away team of the match.
+The relevant AMV dataset is also retrieved from \textit{www.transfermarkt.com}.
+In this case, the ith observed values $(x_{obs}^{(i)},y_{obs}^{(i)})$ are the number of goals of the ith match out of the 283 matches.
+We will then calculate one particular scoring rules $s^{(i)}$ on every match.
+The average score, $\bar{s} = \frac{\sum_{i=1}^{n} s^{(i)}}{n}$ of different models can then be compared.
 
-Furthermore, each entry of the matrix is color-coded as specified by the legend.
-For example in Figure \ref{fig: EPL 2015-16}, the square with row number 1 and column number 8 on the left heatmap represents the goals scored by Chelsea onto Everton, where Chelsea is playing as the home team. In this case the number of goals is 3.
-When the row number equals to the column number, the goals value is "na".
-This is because there is no football match of a club against its own.
+Here we will evaluate thec\textit{logarithmic score} \citep{Czado2009predictive} extended for bivariate predictive distribution:
+\begin{align*}
+s^{(i)} = - \log (Pr(X=x_{obs}^{(i)},Y=y_{obs}^{(i)}))
+\end{align*}
+This scoring evaluates the accuracy based solely by the probability of predictive distribution sampling the observed value.
+Note that a higher probability will produce a lower score, which represents a better model.
+The average logarithmic scores to be:
 
-In addition, the Average Market Value's x-axis also behaves like the column name.
-For example, the AMV of Man City in EPL 2013-2014 is around 17 Million Euros.
-Notice that the rows and columns are ordered by AMV. 
-This arrangement will be further discussed in Chapter \ref{chapter: analysis}
+<<results='asis'>>=
+z <- assessment_LS$logarithmic_DT
+ztable(z, label="table: logarithmic score",
+       caption = "Average Logarithmic Scores.",
+       caption.placement = "bottom",
+       placement="H",
+       type="latex",
+       digits=3,
+       size=2)
+@
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth,trim=0 0 5 20,clip]{"EPL 2013-14"}
-\caption [EPL 2013-14]{EPL 2013-14 dataset.}
-\label{fig: EPL 2013-14}
+\begin{figure}[H] 
+<<fig.asp=0.45>>=
+log_score <- readRDS(paste(root,"/plots/log_score",sep=""))
+plot(log_score)
+@
+\caption [Heatmap representation of Average Logaritmic Score]{This graph is the heatmap representation of the average logarithmic scores from Table \ref{table: logarithmic score}. The darker blue represents lower score, and thus a better model.}
+\label{fig: logarithmic score}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth,trim=0 0 5 20,clip]{"EPL 2014-15"}
-\caption [EPL 2014-15]{EPL 2014-15 dataset.}
-\label{fig: EPL 2014-15}
-\end{figure}
+From Table \ref{table: logarithmic score} and Figure \ref{fig: logarithmic score}, we notice that the models which include \textit{``edgecov + nodeicov + nodeocov''} always have the lower scores. 
+This indicates that the addition of AMV and home-away effect will give a better model.
+However, model 1-3 which assume that every team has an identical goal distribution and do not take into account AMV and the home-away effect, have logarithmic scores revolving around 3.08.
+Whereas, models with \textit{``edgecov + nodeicov + nodeocov''} statistics have a logarithmic score of around 2.95.
+Hence, the more complex models only show a \Sexpr{(3.08-2.95)/3.08*100}\% improvement on the logarithmic score.
+Furthermore, based on the logarithmic score of the predictive distributions, there is no difference in the performance between pair-wise and edge-wise models. 
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth,trim=0 0 5 20,clip]{"EPL 2015-16"}
-\caption [EPL 2015-16]{EPL 2015-16 dataset.}
-\label{fig: EPL 2015-16}
-\end{figure}
+\section{Conclusion and Possible Analysis Extension}
 
+In estimating the parameters of the selected models of ERGM count, one need to consider the restriction on the dataset.
+It is crucial for the dataset to achieve the network that is appropriate for ERGM Count modelling (see Section \ref{sec: justification}).
+EPL seasons are happened to meet the criteria.
+On the other hand, the predictive distribution of some models may be applied with no such restriction.
+In Section \ref{sec: predictive}, we tested the predictiveness of the models on a dataset that cannot be used to fit ERGM Count.
 
-\section{Justification ERGM Count Fitting}\label{sec: justification}
-
-\subsection{Football Matches as a Network Structure}
-Suppose there is a football match between Club A and Club B.
-The 2 football clubs competing will represent the node of the network. 
-The total goals scored by Club A represent the value of the edge originating from Club A to Club B.
-Whereas, The total goals scored by Club B represent the opposite edge's value.
-Now we have a simple network structure with 2 nodes and 2 edges that is valid to model with ERGM Count.
-
-Suppose there is another match between Club B and Club C.
-There is one additional node of Club C and 2 more edges between Club B and Club C to the network.
-Notice that at this point, there is no match between Club A and Club C.
-The edges between them has not formed.
-Modelling this network with ERGM Count is not appropriate.
-Forcing ERGM Count to model the network is similar with assuming the edges' values between Club A and Club C to be zeros. 
-On the other hand, suppose there is another match between Club A and Club B.
-Now there are 4 edges between Club A and Club B.
-This is also invalid for ERGM Count as it does not support multiple edges network. 
-
-Consider EPL as a collection of matches.
-By the winter break, There are 190 matches where each team has played 19 other teams exactly once.
-Here we have 20 nodes with every possible edges (380 in total) has  formed.
-Modelling this network with ERGM Count is then appropriate.
-From the winter break to the end of the season, the same scenario applies.
-We then have another network that is appropriate for ERGM Count.
-As mentioned in the previous section, the dataset consists of every matches on 3 seasons of EPL.
-Here, we can abstract 6 different network that is valid for ERGM.
-
-Furthermore, ERGM Count allows the inclusion of exogenous covariates (see Subsection \ref{sub: exogenous covariates}). 
-Our dataset provides 2 exogenous covariates. 
-One of them is the node attribute AMV at the end of the season.
-Another one is the edge attribute of the home or away effect.
-Figure \ref{fig: EPL Network} represents the visualization of 6 different networks and their attributes.
-Afterwards, we will discuss on how ERGM Count may explain these networks.
+As of football goals prediction, my analysis shows that complex ERGM counts perform no better than the Poisson regression model with AMV and the home-away covariates.
+However, there are still many areas that can be explored on.
+We can consider applying other exogenous covariates such as the weather condition or using other rating of players such as the one calculated by FIFA.
+We can also use the market value of the players that actually involve in the match.
+Moreover, we can use other predictive scoring rules such as quadratic score and spherical score as specified in \citet{Czado2009predictive}.
+Furthermore, we can use scoring rules on detecting the winner of the match instead of the number of goals.
 
 
-\begin{figure}[H] % "[t!]" placement specifier just for this example
-\includegraphics[width=\textwidth,trim=0 0 5 20,clip]{"EPL Network"}
-\caption [Graph Representation of a Football League]{This is the network representation of the dataset. The circles denote the 20 teams that are participating. Its size corresponds to the average market value of the players in the team. The bigger the circle, the AMV of the club is higher. The arrow represents the goal scored by the team it orginates from, to the team pointed by the arrow head. The green hue indicates the scoring team is playing as the home team. Whereas the red hue shows the goal scored as the away team. The intensity of the color represents the total goals scored. The higher intensity of the color, the more goals were scored.} 
-\label{fig: EPL Network}
-\end{figure}
-
-\subsection{Interpretation of ERGM Count to EPL Network}\label{sub: interpretation}
-
-Previously, we are able to abstract 6 networks that are valid for ERGM Count.
-With ERGM Count, we can decide whether the goals are modeled better with Poisson or Geometric Distribution.
-It is also possible that the goals simulate \BI{nonzero} or \BI{CMP} distributions.  
-Here we are interested in finding the best shape of its distribution.
-
-Assuming Poisson Distribution is appropriate, we can further explore the exogenous covariates that may affect the mean. 
-Here, we can analyse whether AMV of a club affect its goals distribution.
-We will also consider whether playing as home team give additional effect to the mean.
 
 
-Furthermore, we can assess the strength of the \BI{mutuality} of the network with ERGM Count.
-Here \BI{mutuality} depicts the tendency for both teams in a match to score the same goals.
-This seems to be unlikely as each team objective is to win the match. 
-Whereas the negative or \BI{anti-mutuality} can be interpreted as dominating effect.
-The dominating effect is a condition where one of the team played really well such that the opposing team unable to perform as expected.
-We will investigate this effect further in the next chapter.
 
-%The \BI{transitivity} attribute of the network is also interesting. 
-%If transitivity is found to be significant, the goals of different matches are interrelated. 
-%For example, If Club A scored many goals to Club B, and Club B scored many goals to Club C, Club A will likely to score even more goals to team C. 
-%Hence, team A performance against team C is affected by the result of team B against team C.
-%This effect differs from the general understanding of transivity. 
-%Although team A naturally has higher scoring tendency to team C, transitivity gives an extra effect on their performance.
+
+
+
+
+
+
 

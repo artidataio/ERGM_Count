@@ -33,8 +33,8 @@ for(i in 1:length(temp)){
     break
   }
   
-  DT_LS_1 <- list(data = DT_1,name = substr(temp[i],1,13), season = "first")
-  DT_LS_2 <- list(data = DT_2,name = substr(temp[i],1,13), season = "second")
+  DT_LS_1 <- list(data = DT_1,season = substr(temp[i],1,11), time = "pre-winter")
+  DT_LS_2 <- list(data = DT_2,season = substr(temp[i],1,11), time = "post-winter")
   print(head(test_2))
   data_LS<- append(data_LS,list(DT_LS_1))
   data_LS<- append(data_LS,list(DT_LS_2))

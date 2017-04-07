@@ -1,13 +1,48 @@
 %This is the text for chapter 1 of the report 
 
-<<set-parent, echo=FALSE, cache=FALSE>>=
-set_parent('report.Rnw')
-@
+%<<set-parent, echo=FALSE, cache=FALSE>>=
+%set_parent('report.Rnw')
+%@
 \chapter{Introduction}
-THIS IS NOT DONE
+A graph in the subject of the graph theory is simply a collection of points (nodes) that are connected with lines (edges).
+In contrast, a network is simply a graph where the nodes and the edges are affiliated with attributes.
+Friendship network is one of the most common manifestation of a network structure. 
+The nodes are people and edges are friendship relation.
+Gender, race and age are often quoted node's attributes.
 
-Contrasting with ERGM where edges can only be binary (exist or not exist), the valued networks enable the extension of edges definition. The idea is to model network that edges can be any value of count, measurement, or rank \citep{countergmdefined}. However, the paper only discuss ergm extension to count values where it can take on any positive integer value. 
+In understanding the process of friendship creation, one would like to make an analysis based on rigorous statistical method.
+In friendship network where the relation can either be a friend or not a friend (binary), binary ERGM \citep{mark2017ergm} are often used.
+\citet{goodreau2009birds} made a tremendous insight on the adolescent friendship pattern with binary ERGM as the statistical method.   
 
-Note that count and rank is different here. Although both can take on any positive integer values, rank only determines the relative position of an order while count determines the total number of items. In a sense that, rank is ordered categeorical values where arithmetic operation is not possible.
+However, there is a strict assumption of binary ERGM. 
+The relation can only exist in 2 levels. 
+In reality, friendship has various levels such as acquaintance, good friend or even best friend forever.
+Analyst would still worry that the definition of these levels will differ from person to person.
+Hence, analyst might consider the relationship level to be defined by the number of hours of interaction.
+\citet{countergmdefined} extended binary ERGM to accomodate count edges (ERGM Count) to handle such matter.
 
-Interestingly, ERGM Count has only been applied to rank data. .....
+Obviously, ERGM Count is applicable to other network of count edges.
+One possible application of ERGM Count is in analyzing a network of mobile messengers.
+The actors will represent the customers of the messengers and the relations represent the number of messages that are sent and/or received in one period of time.
+One can then model the traffic of messages using the different shapes of ERGM count.
+Hence, messenger's providers can predict the traffic of the messages. 
+As a result, they can optimize the power of server required to deliver the service.
+However,  this thesis will analyse football goals prediction with ERGM Count.
+
+In Chapter \ref{chapter: specification}, I will specify the formal definition of ERGM Count.
+I will also discuss the various shapes of ERGM Count with regards to the specification of the reference measure and sufficient statistics.
+The interpretation of the models will also be explained accordingly. 
+At the end of the chapter, I will make a discussion on how the models can be fitted.
+
+In Chapter \ref{chapter: justification}, I will make a detailed introduction of the dataset.
+The EPL network structure will be established from the dataset.
+I will continue by justifying the ERGM Count fitting of the network.
+It will end with a brief discussion on the interpretation of ERGM Count models on the EPL network.
+
+In Chapter \ref{chapter: analysis}, I will apply the various models of ERGM Count to the EPL network.
+These includes identical distribution models, exogenous covariate model and independent pair-wise model.
+Furthermore, I will compare models with various combination of sufficient statistics through logarithmic scoring.
+I will end the chapter and the thesis with a conclusion of my analysis.
+
+
+
